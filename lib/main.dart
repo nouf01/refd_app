@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:refd_app/DataModel/item.dart';
 
 void main() async {
+  //Change 9:55
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   Database db = Database();
@@ -41,7 +42,12 @@ void main() async {
     print(element.description);
   });
 
-  db.removeFromPrvoiderDM(item2.getProviderID, 'BurgerMacDonalds2008');
+  List<DailyMenu_Item> dmList =
+      await db.retrieve_DMmenu_Items(currentProvider.getUsername);
+
+  //db.removeFromPrvoiderDM(currentProvider.getUsername, dmList[0].getUid);
+  db.update_DM_Item_Info(
+      currentProvider.getUsername, dmList[0].getUid, {'quantity': 2});
 }
 
 

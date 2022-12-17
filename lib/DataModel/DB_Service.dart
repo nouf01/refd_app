@@ -95,8 +95,9 @@ class Database {
         .data()!['NumberOfItemsInDM'];
     print('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&');
     print(ref);
+    ref = ref + 1;
     updateProviderInfo(
-        DM_Item.getItem().getProviderID, {'NumberOfItemsInDM': ref++});
+        DM_Item.getItem().getProviderID, {'NumberOfItemsInDM': ref});
   }
 
   void removeFromPrvoiderDM(String providerID, String itemID) async {
@@ -110,15 +111,17 @@ class Database {
         .data()!['NumberOfItemsInDM'];
     print('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&');
     print(ref);
-    updateProviderInfo(providerID, {'NumberOfItemsInDM': ref--});
+    ref = ref - 1;
+    updateProviderInfo(providerID, {'NumberOfItemsInDM': ref});
   }
 
-  static update_DM_Item_Info(DM_item, Map<String, dynamic> field_value_map) {
+  void update_DM_Item_Info(String providerID, String dmItemID,
+      Map<String, dynamic> field_value_map) {
     FirebaseFirestore.instance
         .collection('Providers')
-        .doc(DM_item.getItem().getProviderID)
+        .doc(providerID)
         .collection('DailyMenu')
-        .doc(DM_item.getUid)
+        .doc(dmItemID)
         .update(field_value_map);
   }
 
