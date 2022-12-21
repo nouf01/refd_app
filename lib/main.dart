@@ -1,57 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:refd_app/DataModel/DB_Service.dart';
-import 'package:refd_app/DataModel/DailyMenu_Item.dart';
-import 'package:refd_app/DataModel/Provider.dart';
-import 'package:refd_app/DataModel/Consumer.dart';
 import 'package:flutter/material.dart';
-import 'package:refd_app/DataModel/item.dart';
-
-void main() async {
-  //Change 9:55
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  Database db = Database();
-
-  Provider currentProvider = Provider.fromDocumentSnapshot(
-      await db.searchForProvider('MacDonalds2008'));
-
-  print('----------------------------------------------------');
-  print(currentProvider.getUsername);
-
-  Item item1 = Item(
-      providerID: currentProvider.getUsername,
-      name: 'Sandwitch2222',
-      description: 'Describe Sandwitch',
-      originalPrice: 5.6);
-
-  Item item2 = Item(
-      providerID: currentProvider.getUsername,
-      name: 'Burger',
-      description: 'Describe Burger',
-      originalPrice: 17.2);
-
-  Item item3 = Item(
-      providerID: 'Starbucks22222',
-      name: 'Coffee',
-      description: 'Describe Coffee',
-      originalPrice: 10.99);
-
-  var theList = await db.retrieveMenuItems('MacDonalds2008');
-  theList.forEach((element) {
-    print(element.description);
-  });
-
-  List<DailyMenu_Item> dmList =
-      await db.retrieve_DMmenu_Items(currentProvider.getUsername);
-
-  //db.removeFromPrvoiderDM(currentProvider.getUsername, dmList[0].getUid);
-  db.update_DM_Item_Info(
-      currentProvider.getUsername, dmList[0].getUid, {'quantity': 2});
-}
-
-
-/*import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:refd_app/Consumer_Screens/Cart_Screen/CartScreen.dart';
@@ -154,4 +101,3 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
-*/
