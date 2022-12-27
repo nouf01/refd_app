@@ -80,7 +80,7 @@ class Item {
     return _originalPrice;
   }
 
-  String? get_imageURL() {
+  String get_imageURL() {
     return _imageURL;
   }
 }

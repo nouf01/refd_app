@@ -119,7 +119,7 @@ class Database {
         .collection('Providers')
         .doc(newItem.get_providerID)
         .collection('itemsList')
-        .doc(newItem.get_name() + newItem.get_providerID)
+        .doc()
         .set(newItem.toMap());
   }
 

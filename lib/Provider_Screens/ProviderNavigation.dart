@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:refd_app/DataModel/Provider.dart';
 
 import 'DailyMenu.dart';
 import 'ProvHome.dart';
@@ -19,7 +20,7 @@ class _ProviderNavigationState extends State<ProviderNavigation> {
   int _pageIndex = 0;
   static const List<Widget> _Pages = [
     HomeScreenProvider(),
-    MenuScreen(),
+    DailyMenuScreen(),
     DailyMenuScreen(),
     OrdersHistoryProvider(),
     ProfileProvider(),

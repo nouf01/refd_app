@@ -90,7 +90,7 @@ class Provider {
 
   Map<String, dynamic> toMap() {
     return {
-      'logoURL:': _logoURL,
+      'logoURL': _logoURL,
       'commercialName': _commercialName,
       'commercialReg': _commercialReg,
       'email': _email,
@@ -104,7 +104,7 @@ class Provider {
   }
 
   Provider.fromDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> doc)
-      : _logoURL = doc.data()!['logoURL:'],
+      : _logoURL = doc.data()!['logoURL'],
         _commercialName = doc.data()!["commercialName"],
         _commercialReg = doc.data()!["commercialReg"],
         _email = doc.data()!["email"],

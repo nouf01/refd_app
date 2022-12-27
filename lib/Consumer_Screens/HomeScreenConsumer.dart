@@ -4,6 +4,7 @@ import 'package:refd_app/DataModel/DB_Service.dart';
 import 'package:refd_app/DataModel/Provider.dart';
 import 'package:chips_choice/chips_choice.dart';
 import 'package:flexi_chip/flexi_chip.dart';
+import 'package:refd_app/Provider_Screens/Menu.dart';
 
 import '../Elements/SearchBar.dart';
 
@@ -130,8 +131,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                   borderRadius: BorderRadius.circular(16.0)),
                               child: ListTile(
                                 onTap: () {
-                                  Navigator.pushNamed(context, "/edit",
-                                      arguments: retrievedprovList![index]);
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => MenuScreen(
+                                                currentProv:
+                                                    retrievedprovList![index],
+                                              )));
                                 },
                                 leading: Image.network(
                                     '${retrievedprovList![index].get_logoURL}'),

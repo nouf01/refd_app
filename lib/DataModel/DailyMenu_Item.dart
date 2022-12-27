@@ -9,13 +9,13 @@ class DailyMenu_Item {
   double? _priceAfterDiscount;
 
   DailyMenu_Item({
-    required item,
+    required Item item,
     required quantity,
     required discount,
   })  : this._item = item,
         this._quantity = quantity,
         this._discount = discount,
-        this._priceAfterDiscount = item.originalPrice * discount;
+        this._priceAfterDiscount = item.get_originalPrice() * discount;
 
   Map<String, dynamic> toMap() {
     return {

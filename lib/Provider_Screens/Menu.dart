@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../DataModel/DB_Service.dart';
+import '../DataModel/Provider.dart';
 import '../DataModel/item.dart';
 
 class MenuScreen extends StatefulWidget {
-  const MenuScreen({super.key});
+  final Provider currentProv;
+  const MenuScreen({super.key, required this.currentProv});
 
   @override
   State<MenuScreen> createState() => _MenuScreenState();
@@ -65,19 +67,21 @@ class _MenuScreenState extends State<MenuScreen> {
                         key: UniqueKey(),
                         child: Container(
                           decoration: BoxDecoration(
-                              color: Colors.grey,
+                              color: Colors.white,
                               borderRadius: BorderRadius.circular(16.0)),
                           child: ListTile(
                             onTap: () {
                               Navigator.pushNamed(context, "/edit",
                                   arguments: retrieveditemList![index]);
                             },
+                            leading: Image.network(
+                                retrieveditemList![index].get_imageURL()),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0),
                             ),
                             title: Text(retrieveditemList![index].get_name()),
                             subtitle: Text(
-                                "${retrieveditemList![index].get_name()}, ${retrieveditemList![index].getDecription()}"),
+                                "${retrieveditemList![index].getDecription()}, ${retrieveditemList![index].get_originalPrice()}"),
                             trailing: const Icon(Icons.arrow_right_sharp),
                           ),
                         ),
@@ -113,17 +117,19 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 
   Future<void> _refresh() async {
-    itemList = service.retrieveMenuItems('MacDonalds2008');
-    retrieveditemList = await service.retrieveMenuItems('MacDonalds2008');
+    itemList = service.retrieveMenuItems(this.widget.currentProv.get_email);
+    retrieveditemList =
+        await service.retrieveMenuItems(this.widget.currentProv.get_email);
     setState(() {});
   }
 
   void _dismiss() {
-    itemList = service.retrieveMenuItems('MacDonalds2008');
+    itemList = service.retrieveMenuItems(this.widget.currentProv.get_email);
   }
 
   Future<void> _initRetrieval() async {
-    itemList = service.retrieveMenuItems('MacDonalds2008');
-    retrieveditemList = await service.retrieveMenuItems('MacDonalds2008');
+    itemList = service.retrieveMenuItems(this.widget.currentProv.get_email);
+    retrieveditemList =
+        await service.retrieveMenuItems(this.widget.currentProv.get_email);
   }
 }
