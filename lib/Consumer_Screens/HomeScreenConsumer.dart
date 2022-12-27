@@ -4,6 +4,7 @@ import 'package:refd_app/DataModel/DB_Service.dart';
 import 'package:refd_app/DataModel/Provider.dart';
 import 'package:chips_choice/chips_choice.dart';
 import 'package:flexi_chip/flexi_chip.dart';
+import 'package:refd_app/Elements/ProviderCard.dart';
 
 import '../Elements/SearchBar.dart';
 
@@ -93,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onChanged: ((value) => _search(value)),
             decoration: InputDecoration(
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: Color.fromARGB(255, 234, 232, 232),
                 hintText: 'Search for resturant',
                 suffixIcon: Icon(
                   Icons.search,
@@ -128,22 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(16.0)),
-                              child: ListTile(
-                                onTap: () {
-                                  Navigator.pushNamed(context, "/edit",
-                                      arguments: retrievedprovList![index]);
-                                },
-                                leading: Image.network(
-                                    '${retrievedprovList![index].get_logoURL}'),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                title: Text(retrievedprovList![index]
-                                    .get_commercialName),
-                                subtitle: Text(
-                                    "${retrievedprovList![index].get_tags[0]},   ${retrievedprovList![index].get_rate}"),
-                                trailing: const Icon(Icons.arrow_right_sharp),
-                              ),
+                              child: P_card(p: p1),
                             );
                           });
                     } else if (snapshot.connectionState ==
