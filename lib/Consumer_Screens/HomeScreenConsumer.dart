@@ -4,7 +4,6 @@ import 'package:refd_app/DataModel/DB_Service.dart';
 import 'package:refd_app/DataModel/Provider.dart';
 import 'package:chips_choice/chips_choice.dart';
 import 'package:flexi_chip/flexi_chip.dart';
-import 'package:refd_app/Provider_Screens/Menu.dart';
 
 import '../Elements/SearchBar.dart';
 
@@ -94,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onChanged: ((value) => _search(value)),
             decoration: InputDecoration(
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: Color.fromARGB(255, 234, 232, 232),
                 hintText: 'Search for resturant',
                 suffixIcon: Icon(
                   Icons.search,
@@ -131,13 +130,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   borderRadius: BorderRadius.circular(16.0)),
                               child: ListTile(
                                 onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => MenuScreen(
-                                                currentProv:
-                                                    retrievedprovList![index],
-                                              )));
+                                  Navigator.pushNamed(context, "/edit",
+                                      arguments: retrievedprovList![index]);
                                 },
                                 leading: Image.network(
                                     '${retrievedprovList![index].get_logoURL}'),
