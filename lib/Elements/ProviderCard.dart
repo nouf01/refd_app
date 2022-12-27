@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:refd_app/DataModel/Order.dart';
 import 'package:refd_app/DataModel/Provider.dart';
+import 'package:refd_app/Provider_Screens/Menu.dart';
 
 class P_card extends StatefulWidget {
   final Provider p;
@@ -39,6 +40,13 @@ class _PCardState extends State<P_card> {
               Expanded(
                 flex: 5,
                 child: ListTile(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                MenuScreen(currentProv: this.widget.p)));
+                  },
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),

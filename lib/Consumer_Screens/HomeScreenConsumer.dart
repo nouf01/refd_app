@@ -4,6 +4,7 @@ import 'package:refd_app/DataModel/DB_Service.dart';
 import 'package:refd_app/DataModel/Provider.dart';
 import 'package:chips_choice/chips_choice.dart';
 import 'package:flexi_chip/flexi_chip.dart';
+import 'package:refd_app/Elements/ProviderCard.dart';
 
 import '../Elements/SearchBar.dart';
 
@@ -125,26 +126,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           itemBuilder: (context, index) {
                             Provider p1 = retrievedprovList![index];
                             return Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(16.0)),
-                              child: ListTile(
-                                onTap: () {
-                                  Navigator.pushNamed(context, "/edit",
-                                      arguments: retrievedprovList![index]);
-                                },
-                                leading: Image.network(
-                                    '${retrievedprovList![index].get_logoURL}'),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                title: Text(retrievedprovList![index]
-                                    .get_commercialName),
-                                subtitle: Text(
-                                    "${retrievedprovList![index].get_tags[0]},   ${retrievedprovList![index].get_rate}"),
-                                trailing: const Icon(Icons.arrow_right_sharp),
-                              ),
-                            );
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(16.0)),
+                                child: P_card(
+                                  p: retrievedprovList![index],
+                                ));
                           });
                     } else if (snapshot.connectionState ==
                             ConnectionState.done &&

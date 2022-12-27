@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'HomeScreen.dart';
-
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
 
