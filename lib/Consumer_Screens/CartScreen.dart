@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../Home_Screen/HomeScreen.dart';
+import 'HomeScreen.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -12,6 +12,8 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
-    return Text("Cart");
+    return Container(
+      child: Text('Cart'),
+    );
   }
 }

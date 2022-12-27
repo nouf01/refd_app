@@ -2,35 +2,37 @@ import 'item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DailyMenu_Item {
-  String? uid;
-  Item item;
-  int quantity;
-  double discount;
-  double? priceAfetrDiscount;
+  String? _uid;
+  Item _item;
+  int _quantity;
+  double _discount;
+  double? _priceAfterDiscount;
 
   DailyMenu_Item({
-    required this.item,
-    required this.quantity,
-    required this.discount,
-  })  : priceAfetrDiscount = item.originalPrice * discount,
-        uid = item.getName() + item.getProviderID;
+    required item,
+    required quantity,
+    required discount,
+  })  : this._item = item,
+        this._quantity = quantity,
+        this._discount = discount,
+        this._priceAfterDiscount = item.originalPrice * discount;
 
   Map<String, dynamic> toMap() {
     return {
-      'item': item.toMap(),
-      'quantity': quantity,
-      'discount': discount,
-      'priceAfetrDiscount': priceAfetrDiscount,
+      'item': _item.toMap(),
+      'quantity': _quantity,
+      'discount': _discount,
+      'priceAfterDiscount': _priceAfterDiscount,
     };
   }
 
   DailyMenu_Item.fromDocumentSnapshot(
       DocumentSnapshot<Map<String, dynamic>> doc)
-      : uid = doc.id,
-        item = Item.fromMap(doc.data()!["item"]),
-        quantity = doc.data()!["quantity"],
-        discount = doc.data()!["discount"],
-        priceAfetrDiscount = doc.data()!["priceAfetrDiscount"];
+      : _uid = doc.id,
+        _item = Item.fromMap(doc.data()!["item"]),
+        _quantity = doc.data()!["quantity"],
+        _discount = doc.data()!["discount"],
+        _priceAfterDiscount = doc.data()!["priceAfterDiscount"];
 
   /*DailyMenu_Item.fromMap(Map<String, dynamic> itemMap)
       : providerID = itemMap["providerID"],
@@ -39,26 +41,26 @@ class DailyMenu_Item {
         originalPrice = itemMap["originalPrice"],
         imageURL = itemMap["imageURL"];*/
 
-  get getUid => this.uid;
+  get get_uid => this._uid;
 
-  set setUid(uid) => this.uid = uid;
+  set set_uid(_uid) => this._uid = _uid;
 
   Item getItem() {
-    return item;
+    return _item;
   }
 
-  set setItem(item) => this.item = item;
+  set setItem(item) => this._item = item;
 
-  get getQuantity => this.quantity;
+  get get_quantity => this._quantity;
 
-  set setQuantity(quantity) => this.quantity = quantity;
+  set set_quantity(_quantity) => this._quantity = _quantity;
 
-  get getDiscount => this.discount;
+  get get_discount => this._discount;
 
-  set setDiscount(discount) => this.discount = discount;
+  set set_discount(_discount) => this._discount = _discount;
 
-  get getPriceAfetrDiscount => this.priceAfetrDiscount;
+  get getPriceAfetr_discount => this._priceAfterDiscount;
 
-  set setPriceAfetrDiscount(priceAfetrDiscount) =>
-      this.priceAfetrDiscount = priceAfetrDiscount;
+  set setPriceAfetr_discount(priceAfetrDiscount) =>
+      this._priceAfterDiscount = priceAfetrDiscount;
 }

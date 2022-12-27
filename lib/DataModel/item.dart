@@ -1,83 +1,86 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Item {
-  String providerID;
-  String name;
-  String uid;
-  String description;
-  double originalPrice;
-  String? imageURL; //or id based on fire storage
+  String _providerID;
+  String _name;
+  String? _uid;
+  String _description;
+  double _originalPrice;
+  String _imageURL; //or id based on fire storage
 
   Item({
-    required this.providerID,
-    required this.name,
-    required this.description,
-    required this.originalPrice,
-    this.imageURL,
-  }) : uid = name + providerID;
+    required providerID,
+    required name,
+    required description,
+    required originalPrice,
+    required imageURL,
+  })  : this._providerID = providerID,
+        this._description = description,
+        this._name = name,
+        this._originalPrice = originalPrice,
+        this._imageURL = imageURL;
 
   Map<String, dynamic> toMap() {
     return {
-      'providerID': providerID,
-      'name': name,
-      'description': description,
-      'originalPrice': originalPrice,
-      'imageURL': imageURL,
+      'providerID': _providerID,
+      'name': _name,
+      'description': _description,
+      'originalPrice': _originalPrice,
+      'imageURL': _imageURL,
     };
   }
 
   Item.fromDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> doc)
-      : uid = doc.id,
-        providerID = doc.data()!["providerID"],
-        name = doc.data()!["name"],
-        description = doc.data()!["description"],
-        originalPrice = doc.data()!["originalPrice"],
-        imageURL = doc.data()!['imageURL'];
+      : _uid = doc.id,
+        _providerID = doc.data()!["providerID"],
+        _name = doc.data()!["name"],
+        _description = doc.data()!["description"],
+        _originalPrice = doc.data()!["originalPrice"],
+        _imageURL = doc.data()!['imageURL'];
 
   Item.fromMap(Map<String, dynamic> itemMap)
-      : uid = itemMap["providerID"] + itemMap["name"],
-        providerID = itemMap["providerID"],
-        name = itemMap["name"],
-        description = itemMap["description"],
-        originalPrice = itemMap["originalPrice"],
-        imageURL = itemMap["imageURL"];
+      : _providerID = itemMap["providerID"],
+        _name = itemMap["name"],
+        _description = itemMap["description"],
+        _originalPrice = itemMap["originalPrice"],
+        _imageURL = itemMap["imageURL"];
 
-  String get getProviderID => this.providerID;
-  set setProviderID(String providerID) => this.providerID = providerID;
+  String get get_providerID => this._providerID;
+  set set_providerID(String _providerID) => this._providerID = _providerID;
 
-  void setName(newName) {
-    name = newName;
+  void set_name(new_name) {
+    _name = new_name;
   }
 
-  void setImageURL(newImageURL) {
-    imageURL = newImageURL;
+  void set_imageURL(new_imageURL) {
+    _imageURL = new_imageURL;
   }
 
-  void setDescription(newDescription) {
-    description = newDescription;
+  void set_description(new_description) {
+    _description = new_description;
   }
 
-  void setOriginalPrice(newOriginalPrice) {
-    originalPrice = newOriginalPrice;
+  void set_originalPrice(new_originalPrice) {
+    _originalPrice = new_originalPrice;
   }
 
-  String getId() {
-    return uid;
+  String? getId() {
+    return _uid;
   }
 
-  String getName() {
-    return name;
+  String get_name() {
+    return _name;
   }
 
   String getDecription() {
-    return description;
+    return _description;
   }
 
-  double getOriginalPrice() {
-    return originalPrice;
+  double get_originalPrice() {
+    return _originalPrice;
   }
 
-  String? getImageURL() {
-    return imageURL;
+  String? get_imageURL() {
+    return _imageURL;
   }
 }

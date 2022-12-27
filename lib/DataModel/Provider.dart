@@ -32,122 +32,152 @@ enum Tags {
 }
 
 class Provider {
-  final String username;
-  final String? logoURL;
-  final String commercialName;
-  final String commercialReg;
-  final String email;
-  final String phoneNumber;
-  final String accountStatus;
-  final List<String>
-      tags; //actually i dont use this here in the object get it as query from db_service
-  final double rate;
-  final int NumberOfItemsInDM;
+  final String _logoURL;
+  final String _commercialName;
+  final String _commercialReg;
+  final String _email;
+  final String _phoneNumber;
+  final String _accountStatus;
+  final List<String> _tags;
+  final double _rate;
+  final int _NumberOfItemsInDM;
+  final List<String> _searchCases;
 
   //List<Item>? itemsList;
   //location
   // orders list
-  //catagory: what about tags?
+  //catagory: what about _tags?
 
   Provider({
-    required this.username,
-    this.logoURL,
-    required this.commercialName,
-    required this.commercialReg,
-    required this.email,
-    required this.phoneNumber,
+    required logoURL,
+    required commercialName,
+    required commercialReg,
+    required email,
+    required phoneNumber,
     required accountStatus,
-    required this.rate,
-  })  : NumberOfItemsInDM = 0,
-        this.accountStatus = accountStatus.toString().replaceAll('Status.', ''),
-        tags = [];
+    required rate,
+    required tagList,
+  })  : _NumberOfItemsInDM = 0,
+        this._accountStatus =
+            accountStatus.toString().replaceAll('Status.', ''),
+        this._searchCases = setSearchParam(commercialName),
+        this._tags = set_tags(tagList),
+        this._logoURL = logoURL,
+        this._commercialName = commercialName,
+        this._commercialReg = commercialReg,
+        this._email = email,
+        this._phoneNumber = phoneNumber,
+        this._rate = rate;
+
+  static List<String> setSearchParam(String caseNumber) {
+    caseNumber = caseNumber.toLowerCase();
+    List<String> caseSearchList = [];
+    String temp = "";
+    for (int i = 0; i < caseNumber.length; i++) {
+      temp = temp + caseNumber[i];
+      caseSearchList.add(temp);
+    }
+    return caseSearchList;
+  }
+
+  static List<String> set_tags(List<Tags> tagList) {
+    List<String> result = [];
+    tagList.forEach((e) {
+      result.add(e.toString().replaceAll('Tags.', ''));
+    });
+    return result;
+  }
 
   Map<String, dynamic> toMap() {
     return {
-      'username': username,
-      'logoURL:': logoURL,
-      'commercialName': commercialName,
-      'commercialReg': commercialReg,
-      'email': email,
-      'phoneNumber': phoneNumber,
-      'accountStatus': accountStatus,
-      'rate': rate,
-      'NumberOfItemsInDM': NumberOfItemsInDM
+      'logoURL:': _logoURL,
+      'commercialName': _commercialName,
+      'commercialReg': _commercialReg,
+      'email': _email,
+      'phoneNumber': _phoneNumber,
+      'accountStatus': _accountStatus,
+      'rate': _rate,
+      'NumberOfItemsInDM': _NumberOfItemsInDM,
+      'searchCases': _searchCases,
+      'tags': _tags,
     };
   }
 
   Provider.fromDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> doc)
-      : username = doc.data()!['username'],
-        logoURL = doc.data()!['logoURL'],
-        commercialName = doc.data()!["commercialName"],
-        commercialReg = doc.data()!["commercialReg"],
-        email = doc.data()!["email"],
-        phoneNumber = doc.data()!["phoneNumber"],
-        accountStatus = doc.data()!["accountStatus"],
-        rate = doc.data()!["rate"],
-        NumberOfItemsInDM = doc.data()!['NumberOfItemsInDM'],
-        tags = doc.data()?["tags"].cast<String>();
+      : _logoURL = doc.data()!['logoURL:'],
+        _commercialName = doc.data()!["commercialName"],
+        _commercialReg = doc.data()!["commercialReg"],
+        _email = doc.data()!["email"],
+        _phoneNumber = doc.data()!["phoneNumber"],
+        _accountStatus = doc.data()!["accountStatus"],
+        _rate = doc.data()!["rate"],
+        _NumberOfItemsInDM = doc.data()!['NumberOfItemsInDM'],
+        _tags = doc.data()?["tags"].cast<String>(),
+        _searchCases = doc.data()?["searchCases"].cast<String>();
 
   //String? get getUid => this.uid;
   //set setUid(String? uid) => this.uid = uid;
 
-  get getUsername => this.username;
+  get get_commercialName => this._commercialName;
 
-  get getCommercialName => this.commercialName;
+  get get_commercialReg => this._commercialReg;
 
-  get getCommercialReg => this.commercialReg;
+  get get_email => this._email;
 
-  get getEmail => this.email;
+  get get_phoneNumber => this._phoneNumber;
 
-  get getPhoneNumber => this.phoneNumber;
+  get get_accountStatus => this._accountStatus;
 
-  get getAccountStatus => this.accountStatus;
+  get get_rate => this._rate;
 
-  get getRate => this.rate;
+  int get get_NumberOfItemsInDM => this._NumberOfItemsInDM;
 
-  int get getNumberOfItemsInDM => this.NumberOfItemsInDM;
+  get get_tags => this._tags;
 
-  /*void setCommercialName(commercialName) {
-    this.commercialName = commercialName;
+  get get_searchCases => this._searchCases;
+
+  get get_logoURL => this._logoURL;
+  /*void set_commercialName(_commercialName) {
+    this._commercialName = _commercialName;
     FirebaseFirestore.instance
         .collection('Providers')
         .doc(this.username)
-        .update({'commercialName': commercialName});
+        .update({'_commercialName': _commercialName});
   }
 
-  void setCommercialReg(commercialReg) {
-    this.commercialReg = commercialReg;
+  void set_commercialReg(_commercialReg) {
+    this._commercialReg = _commercialReg;
     FirebaseFirestore.instance
         .collection('Providers')
         .doc(this.username)
-        .update({'commercialReg': commercialReg});
+        .update({'_commercialReg': _commercialReg});
   }
 
-  set setNumberOfItemsInDM(int NumberOfItemsInDM) =>
-      this.NumberOfItemsInDM = NumberOfItemsInDM;
+  set set_NumberOfItemsInDM(int _NumberOfItemsInDM) =>
+      this._NumberOfItemsInDM = _NumberOfItemsInDM;
 
-  void setEmail(email) {
-    this.email = email;
+  void set_email(_email) {
+    this._email = _email;
     FirebaseFirestore.instance
         .collection('Providers')
         .doc(this.username)
-        .update({'email': email});
+        .update({'_email': _email});
   }  
 
-  void setAccountStatus(Status status) {
-    this.accountStatus = status.toString().replaceAll('Status.', '');
+  void set_accountStatus(Status status) {
+    this._accountStatus = status.toString().replaceAll('Status.', '');
     FirebaseFirestore.instance
         .collection('Providers')
         .doc(this.username)
-        .update({'accountStatus': status.toString().replaceAll('Status.', '')});
+        .update({'_accountStatus': status.toString().replaceAll('Status.', '')});
   }
 
-  void setRate(rate) {
-    this.rate = rate;
+  void set_rate(_rate) {
+    this._rate = _rate;
     FirebaseFirestore.instance
         .collection('Providers')
         .doc(this.username)
-        .update({'rate': rate});
+        .update({'_rate': _rate});
   }
 
   void setUsername(username) {

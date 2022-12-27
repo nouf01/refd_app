@@ -12,58 +12,63 @@ enum OrderStatus {
 }
 
 class Order_object {
-  final String orderID;
-  final DateTime date;
-  final String status;
+  final String _orderID;
+  final DateTime _date;
+  final String _status;
   //Timer processTimer;
   //Timer pickUpTimer;
-  final double total;
-  final String providerID;
-  final String consumerID;
+  final double _total;
+  final String _providerID;
+  final String _consumerID;
 
   Order_object({
-    required this.date,
-    required this.total,
-    required this.providerID,
-    required this.consumerID,
+    required date,
+    required total,
+    required providerID,
+    required consumerID,
     required status,
-  })  : this.status = status.toString().replaceAll('OrderStatus.', ''),
-        orderID = ((new Random()).nextInt(900000000) + 100000000).toString();
+  })  : this._status = status.toString().replaceAll('Order_status.', ''),
+        this._orderID =
+            ((new Random()).nextInt(900000000) + 100000000).toString(),
+        this._date = date,
+        this._total = total,
+        this._providerID = providerID,
+        this._consumerID = consumerID;
 
   Map<String, dynamic> toMap() {
     return {
-      'orderID': orderID,
-      'date': date,
-      'total': total,
-      'providerID': providerID,
-      'consumerID': consumerID,
-      'status': status,
+      'orderID': _orderID,
+      'date': _date,
+      'total': _total,
+      'providerID': _providerID,
+      'consumerID': _consumerID,
+      'status': _status,
     };
   }
 
   Order_object.fromDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> doc)
-      : orderID = doc.data()!['orderID'],
-        date = doc
+      : _orderID = doc.data()!['orderID'],
+        _date = doc
             .data()!['date']
-            .toDate(), //DateTime.parse(doc.data()!['orderID']),
-        total = doc.data()!["total"],
-        providerID = doc.data()!["providerID"],
-        consumerID = doc.data()!["consumerID"],
-        status = doc.data()!["status"];
+            .to_date(), //_dateTime.parse(doc.data()!['__orderID']),
+        _total = doc.data()!["total"],
+        _providerID = doc.data()!["providerID"],
+        _consumerID = doc.data()!["consumerID"],
+        _status = doc.data()!["status"];
 
-  get getOrderID => this.orderID;
+  get getorderID => this._orderID;
 
-  get getDate => this.date;
+  get getdate => this._date;
 
-  get getStatus => this.status;
+  get get_status => this._status;
 
-  get getTotal => this.total;
+  get get_total => this._total;
 
-  get getProviderID => this.providerID;
+  get get_ProviderID => this._providerID;
 
-  get getConsumerID => this.consumerID;
+  get get_consumerID => this._consumerID;
 
-  static convertDate(DocumentSnapshot<Map<String, dynamic>> doc) {
+  static convert_date(DocumentSnapshot<Map<String, dynamic>> doc) {
     return doc.data()!['date'];
   }
 }

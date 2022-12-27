@@ -14,7 +14,7 @@ class Database {
     //Done tested
     await _db
         .collection('Providers')
-        .doc(provider.username)
+        .doc(provider.get_email)
         .set(provider.toMap());
   }
 
@@ -25,6 +25,17 @@ class Database {
         .collection('Providers')
         .doc(providerID)
         .update(field_value_map);
+  }
+
+  List<String> setSearchParam(String caseNumber) {
+    caseNumber = caseNumber.toLowerCase();
+    List<String> caseSearchList = [];
+    String temp = "";
+    for (int i = 0; i < caseNumber.length; i++) {
+      temp = temp + caseNumber[i];
+      caseSearchList.add(temp);
+    }
+    return caseSearchList;
   }
 
   void setAccountStatus(String provID, Status status) {
@@ -63,10 +74,38 @@ class Database {
         .get();
   }
 
+  Future<List<Provider>> searchForProviderByName(
+      //Done tested
+      String input) async {
+    QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+        .instance
+        .collection('Providers')
+        .where('searchCases', arrayContains: input)
+        .get();
+    return snapshot.docs
+        .map((docSnapshot) => Provider.fromDocumentSnapshot(docSnapshot))
+        .toList();
+  }
+
   Future<List<Provider>> retrieveAllProviders() async {
     //Done tested
     QuerySnapshot<Map<String, dynamic>> snapshot =
         await _db.collection("Providers").get();
+    return snapshot.docs
+        .map((docSnapshot) => Provider.fromDocumentSnapshot(docSnapshot))
+        .toList();
+  }
+
+  Future<List<Provider>> filterProvider(List<Tags>? tags) async {
+    //Done tested
+    List<String> tagsList = [];
+    tags!.forEach((element) {
+      tagsList.add(element.toString().replaceAll('Tags.', ''));
+    });
+    QuerySnapshot<Map<String, dynamic>> snapshot = await _db
+        .collection("Providers")
+        .where('tags', arrayContainsAny: tagsList)
+        .get();
     return snapshot.docs
         .map((docSnapshot) => Provider.fromDocumentSnapshot(docSnapshot))
         .toList();
@@ -78,19 +117,19 @@ class Database {
     //Done tested
     await _db
         .collection('Providers')
-        .doc(newItem.getProviderID)
+        .doc(newItem.get_providerID)
         .collection('itemsList')
-        .doc(newItem.getName() + newItem.getProviderID)
+        .doc(newItem.get_name() + newItem.get_providerID)
         .set(newItem.toMap());
   }
 
-  void removeFromPrvoiderMenu(Item newItem) async {
+  Future<void> removeFromPrvoiderMenu(Item newItem) async {
     //Done tested
     await _db
         .collection('Providers')
-        .doc(newItem.getProviderID)
+        .doc(newItem.get_providerID)
         .collection('itemsList')
-        .doc(newItem.getName() + newItem.getProviderID)
+        .doc(newItem.get_name() + newItem.get_providerID)
         .delete();
   }
 
@@ -98,9 +137,9 @@ class Database {
     //Done tested
     FirebaseFirestore.instance
         .collection('Providers')
-        .doc(item.getProviderID)
+        .doc(item.get_providerID)
         .collection('itemsList')
-        .doc(item.uid)
+        .doc(item.getId())
         .update(field_value_map);
   }
 
@@ -121,18 +160,18 @@ class Database {
     //Done tested
     await _db
         .collection('Providers')
-        .doc(DM_Item.getItem().getProviderID)
+        .doc(DM_Item.getItem().get_providerID)
         .collection('DailyMenu')
-        .doc(DM_Item.getUid)
+        .doc(DM_Item.get_uid)
         .set(DM_Item.toMap());
     int ref = (await _db
             .collection('Providers')
-            .doc(DM_Item.getItem().getProviderID)
+            .doc(DM_Item.getItem().get_providerID)
             .get())
         .data()!['NumberOfItemsInDM'];
     ref = ref + 1;
     updateProviderInfo(
-        DM_Item.getItem().getProviderID, {'NumberOfItemsInDM': ref});
+        DM_Item.getItem().get_providerID, {'NumberOfItemsInDM': ref});
   }
 
   void removeFromPrvoiderDM(String providerID, String itemID) async {
@@ -177,7 +216,7 @@ class Database {
     //Done Tested
     await _db
         .collection('Consumers')
-        .doc(consumer.getEmail())
+        .doc(consumer.get_email())
         .set(consumer.toMap());
   }
 
@@ -214,7 +253,7 @@ class Database {
   //************************ Orders ***********************************/
   addNewOrderToFirebase(Order_object order) async {
     //Done Tested
-    await _db.collection('Orders').doc(order.getOrderID).set(order.toMap());
+    await _db.collection('Orders').doc(order.getorderID).set(order.toMap());
   }
 
   void updateOrderInfo(
@@ -233,38 +272,38 @@ class Database {
     for (var i = 0; i < dmList.length; i++) {
       await _db
           .collection('Orders')
-          .doc(orderOBJ.getOrderID)
+          .doc(orderOBJ.getorderID)
           .collection('listOfDMitems')
-          .doc(dmList[i].getUid)
+          .doc(dmList[i].get_uid)
           .set(dmList[i].toMap());
-      print(dmList[i].getPriceAfetrDiscount);
-      total = total + dmList[i].getPriceAfetrDiscount;
+      print(dmList[i].getPriceAfetr_discount);
+      total = total + dmList[i].getPriceAfetr_discount;
       int ref = (await _db
               .collection('Providers')
-              .doc(dmList[i].getItem().getProviderID)
+              .doc(dmList[i].getItem().get_providerID)
               .get())
           .data()!['NumberOfItemsInDM'];
       ref = ref - 1;
-      updateProviderInfo(orderOBJ.getProviderID, {'NumberOfItemsInDM': ref});
+      updateProviderInfo(orderOBJ.get_ProviderID, {'NumberOfItemsInDM': ref});
       ref = (await _db
               .collection('Providers')
-              .doc(dmList[i].getItem().getProviderID)
+              .doc(dmList[i].getItem().get_providerID)
               .collection('DailyMenu')
-              .doc(dmList[i].getUid)
+              .doc(dmList[i].get_uid)
               .get())
           .data()!['quantity'];
       ref = ref - 1;
       update_DM_Item_Info(
-          orderOBJ.getProviderID, dmList[i].getUid, {'quantity': ref});
+          orderOBJ.get_ProviderID, dmList[i].get_uid, {'quantity': ref});
       if (ref == 0) {
-        removeFromPrvoiderDM(orderOBJ.providerID, dmList[0].getUid);
+        removeFromPrvoiderDM(orderOBJ.get_ProviderID, dmList[0].get_uid);
       }
       print(total);
     }
     ;
     print('Total *********:');
     print(total);
-    updateOrderInfo(orderOBJ.getOrderID, {'total': total});
+    updateOrderInfo(orderOBJ.getorderID, {'total': total});
   }
 
   Future<List<Order_object>> retrieve_AllOrders_Of_Consumer(
@@ -279,15 +318,16 @@ class Database {
         .toList();
   }
 
-  Future<List<Order_object>> retrieve_AllOrders_Of_Prov(String provID) async {
+  Stream<QuerySnapshot<Map<String, dynamic>>> retrieve_AllOrders_Of_Prov(
+      String provID) {
     //Done tested
-    QuerySnapshot<Map<String, dynamic>> snapshot = await _db
+    var snapshot = _db
         .collection("Orders")
         .where('providerID', isEqualTo: provID)
-        .get();
-    return snapshot.docs
-        .map((docSnapshot) => Order_object.fromDocumentSnapshot(docSnapshot))
-        .toList();
+        .orderBy('date', descending: true)
+        .snapshots();
+    return snapshot;
+    /*where('providerID', isEqualTo: provID)*/
   }
 
   Future<List<Order_object>> retrieve_Some_Orders_Of_Consumer(
@@ -306,20 +346,17 @@ class Database {
         .toList();
   }
 
-  Future<List<Order_object>> retrieve_Some_Orders_Of_Prov(
-      String provID, OrderStatus s1) async {
+  Stream<QuerySnapshot<Map<String, dynamic>>> retrieve_Some_Orders_Of_Prov(
+      String provID, OrderStatus s1) {
     //Done tested
-    QuerySnapshot<Map<String, dynamic>> snapshot = await _db
+    var snapshot = _db
         .collection("Orders")
         .where('providerID', isEqualTo: provID)
-        .where(
-          'status',
-          isEqualTo: s1.toString().replaceAll('OrderStatus.', ''),
-        )
-        .get();
-    return snapshot.docs
-        .map((docSnapshot) => Order_object.fromDocumentSnapshot(docSnapshot))
-        .toList();
+        .where('status',
+            isEqualTo: s1.toString().replaceAll('OrderStatus.', ''))
+        .orderBy('date', descending: true)
+        .snapshots();
+    return snapshot;
   }
 
   Future<List<Order_object>> retrieveWaitingAndProcess(String provID) async {
