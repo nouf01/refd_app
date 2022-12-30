@@ -1,6 +1,9 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:refd_app/DataModel/DB_Service.dart';
+import 'package:refd_app/DataModel/Provider.dart';
+
 import 'DailyMenu_Item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -20,6 +23,7 @@ class Order_object {
   final double _total;
   final String _providerID;
   final String _consumerID;
+  final String _providerLogo;
 
   Order_object({
     required date,
@@ -27,13 +31,15 @@ class Order_object {
     required providerID,
     required consumerID,
     required status,
+    required providerLogo,
   })  : this._status = status.toString().replaceAll('Order_status.', ''),
         this._orderID =
             ((new Random()).nextInt(900000000) + 100000000).toString(),
         this._date = date,
         this._total = total,
         this._providerID = providerID,
-        this._consumerID = consumerID;
+        this._consumerID = consumerID,
+        this._providerLogo = providerLogo;
 
   Map<String, dynamic> toMap() {
     return {
@@ -43,6 +49,7 @@ class Order_object {
       'providerID': _providerID,
       'consumerID': _consumerID,
       'status': _status,
+      'providerLogo': _providerLogo,
     };
   }
 
@@ -50,17 +57,18 @@ class Order_object {
       : _orderID = doc.data()!['orderID'],
         _date = doc
             .data()!['date']
-            .to_date(), //_dateTime.parse(doc.data()!['__orderID']),
+            .toDate(), //_dateTime.parse(doc.data()!['__orderID']),
         _total = doc.data()!["total"],
         _providerID = doc.data()!["providerID"],
         _consumerID = doc.data()!["consumerID"],
-        _status = doc.data()!["status"];
+        _status = doc.data()!["status"],
+        _providerLogo = doc.data()!["providerLogo"];
 
   get getorderID => this._orderID;
 
   get getdate => this._date;
 
-  get get_status => this._status;
+  get get_status => this._status.toString().replaceAll('Order_status.', '');
 
   get get_total => this._total;
 
@@ -71,4 +79,6 @@ class Order_object {
   static convert_date(DocumentSnapshot<Map<String, dynamic>> doc) {
     return doc.data()!['date'];
   }
+
+  get getProviderLogo => this._providerLogo;
 }

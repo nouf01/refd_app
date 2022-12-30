@@ -306,7 +306,7 @@ class Database {
     updateOrderInfo(orderOBJ.getorderID, {'total': total});
   }
 
-  Future<List<Order_object>> retrieve_AllOrders_Of_Consumer(
+  /*Future<List<Order_object>> retrieve_AllOrders_Of_Consumer(
       String consID) async {
     //Done tested
     QuerySnapshot<Map<String, dynamic>> snapshot = await _db
@@ -316,6 +316,18 @@ class Database {
     return snapshot.docs
         .map((docSnapshot) => Order_object.fromDocumentSnapshot(docSnapshot))
         .toList();
+  }*/
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> retrieve_AllOrders_Of_Consumer(
+      String consID) {
+    //Done tested
+    var snapshot = _db
+        .collection("Orders")
+        .where('consumerID', isEqualTo: consID)
+        .orderBy('date', descending: true)
+        .snapshots();
+    return snapshot;
+    /*where('providerID', isEqualTo: provID)*/
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> retrieve_AllOrders_Of_Prov(

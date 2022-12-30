@@ -44,10 +44,11 @@ class _listOfOrdersState extends State<listOfOrders> {
                     Order_object o1 = Order_object.fromDocumentSnapshot(
                         snapshot.data!.docs![index]);
                     return Container(
-                        decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(16.0)),
-                        child: OrderCard(order: o1));
+                      decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(16.0)),
+                      child: OrderCard(order: o1),
+                    );
                   });
             } else if (snapshot.connectionState == ConnectionState.done &&
                 snapshot.data!.docs.isEmpty) {
@@ -77,6 +78,8 @@ class _listOfOrdersState extends State<listOfOrders> {
       myStatus = OrderStatus.waitingForPickUp;
     } else if (this.widget.status == 2) {
       myStatus = OrderStatus.pickedUp;
+    } else if (this.widget.status == 3) {
+      myStatus = OrderStatus.canceled;
     }
     ref = service.retrieve_Some_Orders_Of_Prov(this.widget.provID, myStatus);
     setState(() {});

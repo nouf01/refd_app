@@ -3,10 +3,14 @@ import 'package:flutter/material.dart';
 import '../DataModel/DB_Service.dart';
 import '../DataModel/Provider.dart';
 import '../DataModel/item.dart';
+import 'AddNewItemToMenu.dart';
 
 class MenuScreen extends StatefulWidget {
-  final Provider currentProv;
-  const MenuScreen({super.key, required this.currentProv});
+  //final Provider currentProv;
+  const MenuScreen({
+    super.key,
+    /*required this.currentProv*/
+  });
 
   @override
   State<MenuScreen> createState() => _MenuScreenState();
@@ -108,7 +112,8 @@ class _MenuScreenState extends State<MenuScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.green,
         onPressed: (() {
-          Navigator.pushNamed(context, '/add');
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => AddDish()));
         }),
         tooltip: 'add',
         child: const Icon(Icons.add),
@@ -117,19 +122,17 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 
   Future<void> _refresh() async {
-    itemList = service.retrieveMenuItems(this.widget.currentProv.get_email);
-    retrieveditemList =
-        await service.retrieveMenuItems(this.widget.currentProv.get_email);
+    itemList = service.retrieveMenuItems('MunchBakery@mail.com');
+    retrieveditemList = await service.retrieveMenuItems('MunchBakery@mail.com');
     setState(() {});
   }
 
   void _dismiss() {
-    itemList = service.retrieveMenuItems(this.widget.currentProv.get_email);
+    itemList = service.retrieveMenuItems('MunchBakery@mail.com');
   }
 
   Future<void> _initRetrieval() async {
-    itemList = service.retrieveMenuItems(this.widget.currentProv.get_email);
-    retrieveditemList =
-        await service.retrieveMenuItems(this.widget.currentProv.get_email);
+    itemList = service.retrieveMenuItems('MunchBakery@mail.com');
+    retrieveditemList = await service.retrieveMenuItems('MunchBakery@mail.com');
   }
 }

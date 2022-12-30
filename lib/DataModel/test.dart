@@ -140,17 +140,20 @@ void test() async {
 
   //create new order and add for firebase
   Order_object o1 = Order_object(
-      date: DateTime.now(),
-      total: 0.0,
-      providerID: p1.get_email,
-      consumerID: c2.get_email(),
-      status: OrderStatus.underProcess);
+    date: DateTime.now(),
+    total: 0.0,
+    providerID: p1.get_email,
+    consumerID: c2.get_email(),
+    status: OrderStatus.underProcess,
+    providerLogo: '',
+  );
   Order_object o2 = Order_object(
       date: DateTime.now(),
       total: 0.0,
       providerID: 'DrCade',
       consumerID: c2.get_email(),
-      status: OrderStatus.waitingForPickUp);
+      status: OrderStatus.waitingForPickUp,
+      providerLogo: '');
 
   db.addNewOrderToFirebase(o1);
   db.addNewOrderToFirebase(o2);
