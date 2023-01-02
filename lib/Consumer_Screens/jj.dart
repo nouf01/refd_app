@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:refd_app/DataModel/item.dart';
 
 import '../DataModel/DB_Service.dart';
 import '../DataModel/DailyMenu_Item.dart';
@@ -51,7 +50,6 @@ class _Cart extends State<CartScreen> {
       msg =
           "placing the order failed! You exceed the number of canceled orders";
     }
-    setState(() {});
   }
 
   @override
@@ -64,7 +62,7 @@ class _Cart extends State<CartScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text("Your Cart")),
+        title: Center(child: Text('Restaurant Details')),
         backgroundColor: Colors.green,
       ),
       body: SingleChildScrollView(
@@ -89,72 +87,64 @@ class _Cart extends State<CartScreen> {
                               ),
                           itemBuilder: (context, index) {
                             return Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(16.0)),
-                              child: Card(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: ListTile(
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) => items(
-                                                        currentItem:
-                                                            retrieveditemList![
-                                                                index],
-                                                      )));
-                                        },
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        title: Text(
-                                          "3" +
-                                              " x " +
-                                              retrieveditemList![index]
-                                                  .getItem()
-                                                  .get_name(),
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(16.0)),
+                                child: Card(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Row(
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Text(
+                                                "3" +
+                                                    " x " +
+                                                    retrieveditemList![index]
+                                                        .getItem()
+                                                        .get_name(),
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  retrieveditemList![index]
+                                                      .getItem()
+                                                      .getDecription(),
+                                                  style: TextStyle(
+                                                    fontSize: 13,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                        subtitle: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            retrieveditemList![index]
-                                                .getItem()
-                                                .getDecription(),
+                                        ],
+                                      ),
+                                      Column(
+                                        children: [
+                                          Text(
+                                            (retrieveditemList![index]
+                                                        .getPriceAfetr_discount
+                                                        .toString())
+                                                    .toString() +
+                                                " SAR",
                                             style: TextStyle(
-                                              fontSize: 13,
+                                              fontSize: 15,
                                             ),
                                           ),
-                                        ),
-                                      ),
-                                    ),
-                                    Column(
-                                      children: [
-                                        Text(
-                                          (retrieveditemList![index]
-                                                      .getPriceAfetr_discount
-                                                      .toString())
-                                                  .toString() +
-                                              " SAR",
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ),
-                            );
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ));
                           });
                     } else if (snapshot.connectionState ==
                             ConnectionState.done &&
@@ -179,7 +169,6 @@ class _Cart extends State<CartScreen> {
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  alignment: Alignment.center,
                   fixedSize: Size(200, 35),
                   //padding: EdgeInsets.symmetric(horizontal: 40, vertical: 40),
                   backgroundColor: Colors.green,
@@ -190,7 +179,7 @@ class _Cart extends State<CartScreen> {
                   builder: (BuildContext context) {
                     return AlertDialog(
                       title: Text(
-                        "your order placed sucessfully , \n you can track it in the order history screen",
+                        msg,
                       ),
                       content: Text(
                         " you can track it in the order history screen",
@@ -204,11 +193,8 @@ class _Cart extends State<CartScreen> {
                             //       horizontal: 30, vertical: 30),
                           ),
                           onPressed: () {
-                            // MaterialPageRoute(
-                            //   builder: (_) => cart_page(3),
-                            // );
-
-                            //////////////////
+                            ////////////
+                            ////////////
                             Navigator.of(context).pop();
                           },
                         ),

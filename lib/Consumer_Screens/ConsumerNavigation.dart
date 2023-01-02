@@ -6,6 +6,10 @@ import 'package:refd_app/Consumer_Screens/HomeScreenConsumer.dart';
 import 'package:refd_app/Consumer_Screens/MapsScreen.dart';
 import 'package:refd_app/Consumer_Screens/OrdersHistory_Screen.dart';
 import 'package:refd_app/Consumer_Screens/Profile_Screen.dart';
+import 'package:refd_app/DataModel/Provider.dart';
+
+import '../DataModel/DB_Service.dart';
+import '../DataModel/DailyMenu_Item.dart';
 
 class ConsumerNavigation extends StatefulWidget {
   const ConsumerNavigation({super.key});
