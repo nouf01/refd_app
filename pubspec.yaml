@@ -37,7 +37,8 @@ dependencies:
   firebase_storage: ^11.0.7
   chips_choice: ^3.0.0
   flexi_chip: ^1.0.8
-
+  image_picker: ^0.8.6
+  fluttertoast: ^8.1.2
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

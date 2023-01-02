@@ -2,8 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
+import 'package:refd_app/DataModel/DB_Service.dart';
 import 'package:refd_app/DataModel/Order.dart';
 import 'package:refd_app/Elements/listOfOrdersWidget.dart';
+
+import '../DataModel/Provider.dart';
 
 class OrdersHistoryProvider extends StatefulWidget {
   const OrdersHistoryProvider({super.key});
@@ -13,12 +16,20 @@ class OrdersHistoryProvider extends StatefulWidget {
 }
 
 class _OrdersHistoryProviderState extends State<OrdersHistoryProvider> {
+  Database db = Database();
+  Provider? p;
+  @override
+  void initState() {
+    super.initState();
+    _initRetrieval();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: DefaultTabController(
-          length: 3,
+          length: 4,
           child: Scaffold(
             appBar: AppBar(
                 /*leading: GestureDetector(
@@ -41,19 +52,28 @@ class _OrdersHistoryProviderState extends State<OrdersHistoryProvider> {
                             style: TextStyle(fontSize: 12))),
                     Tab(
                         child:
-                            Text('Picked Up', style: TextStyle(fontSize: 12)))
+                            Text('Picked Up', style: TextStyle(fontSize: 12))),
+                    Tab(child: Text('Canceled', style: TextStyle(fontSize: 12)))
                   ],
                 )),
             resizeToAvoidBottomInset: true,
             backgroundColor: Colors.green,
             body: TabBarView(
               children: [
-                listOfOrders(status: 0, provID: 'Starbucks2'),
-                listOfOrders(status: 1, provID: 'Starbucks2'),
-                listOfOrders(status: 2, provID: 'Starbucks2'),
+                listOfOrders(status: 0, provID: p!.get_email),
+                listOfOrders(status: 1, provID: p!.get_email),
+                listOfOrders(status: 2, provID: p!.get_email),
+                listOfOrders(status: 3, provID: p!.get_email)
               ],
             ),
           )),
     );
+  }
+
+  Future<void> _initRetrieval() async {
+    p = Provider.fromDocumentSnapshot(
+        await db.searchForProvider('MunchBakery@mail.com'));
+    setState(() {});
+    print('mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm');
   }
 }

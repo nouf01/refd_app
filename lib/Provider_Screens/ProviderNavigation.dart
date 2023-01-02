@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:refd_app/DataModel/DB_Service.dart';
 import 'package:refd_app/DataModel/Provider.dart';
 
 import 'DailyMenu.dart';
 import 'ProvHome.dart';
 import 'Menu.dart';
-import 'OrdersHistory.dart';
+import 'OrdersHistoryProvider.dart';
 import 'Profile.dart';
 
 class ProviderNavigation extends StatefulWidget {
@@ -17,10 +18,19 @@ class ProviderNavigation extends StatefulWidget {
 }
 
 class _ProviderNavigationState extends State<ProviderNavigation> {
+  Database db = Database();
+  Provider? currentProv;
+
+  @override
+  void initState() {
+    super.initState();
+    //_initRetrieval();
+  }
+
   int _pageIndex = 0;
-  static const List<Widget> _Pages = [
+  List<Widget> _Pages = [
     HomeScreenProvider(),
-    DailyMenuScreen(),
+    MenuScreen(),
     DailyMenuScreen(),
     OrdersHistoryProvider(),
     ProfileProvider(),
@@ -65,9 +75,14 @@ class _ProviderNavigationState extends State<ProviderNavigation> {
               ),
             ],
             currentIndex: _pageIndex,
-            selectedItemColor: Colors.amber[800],
+            selectedItemColor: Colors.black,
             onTap: _onItemTapped,
           )),
     );
   }
+
+  /*Future<void> _initRetrieval() async {
+    currentProv = Provider.fromDocumentSnapshot(
+        await db.searchForProvider('DrCafe@mail.com'));
+  }*/
 }
