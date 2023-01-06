@@ -46,7 +46,7 @@ class _PCardState extends State<P_card> {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                MenuScreen(currentProv: this.widget.p)));
+                                restaurantDetail(currentProv: this.widget.p)));
                   },
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
