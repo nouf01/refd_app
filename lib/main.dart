@@ -36,10 +36,14 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    if (isProvider) {
+   /* if (isProvider) {
       return ProviderNavigation();
     } else {
       return ConsumerNavigation();
-    }
+    }*/
+
+    return ProviderNavigation();
+
+
   }
 }
