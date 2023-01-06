@@ -19,7 +19,6 @@ class _ConsumerNavigationState extends State<ConsumerNavigation> {
   static const List<Widget> _Pages = [
     HomeScreen(),
     MapsScreen(),
-    CartScreen(),
     OrdersHistoryScreen(),
     ProfileScreen(),
   ];
@@ -46,11 +45,11 @@ class _ConsumerNavigationState extends State<ConsumerNavigation> {
                 label: 'Maps',
                 backgroundColor: Colors.green,
               ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_bag),
+              /*BottomNavigationBarItem(
+                icon: Icon(Icons.shopping_cart),
                 label: 'Cart',
                 backgroundColor: Colors.green,
-              ),
+              ),*/
               BottomNavigationBarItem(
                 icon: Icon(Icons.history),
                 label: 'Orders History',

@@ -53,6 +53,15 @@ class Order_object {
     };
   }
 
+  Order_object.fromMap(Map<String, dynamic> orderMap)
+      : _providerID = orderMap["providerID"],
+        _orderID = orderMap["orderID"],
+        _date = orderMap["date"],
+        _consumerID = orderMap["consumerID"],
+        _status = orderMap["status"],
+        _providerLogo = orderMap['providerLogo'],
+        _total = orderMap['total'];
+
   Order_object.fromDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> doc)
       : _orderID = doc.data()!['orderID'],
         _date = doc

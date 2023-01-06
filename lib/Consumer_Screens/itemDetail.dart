@@ -1,9 +1,16 @@
+// ignore_for_file: prefer_interpolation_to_compose_strings, prefer_const_constructors
+
+import 'package:badges/badges.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:refd_app/Consumer_Screens/CartScreen.dart';
+import 'package:refd_app/Consumer_Screens/restaurantDetail.dart';
+import 'package:refd_app/DataModel/Consumer.dart';
 import 'package:refd_app/DataModel/DailyMenu_Item.dart';
 
+import '../DataModel/DB_Service.dart';
 import '../DataModel/Provider.dart';
 
 class items extends StatefulWidget {
@@ -15,9 +22,74 @@ class items extends StatefulWidget {
 }
 
 class _items extends State<items> {
+  int currentChoosedQuantity = 0;
+  late int maximumQuantity; //can not choose more than that
+  late List<DailyMenu_Item> userCart;
+  late Consumer
+      currentUser; //get current user here and rebuild the consumer object here not passed from another screen, we want info to be updated;
+  Database db = Database();
+  bool cartIsEmpty = true;
+  int numCartItems = 0;
+  Stream<DocumentSnapshot<Map<String, dynamic>>>? ref;
+  //Provider? prov;
+
+  void _initRetrieval() async {
+    ref = db.searchForConsumerStream('nouf888s@gmail.com');
+    maximumQuantity = widget.currentItem.get_quantity;
+    currentUser = Consumer.fromDocumentSnapshot(
+        await db.searchForConsumer('nouf888s@gmail.com'));
+    if (currentUser!.cartTotal > 0.001) {
+      cartIsEmpty = false;
+      numCartItems = currentUser!.numOfCartItems;
+    }
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initRetrieval();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.green,
+        title: Text(widget.currentItem.getItem().get_name()),
+        centerTitle: true,
+        actions: [
+          StreamBuilder(
+              stream: ref,
+              builder: (BuildContext context,
+                  AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
+                      snapshot) {
+                if (snapshot.data == null) {
+                  return CircularProgressIndicator();
+                }
+                int numCart = snapshot.data!.get('numOfCartItems');
+                bool showB = false;
+                if (numCart > 0) {
+                  showB = true;
+                }
+                return Badge(
+                  position: BadgePosition.topEnd(top: 3, end: 18),
+                  showBadge: showB,
+                  badgeContent: Text(numCart.toString(),
+                      style: TextStyle(color: Colors.white)),
+                  child: IconButton(
+                      icon: Icon(Icons.shopping_cart),
+                      padding: EdgeInsets.only(right: 30.0),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => CartScreen()),
+                        );
+                      }),
+                );
+              }),
+        ],
+      ),
       body: CustomScrollView(
         slivers: <Widget>[
           itemAppBar(widget: widget),
@@ -47,12 +119,8 @@ class _items extends State<items> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                this
-                                    .widget
-                                    .currentItem
-                                    .getItem()
-                                    .getDecription(),
-                                style: TextStyle(
+                                widget.currentItem.getItem().getDecription(),
+                                style: const TextStyle(
                                   fontSize: 15,
                                 ),
                               ),
@@ -62,14 +130,11 @@ class _items extends State<items> {
                               child: Text(
                                 "Discount percentage : " +
                                     (100 -
-                                            this
-                                                    .widget
-                                                    .currentItem
-                                                    .get_discount *
+                                            widget.currentItem.get_discount *
                                                 100)
                                         .toString() +
                                     "%",
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 15,
                                 ),
                               ),
@@ -78,14 +143,24 @@ class _items extends State<items> {
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 "Original price : " +
-                                    (this
-                                            .widget
-                                            .currentItem
+                                    (widget.currentItem
                                             .getItem()
                                             .get_originalPrice())
                                         .toString() +
                                     " SAR",
-                                style: TextStyle(
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                "Quantity : " +
+                                    (widget.currentItem.get_quantity
+                                        .toString()) +
+                                    " Available",
+                                style: const TextStyle(
                                   fontSize: 15,
                                 ),
                               ),
@@ -119,10 +194,7 @@ class _items extends State<items> {
                             ),
                           ),
                           Text(
-                            this
-                                    .widget
-                                    .currentItem
-                                    .getPriceAfetr_discount
+                            widget.currentItem.getPriceAfetr_discount
                                     .toString() +
                                 " SAR",
                             textAlign: TextAlign.center,
@@ -145,34 +217,11 @@ class _items extends State<items> {
                               backgroundColor: Colors.green,
                               //primary: Theme.of(context).accentColor,
                             ),
-                            onPressed: () => showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text(
-                                      "your items have been added to cart successflly!"),
-                                  // content: Text("The old items have removed"),
-                                  actions: [
-                                    ElevatedButton(
-                                      child: Text("OK"),
-                                      style: ElevatedButton.styleFrom(
-                                        primary: Colors.green,
-                                        //   padding: EdgeInsets.symmetric(
-                                        //       horizontal: 30, vertical: 30),
-                                      ),
-                                      onPressed: () {
-                                        // MaterialPageRoute(
-                                        //   builder: (_) => cart_page(3),
-                                        // );
-
-                                        //////////////////
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
+                            onPressed: () {
+                              if (currentChoosedQuantity > 0) {
+                                addToCart();
+                              }
+                            },
                             //  showToast,
                             child: Text("Add to cart"),
                           ),
@@ -181,7 +230,7 @@ class _items extends State<items> {
                             icon: Icon(
                               Icons.add,
                             ),
-                            onPressed: () => null,
+                            onPressed: () => incrementQuantity(),
                           ),
                           Container(
                             width: 16,
@@ -191,7 +240,7 @@ class _items extends State<items> {
                               ),
                             ),
                             child: Text(
-                              "0",
+                              currentChoosedQuantity.toString(),
                               style: TextStyle(fontSize: 16),
                               textAlign: TextAlign.center,
                             ),
@@ -201,7 +250,7 @@ class _items extends State<items> {
                             icon: Icon(
                               Icons.remove,
                             ),
-                            onPressed: () => null,
+                            onPressed: () => decrementQuantity(),
                           ),
                         ],
                       ),
@@ -214,6 +263,169 @@ class _items extends State<items> {
         ],
       ),
     );
+  }
+
+  void incrementQuantity() {
+    if (currentChoosedQuantity < maximumQuantity) {
+      setState(() {
+        currentChoosedQuantity++;
+      });
+    }
+  }
+
+  void decrementQuantity() {
+    if (currentChoosedQuantity != 0) {
+      setState(() {
+        currentChoosedQuantity--;
+      });
+    }
+  }
+
+  void addToCart() async {
+    List<DailyMenu_Item> userCart =
+        await db.retrieve_Cart_Items(currentUser.get_email());
+    if (userCart.isEmpty == false) {
+      if (userCart[0].getItem().get_providerID !=
+          widget.currentItem.getItem().get_providerID) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                  title: Text(
+                      "You have previous order in the cart from diiferen store!"),
+                  content: Text("Do you want to discard the previous order?"),
+                  actions: [
+                    ElevatedButton(
+                        child: Text("Yes Delete"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromARGB(255, 175, 91, 76),
+                        ),
+                        onPressed: () async {
+                          db.emptyTheCart(currentUser.get_email());
+                          Navigator.of(context).pop();
+                        }),
+                    ElevatedButton(
+                        child: Text("No"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromARGB(255, 108, 114, 108),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        })
+                  ]);
+            });
+      } else {
+        // same provider
+        bool searchResult = (await db.isItemInCart(
+            widget.currentItem, currentUser.get_email()));
+        if (searchResult == true) {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                    title: Text("The Item is already in the cart !"),
+                    actions: [
+                      ElevatedButton(
+                          child: Text("OK"),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          })
+                    ]);
+              });
+        } else if (searchResult == false) {
+          numCartItems = numCartItems + currentChoosedQuantity;
+          setState(() {});
+          DailyMenu_Item newItemToCart = widget.currentItem;
+          newItemToCart.setChoosedCartQuantity(currentChoosedQuantity);
+          db.addToCart_DMitems(currentUser.get_email(), newItemToCart);
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("your items have been added to cart successflly!"),
+                // content: Text("The old items have removed"),
+                actions: [
+                  ElevatedButton(
+                    child: Text("OK"),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.green,
+                      //   padding: EdgeInsets.symmetric(
+                      //       horizontal: 30, vertical: 30),
+                    ),
+                    onPressed: () {
+                      // MaterialPageRoute(
+                      //   builder: (_) => cart_page(3),
+                      // );
+
+                      //////////////////
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        }
+      }
+    } else {
+      // cart is empty
+      bool searchResult =
+          (await db.isItemInCart(widget.currentItem, currentUser.get_email()));
+      if (searchResult == true) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                  title: Text("The Item is already in the cart !"),
+                  actions: [
+                    ElevatedButton(
+                        child: Text("OK"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        })
+                  ]);
+            });
+      } else if (searchResult == false) {
+        numCartItems = numCartItems + currentChoosedQuantity;
+        setState(() {});
+        DailyMenu_Item newItemToCart = widget.currentItem;
+        newItemToCart.setChoosedCartQuantity(currentChoosedQuantity);
+        db.addToCart_DMitems(currentUser.get_email(), newItemToCart);
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("your items have been added to cart successflly!"),
+              // content: Text("The old items have removed"),
+              actions: [
+                ElevatedButton(
+                  child: Text("OK"),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.green,
+                    //   padding: EdgeInsets.symmetric(
+                    //       horizontal: 30, vertical: 30),
+                  ),
+                  onPressed: () {
+                    // MaterialPageRoute(
+                    //   builder: (_) => cart_page(3),
+                    // );
+
+                    //////////////////
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+    }
   }
 }
 
@@ -236,7 +448,7 @@ class itemAppBar extends StatelessWidget {
         title: Padding(
           padding: const EdgeInsets.all(6.0),
           child: Text(
-            this.widget.currentItem.getItem().get_name(),
+            widget.currentItem.getItem().get_name(),
             textAlign: TextAlign.center,
             style: TextStyle(
               backgroundColor: Color.fromARGB(133, 254, 255, 254),
@@ -247,18 +459,8 @@ class itemAppBar extends StatelessWidget {
           ),
         ),
         background: Image.network(
-          this.widget.currentItem.getItem().get_imageURL(),
+          widget.currentItem.getItem().get_imageURL(),
           fit: BoxFit.cover,
-        ),
-      ),
-      leading: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
-        ),
-        onPressed: () => Navigator.of(context).pop(),
-        child: Icon(
-          Icons.arrow_back_ios,
-          color: Colors.green,
         ),
       ),
     );

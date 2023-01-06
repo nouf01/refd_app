@@ -49,7 +49,8 @@ void test() async {
   db.setAccountStatus(p1.get_email, Status.Active);
 
   //update provider info
-  db.updateProviderInfo(p1.get_email, {'username': 'PizzaIn2023', 'rate': 5.0});
+  db.updateProviderInfo(
+      p1.get_email, false, '', {'username': 'PizzaIn2023', 'rate': 5.0});
 
   // search for provider
   Provider p2 =
@@ -169,4 +170,49 @@ void test() async {
     print(e.getStatus);
     print(e.getDate);
   });*/
+
+  List<DailyMenu_Item> romnsiyah_DMItems =
+      await db.retrieve_DMmenu_Items('Alromansiah@mail.com');
+
+  DailyMenu_Item d0 = romnsiyah_DMItems[1];
+  d0.setChoosedCartQuantity(1);
+
+  db.addToCart_DMitems('nouf888s@gmail.com', d0);
+
+  List<DailyMenu_Item> cart =
+      await db.retrieve_Cart_Items('nouf888s@gmail.com');
+
+  print('**********************************************');
+  cart.forEach((element) {
+    print(element.getItem().get_name());
+    print(element.getChoosedCartQuantity);
+  });
 }
+
+
+ /*
+   QuerySnapshot<Map<String, dynamic>> snapshot =
+      await _db.collection("Consumers").get();
+ 
+ snapshot.docs.forEach((docSnapshot) async {
+    await _db.collection('Consumers').doc(docSnapshot.id).set({
+      'name': docSnapshot.id.substring(0, 2),
+      'email': docSnapshot.id,
+      'phoneNumber': '0558863667',
+      'cancelCounter': 0,
+      'cartTotal': 0.0,
+    });
+  });
+  
+  
+    QuerySnapshot<Map<String, dynamic>> snapshot =
+      await _db.collection("Consumers").get();
+
+  snapshot.docs.forEach((docSnapshot) async {
+    await _db
+        .collection('Consumers')
+        .doc(docSnapshot.id)
+        .update({'numOfCartItems': 0});
+  });
+  
+  */

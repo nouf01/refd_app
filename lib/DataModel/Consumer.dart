@@ -1,14 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:refd_app/DataModel/DailyMenu_Item.dart';
+import 'package:refd_app/DataModel/Order.dart';
 
 class Consumer {
   String _name;
   String _email;
   String _phoneNumber;
   int _cancelCounter;
-  String? _profilePhotoURL;
   // Location location;
   // orders list
-  // one cart object
+  double _cartTotal = 0.0;
+  int _numOfCartItems = 0;
+
   Consumer({
     required name,
     required email,
@@ -18,8 +21,7 @@ class Consumer {
   })  : this._name = name,
         this._cancelCounter = cancelCounter,
         this._email = email,
-        this._phoneNumber = phoneNumber,
-        this._profilePhotoURL = profilePhotoURL;
+        this._phoneNumber = phoneNumber;
 
   Map<String, dynamic> toMap() {
     return {
@@ -27,7 +29,8 @@ class Consumer {
       'email': _email,
       'phoneNumber': _phoneNumber,
       'cancelCounter': _cancelCounter,
-      'profilePhotoURL': _profilePhotoURL,
+      'cartTotal': _cartTotal,
+      'numOfCartItems': _numOfCartItems,
     };
   }
 
@@ -36,7 +39,8 @@ class Consumer {
         _email = doc.data()!["email"],
         _phoneNumber = doc.data()!["phoneNumber"],
         _cancelCounter = doc.data()!["cancelCounter"],
-        _profilePhotoURL = doc.data()!["profilePhotoURL"];
+        _cartTotal = doc.data()!["cartTotal"],
+        _numOfCartItems = doc.data()!["numOfCartItems"];
 
   String get_name() {
     return _name;
@@ -53,4 +57,8 @@ class Consumer {
   int get_cancelCounter() {
     return _cancelCounter;
   }
+
+  get cartTotal => this._cartTotal;
+
+  get numOfCartItems => this._numOfCartItems;
 }

@@ -1,11 +1,15 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+import 'package:badges/badges.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:refd_app/Consumer_Screens/CartScreen.dart';
 import 'package:refd_app/DataModel/DB_Service.dart';
 import 'package:refd_app/DataModel/Provider.dart';
 import 'package:chips_choice/chips_choice.dart';
 import 'package:flexi_chip/flexi_chip.dart';
 import 'package:refd_app/Elements/ProviderCard.dart';
 
+import '../DataModel/Consumer.dart';
 import '../Elements/SearchBar.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -32,6 +36,9 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
   List<Tags> choosedTags = []; //choosed tags
   int tag = 0;
+  Consumer? currentUser;
+  Stream<DocumentSnapshot<Map<String, dynamic>>>? ref;
+  bool showB = false;
 
   List<Provider>? searchMatched = [];
 
@@ -46,6 +53,37 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green,
+        actions: [
+          StreamBuilder(
+              stream: ref,
+              builder: (BuildContext context,
+                  AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
+                      snapshot) {
+                if (snapshot.data == null) {
+                  return CircularProgressIndicator();
+                }
+                int numCart = snapshot.data!.get('numOfCartItems');
+                bool showB = false;
+                if (numCart > 0) {
+                  showB = true;
+                }
+                return Badge(
+                  position: BadgePosition.topEnd(top: 3, end: 18),
+                  showBadge: showB,
+                  badgeContent: Text(numCart.toString(),
+                      style: TextStyle(color: Colors.white)),
+                  child: IconButton(
+                      icon: Icon(Icons.shopping_cart),
+                      padding: EdgeInsets.only(right: 30.0),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => CartScreen()),
+                        );
+                      }),
+                );
+              }),
+        ],
         leading: IconButton(
           icon: Icon(Icons.location_pin),
           onPressed: () {},
@@ -178,6 +216,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _initRetrieval() async {
+    currentUser = Consumer.fromDocumentSnapshot(
+        await service.searchForConsumer('nouf888s@gmail.com'));
+    ref = service.searchForConsumerStream('nouf888s@gmail.com');
     if (choosedTags!.isEmpty) {
       provList = service.filterProvider(listTags);
       retrievedprovList = await service.filterProvider(listTags);
@@ -186,5 +227,6 @@ class _HomeScreenState extends State<HomeScreen> {
       provList = service.filterProvider(choosedTags);
       retrievedprovList = await service.filterProvider(choosedTags);
     }
+    setState(() {});
   }
 }

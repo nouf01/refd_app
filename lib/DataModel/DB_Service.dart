@@ -18,13 +18,23 @@ class Database {
         .set(provider.toMap());
   }
 
-  void updateProviderInfo(
-      String providerID, Map<String, dynamic> field_value_map) {
+  void updateProviderInfo(String providerID, bool nameChanged,
+      String newCommercialName, Map<String, dynamic> field_value_map) {
     //Done tested
     FirebaseFirestore.instance
         .collection('Providers')
         .doc(providerID)
         .update(field_value_map);
+    //update search cases if name changed
+    if (nameChanged == true) {
+      var searchCases = setSearchParam(newCommercialName);
+      FirebaseFirestore.instance
+          .collection('Providers')
+          .doc(providerID)
+          .update({
+        'searchCases': searchCases,
+      });
+    }
   }
 
   List<String> setSearchParam(String caseNumber) {
@@ -162,7 +172,7 @@ class Database {
         .collection('Providers')
         .doc(DM_Item.getItem().get_providerID)
         .collection('DailyMenu')
-        .doc(DM_Item.get_uid)
+        .doc(DM_Item.getItem().getId())
         .set(DM_Item.toMap());
     int ref = (await _db
             .collection('Providers')
@@ -170,8 +180,8 @@ class Database {
             .get())
         .data()!['NumberOfItemsInDM'];
     ref = ref + 1;
-    updateProviderInfo(
-        DM_Item.getItem().get_providerID, {'NumberOfItemsInDM': ref});
+    updateProviderInfo(DM_Item.getItem().get_providerID, false, '',
+        {'NumberOfItemsInDM': ref});
   }
 
   void removeFromPrvoiderDM(String providerID, String itemID) async {
@@ -185,7 +195,7 @@ class Database {
     int ref = (await _db.collection('Providers').doc(providerID).get())
         .data()!['NumberOfItemsInDM'];
     ref = ref - 1;
-    updateProviderInfo(providerID, {'NumberOfItemsInDM': ref});
+    updateProviderInfo(providerID, false, '', {'NumberOfItemsInDM': ref});
   }
 
   void update_DM_Item_Info(String providerID, String dmItemID,
@@ -250,6 +260,15 @@ class Database {
         .get();
   }
 
+  Stream<DocumentSnapshot<Map<String, dynamic>>> searchForConsumerStream(
+      String consumerID) {
+    //Done tested
+    return FirebaseFirestore.instance
+        .collection('Consumers')
+        .doc(consumerID)
+        .snapshots();
+  }
+
   //************************ Orders ***********************************/
   addNewOrderToFirebase(Order_object order) async {
     //Done Tested
@@ -284,7 +303,8 @@ class Database {
               .get())
           .data()!['NumberOfItemsInDM'];
       ref = ref - 1;
-      updateProviderInfo(orderOBJ.get_ProviderID, {'NumberOfItemsInDM': ref});
+      updateProviderInfo(
+          orderOBJ.get_ProviderID, false, '', {'NumberOfItemsInDM': ref});
       ref = (await _db
               .collection('Providers')
               .doc(dmList[i].getItem().get_providerID)
@@ -383,5 +403,155 @@ class Database {
     return snapshot.docs
         .map((docSnapshot) => Order_object.fromDocumentSnapshot(docSnapshot))
         .toList();
+  }
+
+  //*************************************************************************************** */
+
+  //addToCart
+  Future<void> addToCart_DMitems(
+      String consumerID, DailyMenu_Item DM_Item) async {
+    await _db
+        .collection('Consumers')
+        .doc(consumerID)
+        .collection('cart')
+        .doc(DM_Item.get_uid)
+        .set(DM_Item.toMap());
+    int num = (await _db.collection('Consumers').doc(consumerID).get())
+        .data()!['numOfCartItems'];
+    num = num + DM_Item.getChoosedCartQuantity;
+    double total = (await _db.collection('Consumers').doc(consumerID).get())
+        .data()!['cartTotal'];
+    total = total +
+        (DM_Item.getPriceAfetr_discount * DM_Item.getChoosedCartQuantity);
+
+    total = (total);
+
+    updateConsumerInfo(consumerID, {'cartTotal': total, 'numOfCartItems': num});
+  }
+
+  Future<double> getTotalCart(String consumerID) async {
+    return (await _db.collection('Consumers').doc(consumerID).get())
+        .data()!['cartTotal'];
+  }
+
+  //remove from cart
+  Future<void> removeFromCart(
+      String consumID, DailyMenu_Item dmItem, bool alreadyZero) async {
+    //Done tested
+    await _db
+        .collection('Consumers')
+        .doc(consumID)
+        .collection('cart')
+        .doc(dmItem.get_uid)
+        .delete();
+
+    /*int num = (await _db.collection('Consumers').doc(consumID).get())
+        .data()!['numOfCartItems'];
+    num = num - 1;
+
+    updateConsumerInfo(consumID, {'numOfCartItems': num});*/
+
+    /*double total = (await _db.collection('Consumers').doc(consumID).get())
+        .data()!['cartTotal'];
+    if (alreadyZero == false) {
+      total = total -
+          (dmItem.getPriceAfetr_discount * dmItem.getChoosedCartQuantity);
+      total = (total);
+      if (total <= 0.0) {
+        total = 0.001;
+      }
+      updateConsumerInfo(consumID, {'cartTotal': total});
+    }*/
+  }
+
+  Future<void> incrementQuantity(String consumID, DailyMenu_Item dmItem) async {
+    //get prev quantity
+    int quantity = (await _db
+            .collection('Consumers')
+            .doc(consumID)
+            .collection('cart')
+            .doc(dmItem.get_uid)
+            .get())
+        .data()!['choosedCartQuantity'];
+    quantity = quantity + 1;
+    //update quantity in database
+    FirebaseFirestore.instance
+        .collection('Consumers')
+        .doc(consumID)
+        .collection('cart')
+        .doc(dmItem.get_uid)
+        .update({'choosedCartQuantity': quantity});
+    //update total
+    double total = (await _db.collection('Consumers').doc(consumID).get())
+        .data()!['cartTotal'];
+    total = total + (dmItem.getPriceAfetr_discount);
+    //update num
+    int num = (await _db.collection('Consumers').doc(consumID).get())
+        .data()!['numOfCartItems'];
+    num = num + 1;
+    updateConsumerInfo(consumID, {'cartTotal': total, 'numOfCartItems': num});
+  }
+
+  Future<void> decermentQuantity(String consumID, DailyMenu_Item dmItem) async {
+    //get prev quantity
+    int quantity = (await _db
+            .collection('Consumers')
+            .doc(consumID)
+            .collection('cart')
+            .doc(dmItem.get_uid)
+            .get())
+        .data()!['choosedCartQuantity'];
+    quantity = quantity - 1;
+
+    //update quantity in database
+    FirebaseFirestore.instance
+        .collection('Consumers')
+        .doc(consumID)
+        .collection('cart')
+        .doc(dmItem.get_uid)
+        .update({'choosedCartQuantity': quantity});
+
+    //update total
+    double total = (await _db.collection('Consumers').doc(consumID).get())
+        .data()!['cartTotal'];
+    total = total - (dmItem.getPriceAfetr_discount);
+    //update num
+    int num = (await _db.collection('Consumers').doc(consumID).get())
+        .data()!['numOfCartItems'];
+    num = num - 1;
+    updateConsumerInfo(consumID, {'cartTotal': total, 'numOfCartItems': num});
+    //remove if zero
+    if (quantity == 0) {
+      removeFromCart(consumID, dmItem, true);
+    }
+  }
+
+  Future<List<DailyMenu_Item>> retrieve_Cart_Items(String consID) async {
+    //Done tested
+    QuerySnapshot<Map<String, dynamic>> snapshot =
+        await _db.collection("Consumers").doc(consID).collection('cart').get();
+    return snapshot.docs
+        .map((docSnapshot) => DailyMenu_Item.fromDocumentSnapshot(docSnapshot))
+        .toList();
+  }
+
+  Future<bool> isItemInCart(DailyMenu_Item dm, String consID) async {
+    bool result = false;
+    List<DailyMenu_Item> userCart = await retrieve_Cart_Items(consID);
+    userCart.forEach((element) {
+      if (element.get_uid == dm.get_uid) {
+        result = true;
+      }
+    });
+    return result;
+  }
+
+  void emptyTheCart(String consID) async {
+    var collection = _db.collection('Consumers').doc(consID).collection('cart');
+    var snapshots = await collection.get();
+    for (var doc in snapshots.docs) {
+      await doc.reference.delete();
+    }
+    updateConsumerInfo(consID, {'cartTotal': 0.001, 'numOfCartItems': 0});
   }
 }

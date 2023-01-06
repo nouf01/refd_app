@@ -7,6 +7,7 @@ class DailyMenu_Item {
   int _quantity;
   double _discount;
   double? _priceAfterDiscount;
+  int _choosedCartQuantity;
 
   DailyMenu_Item({
     required Item item,
@@ -15,14 +16,17 @@ class DailyMenu_Item {
   })  : this._item = item,
         this._quantity = quantity,
         this._discount = discount,
-        this._priceAfterDiscount = item.get_originalPrice() * discount;
+        this._priceAfterDiscount = item.get_originalPrice() * discount,
+        this._choosedCartQuantity = 0;
 
   Map<String, dynamic> toMap() {
     return {
       'item': _item.toMap(),
       'quantity': _quantity,
       'discount': _discount,
-      'priceAfterDiscount': _priceAfterDiscount,
+      'priceAfterDiscount':
+          double.parse((_priceAfterDiscount)!.toStringAsFixed(2)),
+      'choosedCartQuantity': _choosedCartQuantity,
     };
   }
 
@@ -32,7 +36,8 @@ class DailyMenu_Item {
         _item = Item.fromMap(doc.data()!["item"]),
         _quantity = doc.data()!["quantity"],
         _discount = doc.data()!["discount"],
-        _priceAfterDiscount = doc.data()!["priceAfterDiscount"];
+        _priceAfterDiscount = doc.data()!["priceAfterDiscount"],
+        _choosedCartQuantity = doc.data()!["choosedCartQuantity"];
 
   /*DailyMenu_Item.fromMap(Map<String, dynamic> itemMap)
       : providerID = itemMap["providerID"],
@@ -61,6 +66,7 @@ class DailyMenu_Item {
 
   get getPriceAfetr_discount => this._priceAfterDiscount;
 
-  set setPriceAfetr_discount(priceAfetrDiscount) =>
-      this._priceAfterDiscount = priceAfetrDiscount;
+  int get getChoosedCartQuantity => this._choosedCartQuantity;
+
+  void setChoosedCartQuantity(int value) => this._choosedCartQuantity = value;
 }
