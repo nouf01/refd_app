@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -5,7 +6,9 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:refd_app/Consumer_Screens/HomeScreenConsumer.dart';
 import 'package:refd_app/Consumer_Screens/OrdersHistoryConsumer.dart';
 import 'package:refd_app/DataModel/Consumer.dart';
+import 'package:refd_app/DataModel/Order.dart';
 import 'package:refd_app/DataModel/Provider.dart';
+import 'package:refd_app/Provider_Screens/OrderStatus.dart';
 import '../DataModel/DB_Service.dart';
 import '../DataModel/DailyMenu_Item.dart';
 import '../Elements/restaurantInfo.dart';
@@ -50,7 +53,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
     }
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.green,
+          backgroundColor: Color(0xFF66CDAA),
         ),
         body: Stack(children: [
           SafeArea(
@@ -197,40 +200,53 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                     horizontal: 32,
                                     vertical: 16.0,
                                   ),
-                                  primary: Colors.green,
+                                  primary: Color(0xFF66CDAA),
                                   elevation: 0,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8.0),
                                   ),
                                 ),
-                                onPressed: () => showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text(
-                                        "your order placed sucessfully!",
-                                      ),
-                                      content: Text(
-                                        " you can track it in the order history screen",
-                                      ),
-                                      actions: [
-                                        ElevatedButton(
-                                          child: Text("OK"),
-                                          style: ElevatedButton.styleFrom(
-                                            primary: Colors.green,
-                                          ),
-                                          onPressed: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        OrdersHistoryScreen()));
-                                          },
+                                onPressed: () {
+                                  Order_object newOrder = Order_object(
+                                      date: DateTime.now(),
+                                      total: total,
+                                      providerID: prov!.get_email,
+                                      consumerID: currentUser!.get_email(),
+                                      status: OrderStatus.underProcess,
+                                      providerLogo: prov!.get_logoURL,
+                                      providerName: prov!.get_commercialName);
+                                  DB.addNewOrderToFirebase(newOrder);
+                                  DB.addItemsToOrder(newOrder, cart!);
+                                  DB.emptyTheCart(currentUser!.get_email());
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text(
+                                          "your order placed sucessfully!",
                                         ),
-                                      ],
-                                    );
-                                  },
-                                ),
+                                        content: const Text(
+                                          " you can track it in the order history screen",
+                                        ),
+                                        actions: [
+                                          ElevatedButton(
+                                            child: Text("OK"),
+                                            style: ElevatedButton.styleFrom(
+                                              primary: Color(0xFF66CDAA),
+                                            ),
+                                            onPressed: () {
+                                              /*Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          OrdersHistoryScreen()));*/
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
                                 child: Text("Confirm my order"),
                               ),
                             ),

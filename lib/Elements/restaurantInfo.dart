@@ -34,7 +34,7 @@ class _restaurantInfo extends State<restaurantInfo> {
         ],
       ),
       child: Card(
-        color: Colors.green,
+        color: Color(0xFF66CDAA),
 
         // color: Colors.grey,
         child: Row(

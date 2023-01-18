@@ -51,27 +51,27 @@ class _ProviderNavigationState extends State<ProviderNavigation> {
               BottomNavigationBarItem(
                 icon: Icon(Icons.home),
                 label: 'Home',
-                backgroundColor: Colors.green,
+                backgroundColor: Color(0xFF66CDAA),
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.menu_book),
                 label: 'Menu',
-                backgroundColor: Colors.green,
+                backgroundColor: Color(0xFF66CDAA),
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.dinner_dining),
                 label: 'DailyMenu',
-                backgroundColor: Colors.green,
+                backgroundColor: Color(0xFF66CDAA),
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.history),
                 label: 'Orders History',
-                backgroundColor: Colors.green,
+                backgroundColor: Color(0xFF66CDAA),
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.person),
                 label: 'Profile',
-                backgroundColor: Colors.green,
+                backgroundColor: Color(0xFF66CDAA),
               ),
             ],
             currentIndex: _pageIndex,

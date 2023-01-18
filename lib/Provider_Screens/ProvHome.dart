@@ -29,6 +29,11 @@ class _HomeScreenProviderState extends State<HomeScreenProvider> {
 
   @override
   Widget build(BuildContext context) {
+    if (p == null) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: DefaultTabController(
@@ -42,7 +47,7 @@ class _HomeScreenProviderState extends State<HomeScreenProvider> {
                 title: Center(
                   child: Text(p!.get_commercialName),
                 ),
-                backgroundColor: Colors.green,
+                backgroundColor: Color(0xFF66CDAA),
                 bottom: TabBar(
                   tabs: [
                     Tab(
@@ -54,7 +59,7 @@ class _HomeScreenProviderState extends State<HomeScreenProvider> {
                   ],
                 )),
             resizeToAvoidBottomInset: true,
-            backgroundColor: Colors.green,
+            backgroundColor: Color(0xFF66CDAA),
             body: TabBarView(
               children: [
                 listOfOrders(status: 0, provID: p!.get_email),

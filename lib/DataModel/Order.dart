@@ -24,6 +24,7 @@ class Order_object {
   final String _providerID;
   final String _consumerID;
   final String _providerLogo;
+  final String _providerName;
 
   Order_object({
     required date,
@@ -32,6 +33,7 @@ class Order_object {
     required consumerID,
     required status,
     required providerLogo,
+    required providerName,
   })  : this._status = status.toString().replaceAll('Order_status.', ''),
         this._orderID =
             ((new Random()).nextInt(900000000) + 100000000).toString(),
@@ -39,7 +41,8 @@ class Order_object {
         this._total = total,
         this._providerID = providerID,
         this._consumerID = consumerID,
-        this._providerLogo = providerLogo;
+        this._providerLogo = providerLogo,
+        this._providerName = providerName;
 
   Map<String, dynamic> toMap() {
     return {
@@ -50,6 +53,7 @@ class Order_object {
       'consumerID': _consumerID,
       'status': _status,
       'providerLogo': _providerLogo,
+      'providerName': _providerName,
     };
   }
 
@@ -60,6 +64,7 @@ class Order_object {
         _consumerID = orderMap["consumerID"],
         _status = orderMap["status"],
         _providerLogo = orderMap['providerLogo'],
+        _providerName = orderMap['providerName'],
         _total = orderMap['total'];
 
   Order_object.fromDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> doc)
@@ -71,6 +76,7 @@ class Order_object {
         _providerID = doc.data()!["providerID"],
         _consumerID = doc.data()!["consumerID"],
         _status = doc.data()!["status"],
+        _providerName = doc.data()!["providerName"],
         _providerLogo = doc.data()!["providerLogo"];
 
   get getorderID => this._orderID;
@@ -84,6 +90,7 @@ class Order_object {
   get get_ProviderID => this._providerID;
 
   get get_consumerID => this._consumerID;
+  get getProviderName => this._providerName;
 
   static convert_date(DocumentSnapshot<Map<String, dynamic>> doc) {
     return doc.data()!['date'];

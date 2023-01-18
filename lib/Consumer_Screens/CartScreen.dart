@@ -96,7 +96,7 @@ class _CartScreen extends State<CartScreen> {
     } else {*/
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.green,
+          backgroundColor: Color(0xFF66CDAA),
           title: Text('My Cart'),
           centerTitle: true,
         ),
@@ -132,7 +132,8 @@ class _CartScreen extends State<CartScreen> {
                                         AsyncSnapshot<List<DailyMenu_Item>>
                                             snapshot) {
                                       if (snapshot.hasData &&
-                                          snapshot.data!.isNotEmpty) {
+                                          snapshot.data!.isNotEmpty &&
+                                          cartItems != null) {
                                         return ListView.separated(
                                             separatorBuilder:
                                                 (context, index) =>
@@ -389,7 +390,7 @@ class _CartScreen extends State<CartScreen> {
                         horizontal: 32,
                         vertical: 16.0,
                       ),
-                      backgroundColor: Colors.green,
+                      backgroundColor: Color(0xFF66CDAA),
                       elevation: 0,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),

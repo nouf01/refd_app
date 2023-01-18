@@ -89,7 +89,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         hintStyle: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
-                            color: Colors.green),
+                            color: Color(0xFF66CDAA)),
                         prefixIcon: const Icon(
                           Icons.email,
                           color: Colors.grey,
@@ -123,7 +123,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
-                          color: Colors.green),
+                          color: Color(0xFF66CDAA)),
                     ),
                   ),
                   const SizedBox(height: 80),
@@ -166,7 +166,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   //   child: Material(
                   //     elevation: 2,
                   //     borderRadius: BorderRadius.circular(20),
-                  //     color: Colors.green,
+                  //     color: Color(0xFF66CDAA),
                   //     child: MaterialButton(
                   //       onPressed: () async {
                   //         if (_key.currentState!.validate()) {

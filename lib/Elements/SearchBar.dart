@@ -16,7 +16,7 @@ class SearchBar extends StatelessWidget {
               hintText: 'Search for resturant',
               suffixIcon: Icon(
                 Icons.search,
-                color: Colors.green,
+                color: Color(0xFF66CDAA),
               ),
               contentPadding:
                   const EdgeInsets.only(left: 20.0, bottom: 5.0, top: 12.5),
@@ -35,7 +35,7 @@ class SearchBar extends StatelessWidget {
           child: IconButton(
             icon: Icon(
               Icons.filter_list,
-              color: Colors.green,
+              color: Color(0xFF66CDAA),
             ),
             onPressed: () {},
           ),

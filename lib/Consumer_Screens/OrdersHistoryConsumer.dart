@@ -4,6 +4,10 @@ import 'package:refd_app/DataModel/DB_Service.dart';
 import 'package:refd_app/DataModel/Order.dart';
 import 'package:refd_app/DataModel/Provider.dart';
 import 'package:refd_app/DataModel/item.dart';
+import 'package:refd_app/Provider_Screens/underProcess.dart';
+import 'package:refd_app/Provider_Screens/waitingPickUp.dart';
+
+import '../Provider_Screens/OrderStatus.dart';
 
 class OrdersHistoryScreen extends StatefulWidget {
   const OrdersHistoryScreen({super.key});
@@ -15,6 +19,7 @@ class OrdersHistoryScreen extends StatefulWidget {
 class _OrdersHistoryScreenState extends State<OrdersHistoryScreen> {
   Database service = Database();
   Stream<QuerySnapshot<Map<String, dynamic>>>? ref;
+  Provider? thisOrderProvider;
 
   @override
   void initState() {
@@ -27,7 +32,7 @@ class _OrdersHistoryScreenState extends State<OrdersHistoryScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Center(child: Text('My Orders')),
-        backgroundColor: Colors.green,
+        backgroundColor: Color(0xFF66CDAA),
       ),
       body: RefreshIndicator(
         onRefresh: _refresh,
@@ -54,15 +59,26 @@ class _OrdersHistoryScreenState extends State<OrdersHistoryScreen> {
                             leading: Image.network(o1.getProviderLogo),
                             isThreeLine: true,
                             onTap: () {
-                              Navigator.pushNamed(context, "/edit",
-                                  arguments: snapshot.data!.docs![index]);
+                              if (o1.get_status == OrderStatus.underProcess) {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            underProcess(order: o1)));
+                              } else {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            waitingForPick(order: o1)));
+                              }
                             },
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0),
                             ),
                             title: Text('Order #${o1.getorderID}'),
                             subtitle: Text(
-                                '${o1.get_ProviderID.toString().replaceAll('@mail.com', '')} \n ${o1.getdate.toString()}'),
+                                '${o1.getProviderName} \n ${o1.getdate.toString().substring(0, 16)}'),
                             trailing: Column(
                               children: [
                                 SizedBox(height: 20),
