@@ -56,7 +56,7 @@ class Item {
     _imageURL = new_imageURL;
   }
 
-  void set_description(new_description) {
+    void set_description(new_description) {
     _description = new_description;
   }
 
