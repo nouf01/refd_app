@@ -32,7 +32,7 @@ class _MenuScreenState extends State<MenuScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Center(child: Text('Menu')),
-        backgroundColor: Colors.green,
+        backgroundColor: Color(0xFF66CDAA),
       ),
       body: RefreshIndicator(
         onRefresh: _refresh,
@@ -110,7 +110,7 @@ class _MenuScreenState extends State<MenuScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.green,
+        backgroundColor: Color(0xFF66CDAA),
         onPressed: (() {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => AddDish()));

@@ -97,6 +97,8 @@ class _listOfOrdersState extends State<listOfOrders> {
       myStatus = OrderStatus.waitingForPickUp;
     } else if (this.widget.status == 2) {
       myStatus = OrderStatus.pickedUp;
+    } else if (this.widget.status == 3) {
+      myStatus = OrderStatus.canceled;
     }
     ref = service.retrieve_Some_Orders_Of_Prov(this.widget.provID, myStatus);
   }

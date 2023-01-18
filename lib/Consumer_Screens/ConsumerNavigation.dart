@@ -38,27 +38,27 @@ class _ConsumerNavigationState extends State<ConsumerNavigation> {
               BottomNavigationBarItem(
                 icon: Icon(Icons.home),
                 label: 'Home',
-                backgroundColor: Colors.green,
+                backgroundColor: Color(0xFF66CDAA),
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.map),
                 label: 'Maps',
-                backgroundColor: Colors.green,
+                backgroundColor: Color(0xFF66CDAA),
               ),
               /*BottomNavigationBarItem(
                 icon: Icon(Icons.shopping_cart),
                 label: 'Cart',
-                backgroundColor: Colors.green,
+                backgroundColor: Color(0xFF66CDAA),
               ),*/
               BottomNavigationBarItem(
                 icon: Icon(Icons.history),
                 label: 'Orders History',
-                backgroundColor: Colors.green,
+                backgroundColor: Color(0xFF66CDAA),
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.person),
                 label: 'Profile',
-                backgroundColor: Colors.green,
+                backgroundColor: Color(0xFF66CDAA),
               ),
             ],
             currentIndex: _pageIndex,

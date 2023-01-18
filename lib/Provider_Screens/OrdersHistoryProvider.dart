@@ -26,6 +26,11 @@ class _OrdersHistoryProviderState extends State<OrdersHistoryProvider> {
 
   @override
   Widget build(BuildContext context) {
+    if (p == null) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: DefaultTabController(
@@ -41,7 +46,7 @@ class _OrdersHistoryProviderState extends State<OrdersHistoryProvider> {
                 title: Center(
                   child: Text('Orders History'),
                 ),
-                backgroundColor: Colors.green,
+                backgroundColor: Color(0xFF66CDAA),
                 bottom: TabBar(
                   tabs: [
                     Tab(
@@ -57,7 +62,7 @@ class _OrdersHistoryProviderState extends State<OrdersHistoryProvider> {
                   ],
                 )),
             resizeToAvoidBottomInset: true,
-            backgroundColor: Colors.green,
+            backgroundColor: Color(0xFF66CDAA),
             body: TabBarView(
               children: [
                 listOfOrders(status: 0, provID: p!.get_email),

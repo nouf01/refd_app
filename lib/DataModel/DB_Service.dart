@@ -284,6 +284,15 @@ class Database {
         .update(field_value_map);
   }
 
+  void setOrderTimer(String orderID, int timeLeft) {
+    _db.collection('Orders').doc(orderID).update({'remainingTimer': timeLeft});
+  }
+
+  Future<int> getOrderRemainingTimer(String orderID) async {
+    return (await _db.collection('Orders').doc(orderID).get())
+        .data()!['remainingTimer'];
+  }
+
   void addItemsToOrder(
       Order_object orderOBJ, List<DailyMenu_Item> dmList) async {
     //Done tested

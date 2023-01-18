@@ -21,6 +21,7 @@ void main() async {
   await Firebase.initializeApp();
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   Database db = Database();
+
   runApp(MyApp());
 }
 

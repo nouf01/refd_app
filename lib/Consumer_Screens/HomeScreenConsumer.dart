@@ -52,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green,
+        backgroundColor: Color(0xFF66CDAA),
         actions: [
           StreamBuilder(
               stream: ref,
@@ -122,8 +122,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               choiceStyle: FlexiChipStyle.when(
                   selected: const C2ChipStyle(
-                      checkmarkColor: Colors.green,
-                      backgroundColor: Colors.green,
+                      checkmarkColor: Color(0xFF66CDAA),
+                      backgroundColor: Color(0xFF66CDAA),
                       foregroundStyle: TextStyle(color: Colors.black))),
               choiceCheckmark: true,
             ),
@@ -136,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 hintText: 'Search for resturant',
                 suffixIcon: Icon(
                   Icons.search,
-                  color: Colors.green,
+                  color: Color(0xFF66CDAA),
                 ),
                 contentPadding:
                     const EdgeInsets.only(left: 20.0, bottom: 5.0, top: 12.5),

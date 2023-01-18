@@ -63,7 +63,7 @@ class _restaurantDetail extends State<restaurantDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green,
+        backgroundColor: Color(0xFF66CDAA),
         title: Text(widget.currentProv.get_commercialName),
         centerTitle: true,
         actions: [

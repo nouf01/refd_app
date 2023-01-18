@@ -104,11 +104,17 @@ class Provider {
   }
 
   Provider.fromDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> doc)
-      : _logoURL = doc.data()!['logoURL'],
+      : _logoURL = doc.data()!['logoURL'] == null
+            ? 'https://firebasestorage.googleapis.com/v0/b/refd-d5769.appspot.com/o/emptyPlaceholder.jpg?alt=media&token=f247e3a3-d263-434d-a9c3-fbd06f827baa'
+            : doc.data()!['logoURL'],
         _commercialName = doc.data()!["commercialName"],
-        _commercialReg = doc.data()!["commercialReg"],
+        _commercialReg = doc.data()!["commercialReg"] == null
+            ? ''
+            : doc.data()!["commercialReg"],
         _email = doc.data()!["email"],
-        _phoneNumber = doc.data()!["phoneNumber"],
+        _phoneNumber = doc.data()!["phoneNumber"] == null
+            ? ''
+            : doc.data()!["phoneNumber"],
         _accountStatus = doc.data()!["accountStatus"],
         _rate = doc.data()!["rate"],
         _NumberOfItemsInDM = doc.data()!['NumberOfItemsInDM'],
