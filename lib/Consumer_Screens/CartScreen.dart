@@ -7,6 +7,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:refd_app/Consumer_Screens/ConfirmOrder.dart';
+import 'package:refd_app/Consumer_Screens/LoggedConsumer.dart';
 import 'package:refd_app/DataModel/Consumer.dart';
 import '../DataModel/DB_Service.dart';
 import '../DataModel/DailyMenu_Item.dart';
@@ -32,16 +33,16 @@ class _CartScreen extends State<CartScreen> {
   int cartIsEmpty = -1; // means not intilized
   int numCartItems = 0;
   Stream<DocumentSnapshot<Map<String, dynamic>>>? ref;
+  LoggedConsumer log = LoggedConsumer();
 
   Future<void> _initRetrieval() async {
-    ref = DB.searchForConsumerStream('nouf888s@gmail.com');
-    currentUser = Consumer.fromDocumentSnapshot(
-        await DB.searchForConsumer('nouf888s@gmail.com'));
+    currentUser = await log.buildConsumer();
+    ref = DB.searchForConsumerStream(currentUser!.get_email());
     currentTotal = currentUser!.cartTotal;
 
     if (currentUser!.cartTotal > 0.001) {
       userCart = DB.retrieve_Cart_Items(currentUser!.get_email());
-      cartItems = await DB.retrieve_Cart_Items('nouf888s@gmail.com');
+      cartItems = await DB.retrieve_Cart_Items(currentUser!.get_email());
       int i = 0;
       cartItems!.forEach((element) {
         currentQuantity.add(element.getChoosedCartQuantity);
@@ -123,7 +124,7 @@ class _CartScreen extends State<CartScreen> {
                       currentProve: prov!,
                     ),*/
                               Container(
-                                height: 450,
+                                height: 620,
                                 child: Padding(
                                   padding: const EdgeInsets.all(1.0),
                                   child: FutureBuilder(

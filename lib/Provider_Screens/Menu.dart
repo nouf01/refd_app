@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:refd_app/Provider_Screens/LoggedProv.dart';
 
 import '../DataModel/DB_Service.dart';
 import '../DataModel/Provider.dart';
@@ -18,6 +19,7 @@ class MenuScreen extends StatefulWidget {
 
 class _MenuScreenState extends State<MenuScreen> {
   Database service = Database();
+  LoggedProvider log = LoggedProvider();
   Future<List<Item>>? itemList;
   List<Item>? retrieveditemList;
 
@@ -122,17 +124,17 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 
   Future<void> _refresh() async {
-    itemList = service.retrieveMenuItems('MunchBakery@mail.com');
-    retrieveditemList = await service.retrieveMenuItems('MunchBakery@mail.com');
+    itemList = service.retrieveMenuItems(log.getEmailOnly());
+    retrieveditemList = await service.retrieveMenuItems(log.getEmailOnly());
     setState(() {});
   }
 
   void _dismiss() {
-    itemList = service.retrieveMenuItems('MunchBakery@mail.com');
+    itemList = service.retrieveMenuItems(log.getEmailOnly());
   }
 
   Future<void> _initRetrieval() async {
-    itemList = service.retrieveMenuItems('MunchBakery@mail.com');
-    retrieveditemList = await service.retrieveMenuItems('MunchBakery@mail.com');
+    itemList = service.retrieveMenuItems(log.getEmailOnly());
+    retrieveditemList = await service.retrieveMenuItems(log.getEmailOnly());
   }
 }

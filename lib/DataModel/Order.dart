@@ -25,16 +25,20 @@ class Order_object {
   final String _consumerID;
   final String _providerLogo;
   final String _providerName;
+  final int _isCancelledByProv;
+  final int _remainingTimer;
+  int _hasRate;
 
-  Order_object({
-    required date,
-    required total,
-    required providerID,
-    required consumerID,
-    required status,
-    required providerLogo,
-    required providerName,
-  })  : this._status = status.toString().replaceAll('Order_status.', ''),
+  Order_object(
+      {required date,
+      required total,
+      required providerID,
+      required consumerID,
+      required status,
+      required providerLogo,
+      required providerName,
+      required remainingTimer})
+      : this._status = status.toString().replaceAll('Order_status.', ''),
         this._orderID =
             ((new Random()).nextInt(900000000) + 100000000).toString(),
         this._date = date,
@@ -42,6 +46,9 @@ class Order_object {
         this._providerID = providerID,
         this._consumerID = consumerID,
         this._providerLogo = providerLogo,
+        this._isCancelledByProv = 0,
+        this._hasRate = 0,
+        this._remainingTimer = remainingTimer,
         this._providerName = providerName;
 
   Map<String, dynamic> toMap() {
@@ -54,6 +61,9 @@ class Order_object {
       'status': _status,
       'providerLogo': _providerLogo,
       'providerName': _providerName,
+      'hasRate': _hasRate,
+      'remainingTimer': _remainingTimer,
+      'isCancelledByProv': _isCancelledByProv,
     };
   }
 
@@ -65,7 +75,10 @@ class Order_object {
         _status = orderMap["status"],
         _providerLogo = orderMap['providerLogo'],
         _providerName = orderMap['providerName'],
-        _total = orderMap['total'];
+        _total = orderMap['total'],
+        _hasRate = orderMap['hasRate'],
+        _remainingTimer = orderMap['remainingTimer'],
+        _isCancelledByProv = orderMap['isCancelledByProv'];
 
   Order_object.fromDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> doc)
       : _orderID = doc.data()!['orderID'],
@@ -77,23 +90,35 @@ class Order_object {
         _consumerID = doc.data()!["consumerID"],
         _status = doc.data()!["status"],
         _providerName = doc.data()!["providerName"],
+        _isCancelledByProv = doc.data()!["isCancelledByProv"],
+        _hasRate = doc.data()!["hasRate"],
+        _remainingTimer = doc.data()!['remainingTimer'],
         _providerLogo = doc.data()!["providerLogo"];
 
   get getorderID => this._orderID;
 
   get getdate => this._date;
 
-  get get_status => this._status.toString().replaceAll('Order_status.', '');
+  get get_status => this._status;
 
   get get_total => this._total;
 
   get get_ProviderID => this._providerID;
 
   get get_consumerID => this._consumerID;
+
   get getProviderName => this._providerName;
+
+  get hasRate => this._hasRate;
+
+  get isCancelledByProv => this._isCancelledByProv;
 
   static convert_date(DocumentSnapshot<Map<String, dynamic>> doc) {
     return doc.data()!['date'];
+  }
+
+  void setHasRate(int value) {
+    this._hasRate = value;
   }
 
   get getProviderLogo => this._providerLogo;

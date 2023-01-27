@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:flutter/material.dart';
 import 'item.dart';
 
 enum Status {
@@ -42,22 +42,27 @@ class Provider {
   final double _rate;
   final int _NumberOfItemsInDM;
   final List<String> _searchCases;
+  final double _Lat;
+  final double _Lang;
+  String _token;
 
   //List<Item>? itemsList;
   //location
   // orders list
   //catagory: what about _tags?
 
-  Provider({
-    required logoURL,
-    required commercialName,
-    required commercialReg,
-    required email,
-    required phoneNumber,
-    required accountStatus,
-    required rate,
-    required tagList,
-  })  : _NumberOfItemsInDM = 0,
+  Provider(
+      {required logoURL,
+      required commercialName,
+      required commercialReg,
+      required email,
+      required phoneNumber,
+      required accountStatus,
+      required rate,
+      required tagList,
+      required Lat,
+      required Lang})
+      : _NumberOfItemsInDM = 0,
         this._accountStatus =
             accountStatus.toString().replaceAll('Status.', ''),
         this._searchCases = setSearchParam(commercialName),
@@ -65,9 +70,12 @@ class Provider {
         this._logoURL = logoURL,
         this._commercialName = commercialName,
         this._commercialReg = commercialReg,
-        this._email = email,
+        this._email = email.toString().toLowerCase(),
         this._phoneNumber = phoneNumber,
-        this._rate = rate;
+        this._token = '',
+        this._rate = rate,
+        this._Lat = Lat,
+        this._Lang = Lang;
 
   static List<String> setSearchParam(String caseNumber) {
     caseNumber = caseNumber.toLowerCase();
@@ -93,33 +101,33 @@ class Provider {
       'logoURL': _logoURL,
       'commercialName': _commercialName,
       'commercialReg': _commercialReg,
-      'email': _email,
+      'email': _email.toLowerCase(),
       'phoneNumber': _phoneNumber,
       'accountStatus': _accountStatus,
       'rate': _rate,
       'NumberOfItemsInDM': _NumberOfItemsInDM,
       'searchCases': _searchCases,
+      'token': _token,
       'tags': _tags,
+      'Lat': _Lat,
+      'Lang': _Lang
     };
   }
 
   Provider.fromDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> doc)
-      : _logoURL = doc.data()!['logoURL'] == null
-            ? 'https://firebasestorage.googleapis.com/v0/b/refd-d5769.appspot.com/o/emptyPlaceholder.jpg?alt=media&token=f247e3a3-d263-434d-a9c3-fbd06f827baa'
-            : doc.data()!['logoURL'],
-        _commercialName = doc.data()!["commercialName"],
-        _commercialReg = doc.data()!["commercialReg"] == null
-            ? ''
-            : doc.data()!["commercialReg"],
+      : _commercialName = doc.data()!["commercialName"],
+        _logoURL = doc.data()!['logoURL'],
+        _commercialReg = doc.data()!["commercialReg"],
         _email = doc.data()!["email"],
-        _phoneNumber = doc.data()!["phoneNumber"] == null
-            ? ''
-            : doc.data()!["phoneNumber"],
+        _phoneNumber = doc.data()!["phoneNumber"],
         _accountStatus = doc.data()!["accountStatus"],
         _rate = doc.data()!["rate"],
         _NumberOfItemsInDM = doc.data()!['NumberOfItemsInDM'],
         _tags = doc.data()?["tags"].cast<String>(),
-        _searchCases = doc.data()?["searchCases"].cast<String>();
+        _searchCases = doc.data()?["searchCases"].cast<String>(),
+        _token = doc.data()!['token'],
+        _Lat = doc.data()!["Lat"],
+        _Lang = doc.data()!["Lang"];
 
   //String? get getUid => this.uid;
   //set setUid(String? uid) => this.uid = uid;
@@ -143,6 +151,13 @@ class Provider {
   get get_searchCases => this._searchCases;
 
   get get_logoURL => this._logoURL;
+
+  get get_Lat => this._Lat;
+
+  get get_Lang => this._Lang;
+
+  get get_token => this._token;
+
   /*void set_commercialName(_commercialName) {
     this._commercialName = _commercialName;
     FirebaseFirestore.instance
@@ -150,7 +165,6 @@ class Provider {
         .doc(this.username)
         .update({'_commercialName': _commercialName});
   }
-
   void set_commercialReg(_commercialReg) {
     this._commercialReg = _commercialReg;
     FirebaseFirestore.instance
@@ -158,10 +172,8 @@ class Provider {
         .doc(this.username)
         .update({'_commercialReg': _commercialReg});
   }
-
   set set_NumberOfItemsInDM(int _NumberOfItemsInDM) =>
       this._NumberOfItemsInDM = _NumberOfItemsInDM;
-
   void set_email(_email) {
     this._email = _email;
     FirebaseFirestore.instance
@@ -169,7 +181,6 @@ class Provider {
         .doc(this.username)
         .update({'_email': _email});
   }  
-
   void set_accountStatus(Status status) {
     this._accountStatus = status.toString().replaceAll('Status.', '');
     FirebaseFirestore.instance
@@ -177,7 +188,6 @@ class Provider {
         .doc(this.username)
         .update({'_accountStatus': status.toString().replaceAll('Status.', '')});
   }
-
   void set_rate(_rate) {
     this._rate = _rate;
     FirebaseFirestore.instance
@@ -185,7 +195,6 @@ class Provider {
         .doc(this.username)
         .update({'_rate': _rate});
   }
-
   void setUsername(username) {
     this.username = username;
     FirebaseFirestore.instance

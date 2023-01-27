@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:refd_app/DataModel/Order.dart';
-import 'package:refd_app/Provider_Screens/OrderStatus.dart';
-import 'package:refd_app/Provider_Screens/waitingPickUp.dart';
-
-import '../Provider_Screens/underProcess.dart';
+import 'package:refd_app/Provider_Screens/ManageOrders.dart';
 
 class OrderCard extends StatefulWidget {
   final Order_object order;
@@ -20,17 +17,11 @@ class _OrderCardState extends State<OrderCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (widget.order.get_status == 'underProcess') {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => underProcess(order: widget.order)));
-        } else {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => waitingForPick(order: widget.order)));
-        }
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ManageOrder(order: widget.order)),
+        );
       },
       child: Container(
         /*shape: RoundedRectangleBorder(
@@ -69,7 +60,8 @@ class _OrderCardState extends State<OrderCard> {
                         SizedBox(
                           height: 8,
                         ),
-                        getTheStatus('${this.widget.order.get_status}'),
+                        getTheStatus(
+                            '${this.widget.order.get_status.toString().replaceAll('OrderStatus.', '')}'),
                       ],
                     ),
                     VerticalDivider(thickness: 1),
@@ -110,10 +102,10 @@ class _OrderCardState extends State<OrderCard> {
                   ],
                 ),
               ),
-              Divider(thickness: 2),
+              /*Divider(thickness: 2),
               Icon(Icons.timer, color: Colors.black),
               SizedBox(width: 8),
-              Text('Timer Here'),
+              Text('Timer Here'),*/
             ],
           ),
         ),

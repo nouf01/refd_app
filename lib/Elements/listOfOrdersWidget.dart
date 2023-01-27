@@ -81,7 +81,8 @@ class _listOfOrdersState extends State<listOfOrders> {
     } else if (this.widget.status == 3) {
       myStatus = OrderStatus.canceled;
     }
-    ref = service.retrieve_Some_Orders_Of_Prov(this.widget.provID, myStatus);
+    ref = service.retrieve_Some_Orders_Of_Prov(
+        this.widget.provID, myStatus.toString());
     setState(() {});
   }
 
@@ -100,7 +101,8 @@ class _listOfOrdersState extends State<listOfOrders> {
     } else if (this.widget.status == 3) {
       myStatus = OrderStatus.canceled;
     }
-    ref = service.retrieve_Some_Orders_Of_Prov(this.widget.provID, myStatus);
+    ref = service.retrieve_Some_Orders_Of_Prov(
+        this.widget.provID, myStatus.toString());
   }
 
   void methodDoNothing() {}

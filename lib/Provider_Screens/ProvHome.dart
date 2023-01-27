@@ -7,8 +7,10 @@ import 'package:refd_app/DataModel/Order.dart';
 import 'package:refd_app/Elements/listOfOrdersWidget.dart';
 import 'package:refd_app/Elements/restaurantInfo.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:refd_app/Provider_Screens/LoggedProv.dart';
 
 import '../DataModel/Provider.dart';
+import '../messaging_service.dart';
 
 class HomeScreenProvider extends StatefulWidget {
   const HomeScreenProvider({super.key});
@@ -18,6 +20,7 @@ class HomeScreenProvider extends StatefulWidget {
 }
 
 class _HomeScreenProviderState extends State<HomeScreenProvider> {
+  LoggedProvider log = LoggedProvider();
   Database db = Database();
   Provider? p;
 
@@ -71,8 +74,11 @@ class _HomeScreenProviderState extends State<HomeScreenProvider> {
   }
 
   Future<void> _initRetrieval() async {
-    p = Provider.fromDocumentSnapshot(
-        await db.searchForProvider('MunchBakery@mail.com'));
+    p = await log.buildProvider();
+    print('********************************************** intit retrival');
+    MessagingService _msgService =
+        MessagingService(isProv: true, userID: p!.get_email);
+    await _msgService.init();
     setState(() {});
     print('mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm');
   }

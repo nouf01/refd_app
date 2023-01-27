@@ -3,6 +3,7 @@ import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:refd_app/Consumer_Screens/CartScreen.dart';
+import 'package:refd_app/Consumer_Screens/LoggedConsumer.dart';
 import 'package:refd_app/DataModel/DB_Service.dart';
 import 'package:refd_app/DataModel/Provider.dart';
 import 'package:chips_choice/chips_choice.dart';
@@ -11,6 +12,7 @@ import 'package:refd_app/Elements/ProviderCard.dart';
 
 import '../DataModel/Consumer.dart';
 import '../Elements/SearchBar.dart';
+import '../messaging_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -21,6 +23,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   Database service = Database();
+  LoggedConsumer log = LoggedConsumer();
   Future<List<Provider>>? provList;
   List<Provider> retrievedprovList = [];
   List<Tags> listTags = [
@@ -216,9 +219,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _initRetrieval() async {
-    currentUser = Consumer.fromDocumentSnapshot(
-        await service.searchForConsumer('nouf888s@gmail.com'));
-    ref = service.searchForConsumerStream('nouf888s@gmail.com');
+    currentUser = await log.buildConsumer();
+    ref = service.searchForConsumerStream(currentUser!.get_email());
+    print('OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO homeee');
+    MessagingService _msgService =
+        MessagingService(isProv: false, userID: currentUser!.get_email());
+    await _msgService.init();
     if (choosedTags!.isEmpty) {
       provList = service.filterProvider(listTags);
       retrievedprovList = await service.filterProvider(listTags);

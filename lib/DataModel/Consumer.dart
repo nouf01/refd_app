@@ -11,17 +11,18 @@ class Consumer {
   // orders list
   double _cartTotal = 0.0;
   int _numOfCartItems = 0;
+  String _token;
 
   Consumer({
     required name,
     required email,
     required phoneNumber,
     required cancelCounter,
-    required profilePhotoURL,
   })  : this._name = name,
         this._cancelCounter = cancelCounter,
         this._email = email,
-        this._phoneNumber = phoneNumber;
+        this._phoneNumber = phoneNumber,
+        this._token = "";
 
   Map<String, dynamic> toMap() {
     return {
@@ -31,6 +32,7 @@ class Consumer {
       'cancelCounter': _cancelCounter,
       'cartTotal': _cartTotal,
       'numOfCartItems': _numOfCartItems,
+      'token': _token
     };
   }
 
@@ -40,6 +42,7 @@ class Consumer {
         _phoneNumber = doc.data()!["phoneNumber"],
         _cancelCounter = doc.data()!["cancelCounter"],
         _cartTotal = doc.data()!["cartTotal"],
+        _token = doc.data()!['token'],
         _numOfCartItems = doc.data()!["numOfCartItems"];
 
   String get_name() {
@@ -56,6 +59,10 @@ class Consumer {
 
   int get_cancelCounter() {
     return _cancelCounter;
+  }
+
+  String getUserToken() {
+    return this._token;
   }
 
   get cartTotal => this._cartTotal;

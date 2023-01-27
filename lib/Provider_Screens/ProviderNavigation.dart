@@ -3,15 +3,17 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:refd_app/DataModel/DB_Service.dart';
 import 'package:refd_app/DataModel/Provider.dart';
+import 'package:refd_app/LoginSignUp/providerSign/ProviderProfile.dart';
 
+import '../messaging_service.dart';
 import 'DailyMenu.dart';
 import 'ProvHome.dart';
 import 'Menu.dart';
 import 'OrdersHistoryProvider.dart';
-import 'Profile.dart';
 
 class ProviderNavigation extends StatefulWidget {
-  const ProviderNavigation({super.key});
+  final int? choosedIndex;
+  const ProviderNavigation({super.key, this.choosedIndex});
 
   @override
   State<ProviderNavigation> createState() => _ProviderNavigationState();
@@ -23,8 +25,12 @@ class _ProviderNavigationState extends State<ProviderNavigation> {
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-    //_initRetrieval();
+    if (this.widget.choosedIndex != null) {
+      _pageIndex = this.widget.choosedIndex!;
+      setState(() {});
+    }
   }
 
   int _pageIndex = 0;
@@ -33,7 +39,7 @@ class _ProviderNavigationState extends State<ProviderNavigation> {
     MenuScreen(),
     DailyMenuScreen(),
     OrdersHistoryProvider(),
-    ProfileProvider(),
+    ProviderProfile(),
   ];
   void _onItemTapped(int index) {
     setState(() {
@@ -80,9 +86,4 @@ class _ProviderNavigationState extends State<ProviderNavigation> {
           )),
     );
   }
-
-  /*Future<void> _initRetrieval() async {
-    currentProv = Provider.fromDocumentSnapshot(
-        await db.searchForProvider('DrCafe@mail.com'));
-  }*/
 }

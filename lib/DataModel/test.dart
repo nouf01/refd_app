@@ -15,8 +15,10 @@ void test() async {
   //create database object
   Database db = Database();
 
-  // addProviderToFirebase
+  //addProviderToFirebase
   Provider p1 = Provider(
+    Lang: 0.1,
+    Lat: 0.1,
     commercialName: 'Lilio Patisserie',
     commercialReg: '2345765438',
     email: 'Lilio@mail.com',
@@ -122,9 +124,7 @@ void test() async {
       name: 'Nouf',
       email: 'nouf888s@gmail.com',
       phoneNumber: '0531180988',
-      cancelCounter: 0,
-      profilePhotoURL:
-          'https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg');
+      cancelCounter: 0);
   db.addNewConsumerToFirebase(c1);
 
   //update consumer info
@@ -139,7 +139,7 @@ void test() async {
   db.updateCancelCounter(c1.get_email(), true); // to increment
   db.updateCancelCounter(c1.get_email(), false); // to decrement
 
-  //create new order and add for firebase
+  /*create new order and add for firebase
   Order_object o1 = Order_object(
       date: DateTime.now(),
       total: 0.0,
@@ -159,9 +159,9 @@ void test() async {
 
   db.addNewOrderToFirebase(o1);
   db.addNewOrderToFirebase(o2);
-
+*/
   //add items to order
-  db.addItemsToOrder(o1, [d1, d2]);
+  //db.addItemsToOrder(o1, [d1, d2]);
 
   //retrive orders of specific provider:
   /*List<Order_object> ordersList =

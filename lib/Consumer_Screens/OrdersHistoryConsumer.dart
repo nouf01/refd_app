@@ -1,13 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:refd_app/Consumer_Screens/LoggedConsumer.dart';
+import 'package:refd_app/Consumer_Screens/track.dart';
+import 'package:refd_app/Consumer_Screens/trackCancelled.dart';
+import 'package:refd_app/Consumer_Screens/trackUnderProcess.dart';
 import 'package:refd_app/DataModel/DB_Service.dart';
 import 'package:refd_app/DataModel/Order.dart';
 import 'package:refd_app/DataModel/Provider.dart';
 import 'package:refd_app/DataModel/item.dart';
-import 'package:refd_app/Provider_Screens/underProcess.dart';
-import 'package:refd_app/Provider_Screens/waitingPickUp.dart';
 
-import '../Provider_Screens/OrderStatus.dart';
+import '../Provider_Screens/ManageOrders.dart';
 
 class OrdersHistoryScreen extends StatefulWidget {
   const OrdersHistoryScreen({super.key});
@@ -18,6 +20,7 @@ class OrdersHistoryScreen extends StatefulWidget {
 
 class _OrdersHistoryScreenState extends State<OrdersHistoryScreen> {
   Database service = Database();
+  LoggedConsumer log = LoggedConsumer();
   Stream<QuerySnapshot<Map<String, dynamic>>>? ref;
   Provider? thisOrderProvider;
 
@@ -33,6 +36,7 @@ class _OrdersHistoryScreenState extends State<OrdersHistoryScreen> {
       appBar: AppBar(
         title: Center(child: Text('My Orders')),
         backgroundColor: Color(0xFF66CDAA),
+        automaticallyImplyLeading: false,
       ),
       body: RefreshIndicator(
         onRefresh: _refresh,
@@ -59,19 +63,12 @@ class _OrdersHistoryScreenState extends State<OrdersHistoryScreen> {
                             leading: Image.network(o1.getProviderLogo),
                             isThreeLine: true,
                             onTap: () {
-                              if (o1.get_status == OrderStatus.underProcess) {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            underProcess(order: o1)));
-                              } else {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            waitingForPick(order: o1)));
-                              }
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        trackOrder(order: o1)),
+                              );
                             },
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0),
@@ -82,8 +79,9 @@ class _OrdersHistoryScreenState extends State<OrdersHistoryScreen> {
                             trailing: Column(
                               children: [
                                 SizedBox(height: 20),
-                                Text(
-                                    '${o1.get_status.toString().replaceAll('OrderStatus.', '')}'),
+                                getTheStatus(o1.get_status
+                                    .toString()
+                                    .replaceAll('OrderStatus.', '')),
                               ],
                             ),
                           ));
@@ -110,7 +108,7 @@ class _OrdersHistoryScreenState extends State<OrdersHistoryScreen> {
   }
 
   Future<void> _refresh() async {
-    ref = service.retrieve_AllOrders_Of_Consumer('nouf888s@gmail.com');
+    ref = service.retrieve_AllOrders_Of_Consumer(log.getEmailOnly());
     setState(() {});
   }
 
@@ -119,8 +117,36 @@ class _OrdersHistoryScreenState extends State<OrdersHistoryScreen> {
   }*/
 
   Future<void> _initRetrieval() async {
-    ref = service.retrieve_AllOrders_Of_Consumer('nouf888s@gmail.com');
+    ref = service.retrieve_AllOrders_Of_Consumer(log.getEmailOnly());
   }
 
-  void methodDoNothing() {}
+  Widget getTheStatus(String status) {
+    if (status == 'underProcess') {
+      return const Text(
+        'Under Process',
+        style: TextStyle(color: Colors.blue, fontSize: 10),
+      );
+    } else if (status == 'waitingForPickUp') {
+      return const Text(
+        'Waiting for pick up',
+        style:
+            TextStyle(color: Color.fromARGB(255, 202, 156, 41), fontSize: 10),
+      );
+    } else if (status == 'pickedUp') {
+      return const Text(
+        'Picked Up',
+        style: TextStyle(color: Color(0xFF66CDAA), fontSize: 10),
+      );
+    } else if (status == 'canceled') {
+      return const Text(
+        'Canceled',
+        style: TextStyle(color: Colors.red, fontSize: 10),
+      );
+    } else {
+      return const Text(
+        'No Status',
+        style: TextStyle(color: Colors.grey, fontSize: 10),
+      );
+    }
+  }
 }

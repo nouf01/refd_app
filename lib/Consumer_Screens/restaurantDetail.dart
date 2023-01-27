@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:refd_app/Consumer_Screens/LoggedConsumer.dart';
 import 'package:refd_app/DataModel/Consumer.dart';
 import 'package:refd_app/DataModel/item.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -25,6 +26,7 @@ class restaurantDetail extends StatefulWidget {
 
 class _restaurantDetail extends State<restaurantDetail> {
   int successflAdd = 1;
+  LoggedConsumer log = LoggedConsumer();
   Database DB = Database();
   Future<List<DailyMenu_Item>>? itemList;
   List<DailyMenu_Item>? retrieveditemList;
@@ -33,12 +35,11 @@ class _restaurantDetail extends State<restaurantDetail> {
   Stream<DocumentSnapshot<Map<String, dynamic>>>? ref;
 
   Future<void> _initRetrieval() async {
+    currentUser = await log.buildConsumer();
+    ref = DB.searchForConsumerStream(currentUser!.get_email());
     itemList = DB.retrieve_DMmenu_Items(this.widget.currentProv.get_email);
     retrieveditemList =
         await DB.retrieve_DMmenu_Items(this.widget.currentProv.get_email);
-    currentUser = Consumer.fromDocumentSnapshot(
-        await DB.searchForConsumer('nouf888s@gmail.com'));
-    ref = DB.searchForConsumerStream('nouf888s@gmail.com');
     setState(() {});
   }
 
@@ -104,7 +105,7 @@ class _restaurantDetail extends State<restaurantDetail> {
             currentProve: widget.currentProv,
           ),
           Container(
-            height: 520,
+            height: 600,
             child: RefreshIndicator(
               onRefresh: _refresh,
               child: Padding(

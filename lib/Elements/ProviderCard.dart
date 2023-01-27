@@ -83,7 +83,8 @@ class _PCardState extends State<P_card> {
                             ),
                             color: Colors.yellow,
                           ),
-                          Text('${this.widget.p.get_rate}'),
+                          Text(
+                              '${this.widget.p.get_rate.toString().substring(0, 3)}'),
                         ],
                       ),
                     ),

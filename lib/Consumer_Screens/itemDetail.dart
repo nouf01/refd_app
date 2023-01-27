@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:refd_app/Consumer_Screens/CartScreen.dart';
+import 'package:refd_app/Consumer_Screens/LoggedConsumer.dart';
 import 'package:refd_app/Consumer_Screens/restaurantDetail.dart';
 import 'package:refd_app/DataModel/Consumer.dart';
 import 'package:refd_app/DataModel/DailyMenu_Item.dart';
@@ -22,11 +23,11 @@ class items extends StatefulWidget {
 }
 
 class _items extends State<items> {
+  LoggedConsumer log = LoggedConsumer();
   int currentChoosedQuantity = 0;
   late int maximumQuantity; //can not choose more than that
   late List<DailyMenu_Item> userCart;
-  late Consumer
-      currentUser; //get current user here and rebuild the consumer object here not passed from another screen, we want info to be updated;
+  late Consumer? currentUser;
   Database db = Database();
   bool cartIsEmpty = true;
   int numCartItems = 0;
@@ -34,10 +35,9 @@ class _items extends State<items> {
   //Provider? prov;
 
   void _initRetrieval() async {
-    ref = db.searchForConsumerStream('nouf888s@gmail.com');
+    currentUser = await log.buildConsumer();
+    ref = db.searchForConsumerStream(currentUser!.get_email());
     maximumQuantity = widget.currentItem.get_quantity;
-    currentUser = Consumer.fromDocumentSnapshot(
-        await db.searchForConsumer('nouf888s@gmail.com'));
     if (currentUser!.cartTotal > 0.001) {
       cartIsEmpty = false;
       numCartItems = currentUser!.numOfCartItems;
@@ -283,7 +283,7 @@ class _items extends State<items> {
 
   void addToCart() async {
     List<DailyMenu_Item> userCart =
-        await db.retrieve_Cart_Items(currentUser.get_email());
+        await db.retrieve_Cart_Items(currentUser!.get_email());
     if (userCart.isEmpty == false) {
       if (userCart[0].getItem().get_providerID !=
           widget.currentItem.getItem().get_providerID) {
@@ -301,7 +301,7 @@ class _items extends State<items> {
                           backgroundColor: Color.fromARGB(255, 175, 91, 76),
                         ),
                         onPressed: () async {
-                          db.emptyTheCart(currentUser.get_email());
+                          db.emptyTheCart(currentUser!.get_email());
                           Navigator.of(context).pop();
                         }),
                     ElevatedButton(
@@ -317,7 +317,7 @@ class _items extends State<items> {
       } else {
         // same provider
         bool searchResult = (await db.isItemInCart(
-            widget.currentItem, currentUser.get_email()));
+            widget.currentItem, currentUser!.get_email()));
         if (searchResult == true) {
           showDialog(
               context: context,
@@ -340,7 +340,7 @@ class _items extends State<items> {
           setState(() {});
           DailyMenu_Item newItemToCart = widget.currentItem;
           newItemToCart.setChoosedCartQuantity(currentChoosedQuantity);
-          db.addToCart_DMitems(currentUser.get_email(), newItemToCart);
+          db.addToCart_DMitems(currentUser!.get_email(), newItemToCart);
           showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -373,7 +373,7 @@ class _items extends State<items> {
     } else {
       // cart is empty
       bool searchResult =
-          (await db.isItemInCart(widget.currentItem, currentUser.get_email()));
+          (await db.isItemInCart(widget.currentItem, currentUser!.get_email()));
       if (searchResult == true) {
         showDialog(
             context: context,
@@ -396,7 +396,7 @@ class _items extends State<items> {
         setState(() {});
         DailyMenu_Item newItemToCart = widget.currentItem;
         newItemToCart.setChoosedCartQuantity(currentChoosedQuantity);
-        db.addToCart_DMitems(currentUser.get_email(), newItemToCart);
+        db.addToCart_DMitems(currentUser!.get_email(), newItemToCart);
         showDialog(
           context: context,
           builder: (BuildContext context) {

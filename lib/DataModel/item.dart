@@ -64,6 +64,10 @@ class Item {
     _originalPrice = new_originalPrice;
   }
 
+  void setProvID(String value) {
+    this._providerID = value;
+  }
+
   String? getId() {
     return _uid;
   }

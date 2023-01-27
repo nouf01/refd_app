@@ -58,7 +58,9 @@ class DailyMenu_Item {
 
   get get_quantity => this._quantity;
 
-  set set_quantity(_quantity) => this._quantity = _quantity;
+  void set_quantity(quantity) {
+    this._quantity = quantity;
+  }
 
   get get_discount => this._discount;
 

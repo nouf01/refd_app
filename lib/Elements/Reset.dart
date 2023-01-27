@@ -95,16 +95,14 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           color: Colors.grey,
                         ),
                         focusedBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Color.fromARGB(255, 88, 207, 108)),
+                            borderSide: BorderSide(color: Color(0xFF66CDAA)),
                             borderRadius:
                                 BorderRadius.all(Radius.circular(100.0))),
                         enabledBorder: const OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(100.0)),
-                            borderSide: BorderSide(
-                                width: 3,
-                                color: Color.fromARGB(255, 88, 207, 108))),
+                            borderSide:
+                                BorderSide(width: 3, color: Color(0xFF66CDAA))),
                         label: Text(
                           "Email",
                           style:
@@ -135,7 +133,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             minimumSize: Size(360, 40),
-                            backgroundColor: Color.fromARGB(255, 88, 207, 108),
+                            backgroundColor: Color(0xFF66CDAA),
                             shape: const BeveledRectangleBorder(
                                 borderRadius: BorderRadius.all(
                               Radius.circular(5),

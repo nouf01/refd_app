@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:refd_app/DataModel/DB_Service.dart';
 import 'package:refd_app/DataModel/Order.dart';
 import 'package:refd_app/Elements/listOfOrdersWidget.dart';
+import 'package:refd_app/Provider_Screens/LoggedProv.dart';
 
 import '../DataModel/Provider.dart';
 
@@ -17,20 +18,15 @@ class OrdersHistoryProvider extends StatefulWidget {
 
 class _OrdersHistoryProviderState extends State<OrdersHistoryProvider> {
   Database db = Database();
-  Provider? p;
+  LoggedProvider log = LoggedProvider();
+
   @override
   void initState() {
     super.initState();
-    _initRetrieval();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (p == null) {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
-    }
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: DefaultTabController(
@@ -65,20 +61,13 @@ class _OrdersHistoryProviderState extends State<OrdersHistoryProvider> {
             backgroundColor: Color(0xFF66CDAA),
             body: TabBarView(
               children: [
-                listOfOrders(status: 0, provID: p!.get_email),
-                listOfOrders(status: 1, provID: p!.get_email),
-                listOfOrders(status: 2, provID: p!.get_email),
-                listOfOrders(status: 3, provID: p!.get_email)
+                listOfOrders(status: 0, provID: log.getEmailOnly()),
+                listOfOrders(status: 1, provID: log.getEmailOnly()),
+                listOfOrders(status: 2, provID: log.getEmailOnly()),
+                listOfOrders(status: 3, provID: log.getEmailOnly())
               ],
             ),
           )),
     );
-  }
-
-  Future<void> _initRetrieval() async {
-    p = Provider.fromDocumentSnapshot(
-        await db.searchForProvider('MunchBakery@mail.com'));
-    setState(() {});
-    print('mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm');
   }
 }

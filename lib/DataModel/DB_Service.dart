@@ -14,7 +14,7 @@ class Database {
     //Done tested
     await _db
         .collection('Providers')
-        .doc(provider.get_email)
+        .doc(provider.get_email.toString().toLowerCase())
         .set(provider.toMap());
   }
 
@@ -28,12 +28,8 @@ class Database {
     //update search cases if name changed
     if (nameChanged == true) {
       var searchCases = setSearchParam(newCommercialName);
-      FirebaseFirestore.instance
-          .collection('Providers')
-          .doc(providerID)
-          .update({
-        'searchCases': searchCases,
-      });
+      FirebaseFirestore.instance.collection('Providers').doc(providerID).update(
+          {'searchCases': searchCases, 'commercialName': newCommercialName});
     }
   }
 
@@ -119,6 +115,29 @@ class Database {
     return snapshot.docs
         .map((docSnapshot) => Provider.fromDocumentSnapshot(docSnapshot))
         .toList();
+  }
+
+  void calculateRate(String provID) async {
+    int num1stars = (await _db.collection('Providers').doc(provID).get())
+        .data()!['num1stars'];
+    int num2stars = (await _db.collection('Providers').doc(provID).get())
+        .data()!['num2stars'];
+    int num3stars = (await _db.collection('Providers').doc(provID).get())
+        .data()!['num3stars'];
+    int num4stars = (await _db.collection('Providers').doc(provID).get())
+        .data()!['num4stars'];
+    int num5stars = (await _db.collection('Providers').doc(provID).get())
+        .data()!['num5stars'];
+    int total = num1stars + num2stars + num3stars + num4stars + num5stars;
+
+    double newRate = (1 * num1stars +
+            2 * num2stars +
+            3 * num3stars +
+            4 * num4stars +
+            5 * num5stars) /
+        total;
+    newRate = double.parse(newRate.toStringAsFixed(1));
+    updateProviderInfo(provID, false, '', {'rate': newRate});
   }
 
   //************************ Menu **********************/
@@ -270,6 +289,7 @@ class Database {
   }
 
   //************************ Orders ***********************************/
+
   addNewOrderToFirebase(Order_object order) async {
     //Done Tested
     await _db.collection('Orders').doc(order.getorderID).set(order.toMap());
@@ -284,8 +304,11 @@ class Database {
         .update(field_value_map);
   }
 
-  void setOrderTimer(String orderID, int timeLeft) {
-    _db.collection('Orders').doc(orderID).update({'remainingTimer': timeLeft});
+  void setOrderTimer(String orderID, int timeLeft) async {
+    await _db
+        .collection('Orders')
+        .doc(orderID)
+        .update({'remainingTimer': timeLeft});
   }
 
   Future<int> getOrderRemainingTimer(String orderID) async {
@@ -309,30 +332,70 @@ class Database {
       int ref = (await _db
               .collection('Providers')
               .doc(dmList[i].getItem().get_providerID)
-              .get())
-          .data()!['NumberOfItemsInDM'];
-      ref = ref - 1;
-      updateProviderInfo(
-          orderOBJ.get_ProviderID, false, '', {'NumberOfItemsInDM': ref});
-      ref = (await _db
-              .collection('Providers')
-              .doc(dmList[i].getItem().get_providerID)
               .collection('DailyMenu')
               .doc(dmList[i].get_uid)
               .get())
           .data()!['quantity'];
-      ref = ref - 1;
+      ref = ref - dmList[i].getChoosedCartQuantity;
       update_DM_Item_Info(
           orderOBJ.get_ProviderID, dmList[i].get_uid, {'quantity': ref});
       if (ref == 0) {
         removeFromPrvoiderDM(orderOBJ.get_ProviderID, dmList[0].get_uid);
+        int numOfItems = (await _db
+                .collection('Providers')
+                .doc(dmList[i].getItem().get_providerID)
+                .get())
+            .data()!['NumberOfItemsInDM'];
+        numOfItems = numOfItems - 1;
+        updateProviderInfo(orderOBJ.get_ProviderID, false, '',
+            {'NumberOfItemsInDM': numOfItems});
       }
       print(total);
     }
-    ;
     print('Total *********:');
     print(total);
     updateOrderInfo(orderOBJ.getorderID, {'total': total});
+  }
+
+  void returnItemsToDailyMenu(
+      List<DailyMenu_Item> orderItems, String provID) async {
+    List<DailyMenu_Item> provItems = await retrieve_DMmenu_Items(provID);
+    orderItems.forEach((o) {
+      bool isExist = false;
+      provItems.forEach((p) async {
+        if (o.get_uid == p.get_uid) {
+          //the item exist => increment the quantity
+          isExist = true;
+          int currentProvQuantity = (await _db
+                  .collection('Providers')
+                  .doc(provID)
+                  .collection('DailyMenu')
+                  .doc(p.get_uid)
+                  .get())
+              .data()!['quantity'];
+          int choosedOrderQuantuty = o.getChoosedCartQuantity;
+          currentProvQuantity = currentProvQuantity + choosedOrderQuantuty;
+          update_DM_Item_Info(
+              provID, p.get_uid, {'quantity': currentProvQuantity});
+        }
+      });
+      if (isExist == false) {
+        o.set_quantity(o.getChoosedCartQuantity);
+        addToProviderDM(o);
+      }
+    });
+  }
+
+  Future<List<DailyMenu_Item>> retrieve_Order_Items(String orderID) async {
+    //Done tested
+    QuerySnapshot<Map<String, dynamic>> snapshot = await _db
+        .collection("Orders")
+        .doc(orderID)
+        .collection('listOfDMitems')
+        .get();
+    return snapshot.docs
+        .map((docSnapshot) => DailyMenu_Item.fromDocumentSnapshot(docSnapshot))
+        .toList();
   }
 
   /*Future<List<Order_object>> retrieve_AllOrders_Of_Consumer(
@@ -372,14 +435,14 @@ class Database {
   }
 
   Future<List<Order_object>> retrieve_Some_Orders_Of_Consumer(
-      String consID, OrderStatus s1) async {
+      String consID, String s1) async {
     //Done tested
     QuerySnapshot<Map<String, dynamic>> snapshot = await _db
         .collection("Orders")
         .where('consumerID', isEqualTo: consID)
         .where(
           'status',
-          isEqualTo: s1.toString().replaceAll('OrderStatus.', ''),
+          isEqualTo: s1,
         )
         .get();
     return snapshot.docs
@@ -388,13 +451,12 @@ class Database {
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> retrieve_Some_Orders_Of_Prov(
-      String provID, OrderStatus s1) {
+      String provID, String s1) {
     //Done tested
     var snapshot = _db
         .collection("Orders")
         .where('providerID', isEqualTo: provID)
-        .where('status',
-            isEqualTo: s1.toString().replaceAll('OrderStatus.', ''))
+        .where('status', isEqualTo: s1)
         .orderBy('date', descending: true)
         .snapshots();
     return snapshot;

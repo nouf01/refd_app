@@ -1,38 +1,47 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:refd_app/Consumer_Screens/HomeScreenConsumer.dart';
+import 'package:refd_app/Consumer_Screens/LoggedConsumer.dart';
 import 'package:refd_app/Consumer_Screens/OrdersHistoryConsumer.dart';
+import 'package:refd_app/Consumer_Screens/trackCancelled.dart';
+import 'package:refd_app/Consumer_Screens/trackUnderProcess.dart';
 import 'package:refd_app/DataModel/Consumer.dart';
 import 'package:refd_app/DataModel/Order.dart';
 import 'package:refd_app/DataModel/Provider.dart';
-import 'package:refd_app/Provider_Screens/OrderStatus.dart';
+import 'package:refd_app/Provider_Screens/ManageOrders.dart';
 import '../DataModel/DB_Service.dart';
 import '../DataModel/DailyMenu_Item.dart';
 import '../Elements/restaurantInfo.dart';
+import 'ConsumerNavigation.dart';
 
 class ConfirmOrder extends StatefulWidget {
   //>>>>>>>>>>> Here must be the concumerCart
   const ConfirmOrder({super.key});
-
   @override
   State<ConfirmOrder> createState() => _ConfirmOrderState();
 }
 
 class _ConfirmOrderState extends State<ConfirmOrder> {
   Database DB = Database();
+  LoggedConsumer log = LoggedConsumer();
   Provider? prov;
   Consumer? currentUser;
   List<DailyMenu_Item>? cart;
   double? total;
+  String? orderID;
 
   Future<void> _initRetrieval() async {
-    currentUser = Consumer.fromDocumentSnapshot(
-        await DB.searchForConsumer('nouf888s@gmail.com'));
+    currentUser = await log.buildConsumer();
     total = currentUser!.cartTotal;
-    cart = await DB.retrieve_Cart_Items('nouf888s@gmail.com');
+    cart = await DB.retrieve_Cart_Items(currentUser!.get_email());
     prov = Provider.fromDocumentSnapshot(
         await DB.searchForProvider(cart![0].getItem().get_providerID));
     setState(() {});
@@ -63,7 +72,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                   currentProve: prov!,
                 ),
                 Container(
-                  height: 260,
+                  height: 200,
                   child: Padding(
                     padding: const EdgeInsets.all(0.5),
                     child: ListView.separated(
@@ -166,13 +175,12 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Payment method is pay on store,",
+                              "Payment method is pay onsite,",
                               style: TextStyle(
                                 color: Colors.grey,
                                 fontSize: 13.0,
                               ),
                             ),
-                            SizedBox(height: 16),
                             Text(
                               "You can cancel your order only if it's still under processing ",
                               style: TextStyle(
@@ -180,7 +188,6 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                 fontSize: 12.0,
                               ),
                             ),
-                            SizedBox(height: 16),
                             Text(
                               "Note: If you do not pickup your order for a certain number of times, you will not be able to use the application again!",
                               style: TextStyle(
@@ -206,18 +213,45 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                     borderRadius: BorderRadius.circular(8.0),
                                   ),
                                 ),
-                                onPressed: () {
+                                onPressed: () async {
+                                  //new order object
                                   Order_object newOrder = Order_object(
-                                      date: DateTime.now(),
-                                      total: total,
-                                      providerID: prov!.get_email,
-                                      consumerID: currentUser!.get_email(),
-                                      status: OrderStatus.underProcess,
-                                      providerLogo: prov!.get_logoURL,
-                                      providerName: prov!.get_commercialName);
+                                    date: DateTime.now(),
+                                    total: total,
+                                    providerID: prov!.get_email,
+                                    consumerID: currentUser!.get_email(),
+                                    status: OrderStatus.underProcess,
+                                    providerLogo: prov!.get_logoURL,
+                                    providerName: prov!.get_commercialName,
+                                    remainingTimer: DateTime.now()
+                                        .add(Duration(minutes: 5))
+                                        .millisecondsSinceEpoch,
+                                  );
+                                  //add the object to firebase
                                   DB.addNewOrderToFirebase(newOrder);
+                                  //add items list to the order
                                   DB.addItemsToOrder(newOrder, cart!);
+                                  //intilized the 5 minute time write the deadline in firebase
+                                  var target =
+                                      DateTime.now().add(Duration(minutes: 5));
+                                  DB.setOrderTimer(newOrder.getorderID,
+                                      target!.millisecondsSinceEpoch);
+                                  //intilize a timer in the background
+                                  await AndroidAlarmManager.oneShotAt(
+                                    DateTime.fromMillisecondsSinceEpoch(
+                                        target!.millisecondsSinceEpoch),
+                                    int.parse(newOrder.getorderID),
+                                    checkConfirm,
+                                    wakeup: true,
+                                  );
+                                  //empty the cart
                                   DB.emptyTheCart(currentUser!.get_email());
+                                  //notification to the provider
+                                  _sendMessage(
+                                      consEmail: currentUser!.get_email(),
+                                      provEmail: prov!.get_email,
+                                      orderID: newOrder.getorderID);
+                                  //show dialog
                                   showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
@@ -232,14 +266,47 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                           ElevatedButton(
                                             child: Text("OK"),
                                             style: ElevatedButton.styleFrom(
-                                              primary: Color(0xFF66CDAA),
+                                              primary: Color.fromARGB(
+                                                  255, 88, 207, 108),
                                             ),
                                             onPressed: () {
-                                              /*Navigator.push(
+                                              Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          OrdersHistoryScreen()));*/
+                                                    builder: (context) =>
+                                                        Scaffold(
+                                                            backgroundColor:
+                                                                Colors.white,
+                                                            appBar: AppBar(
+                                                              title: const Text(
+                                                                  'Order Status'),
+                                                              backgroundColor:
+                                                                  Color(
+                                                                      0xFF66CDAA),
+                                                              leading:
+                                                                  IconButton(
+                                                                icon: Icon(Icons
+                                                                    .arrow_back),
+                                                                onPressed: () {
+                                                                  Navigator
+                                                                      .pushAndRemoveUntil(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) =>
+                                                                                ConsumerNavigation(choosedIndex: 2)),
+                                                                    (Route<dynamic>
+                                                                            route) =>
+                                                                        false,
+                                                                  );
+                                                                },
+                                                              ),
+                                                            ),
+                                                            body:
+                                                                trackUnderProcess(
+                                                              order: newOrder,
+                                                            )),
+                                                  ));
                                             },
                                           ),
                                         ],
@@ -261,5 +328,85 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
             ),
           ),
         ]));
+  }
+
+  @pragma('vm:entry-point')
+  static void checkConfirm(orderID) async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+    final FirebaseFirestore _db = FirebaseFirestore.instance;
+    Database db = Database();
+    Order_object order = Order_object.fromDocumentSnapshot(
+        await FirebaseFirestore.instance
+            .collection('Orders')
+            .doc(orderID.toString())
+            .get());
+    if (order.get_status == OrderStatus.underProcess.toString()) {
+      //change the status of the order to canceled
+      db.updateOrderInfo(orderID.toString(),
+          {'status': OrderStatus.canceled.toString(), 'isCancelledByProv': 1});
+      //return items to daily menu
+      List<DailyMenu_Item> orderItems =
+          await db.retrieve_Order_Items(orderID.toString());
+      db.returnItemsToDailyMenu(orderItems!, order.get_ProviderID);
+      //Notification to the consumer that the order is not confirmed
+      _sendMessageCanceled(
+          providerName: order.getProviderName, userEmail: order.get_consumerID);
+    }
+  }
+
+  static Future _sendMessage(
+      {required String provEmail,
+      required String consEmail,
+      required String orderID}) async {
+    String providerToken = (await FirebaseFirestore.instance
+            .collection('Providers')
+            .doc(provEmail)
+            .get())
+        .data()!['token'];
+    var func = FirebaseFunctions.instance.httpsCallable("notifySubscribers");
+    var res = await func.call(<String, dynamic>{
+      "targetDevices": [providerToken],
+      "messageTitle": "New order #{$orderID}",
+      "messageBody": 'New order need to be confirmed within 5 minutes'
+    });
+
+    print("message was ${res.data as bool ? "sent!" : "not sent!"}");
+  }
+
+  static Future _sendMessageCanceled(
+      {required String userEmail, required String providerName}) async {
+    String consumerToken = (await FirebaseFirestore.instance
+            .collection('Consumers')
+            .doc(userEmail)
+            .get())
+        .data()!['token'];
+    var func = FirebaseFunctions.instance.httpsCallable("notifySubscribers");
+    var res = await func.call(<String, dynamic>{
+      "targetDevices": [consumerToken],
+      "messageTitle": "Your order from ${providerName} is canceled",
+      "messageBody":
+          'Sorry ${providerName} could not respond to your order at the moment'
+    });
+  }
+
+  static Future _sendMessageNoResponse(
+      {required String consEmail,
+      required String provName,
+      required String orderID}) async {
+    String consumerToken = (await FirebaseFirestore.instance
+            .collection('Consumers')
+            .doc(consEmail)
+            .get())
+        .data()!['token'];
+    var func = FirebaseFunctions.instance.httpsCallable("notifySubscribers");
+    var res = await func.call(<String, dynamic>{
+      "targetDevices": [consumerToken],
+      "messageTitle": "Your order from ${provName} is canceled",
+      "messageBody":
+          'Sorry ${provName} could not accepet your order at the moment'
+    });
+
+    print("message was ${res.data as bool ? "sent!" : "not sent!"}");
   }
 }
