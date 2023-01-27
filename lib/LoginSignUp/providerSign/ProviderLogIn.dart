@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:refd_app/Elements/Reset.dart';
+import 'package:refd_app/LoginSignUp/updatePassword.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../DataModel/DB_Service.dart';
 import '../../DataModel/Provider.dart';
@@ -277,7 +278,7 @@ class _MyWidgetState extends State<ProviderLogIn> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ResetPasswordScreen()),
+                                  builder: (context) => UpdatePassword()),
                             );
                           },
                           child: const Text(

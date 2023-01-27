@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:refd_app/DataModel/DB_Service.dart';
 
 class UpdatePassword extends StatefulWidget {
   const UpdatePassword({super.key});
@@ -11,85 +10,59 @@ class UpdatePassword extends StatefulWidget {
 }
 
 class _MyWidgetState extends State<UpdatePassword> {
-  //firebase database & current user objects
-  Database db = Database();
-  dynamic user;
-  var currentConsumer;
-
   //the key for the form
   final formKey = GlobalKey<FormState>();
-
-  //passwords
-  var oldPass, newPass;
-
-  //save fields
-  bool _saveFields() {
-    var formFields = formKey.currentState;
-    if (formFields!.validate()) {
-      formFields.save();
-      return true;
-    } else
-      return false;
-  }
+  var userEmail;
+  TextEditingController _userEmailCont = TextEditingController();
 
 //password update function
   void _changePassword(String currentPassword, String newPassword) async {
+    formKey.currentState!.save();
     final user = await FirebaseAuth.instance.currentUser;
-    final cred = EmailAuthProvider.credential(
-        email: user!.email!, password: currentPassword);
+  }
 
-    user.reauthenticateWithCredential(cred).then((value) {
-      user.updatePassword(newPassword).then((_) {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: Text("Updated!"),
-                content: Text("your password has been successfully updated"),
-                actions: [
-                  TextButton(
-                      child: Text('Ok'),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      }),
-                ],
-              );
-            });
-      }).catchError((error) {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: Text("Error!"),
-                content: Text("the password you entred was not correct"),
-                actions: [
-                  TextButton(
-                      child: Text('Ok'),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      }),
-                ],
-              );
-            });
-      });
-    }).catchError((err) {});
+  @override
+  void dispose() {
+    _userEmailCont.dispose();
+    super.dispose();
+  }
+
+  //RESET password method
+  Future _resetPassword() async {
+    try {
+      formKey.currentState!.save();
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: userEmail);
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+                content: Text(
+                    "Password reset link is sent to your email, plese check your inbox"));
+          });
+    } on FirebaseAuthException catch (e) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(content: Text(e.message.toString()));
+          });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(backgroundColor: Colors.green),
       body: SingleChildScrollView(
         child: Column(
           children: [
             SizedBox(
-              height: 170,
+              height: 150,
             ),
             Container(
               width: double.infinity,
-              margin: const EdgeInsets.only(left: 20, top: 50),
+              margin: const EdgeInsets.only(left: 10, top: 40),
               child: const Text(
-                "UPDATE PASSWORD",
+                "RESET PASSWORD",
                 textAlign: TextAlign.start,
                 style: TextStyle(color: Colors.grey, fontSize: 30),
               ),
@@ -101,95 +74,58 @@ class _MyWidgetState extends State<UpdatePassword> {
                 key: formKey,
                 child: Column(
                   children: [
-                    TextFormField(
-                        onSaved: (newValue) {
-                          oldPass = newValue;
-                        },
-                        validator: (value) {
-                          if (value!.length > 50)
-                            return "password can not be more than 50 letters";
-                          else if (value.length < 6)
-                            return "password is too short";
-                          else
-                            return null;
-                        },
-                        obscureText: true,
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.lock,
-                            color: Colors.grey,
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xFF66CDAA)),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(100.0))),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(100.0)),
-                              borderSide: BorderSide(
-                                  width: 3, color: Color(0xFF66CDAA))),
-                          label: Text(
-                            "Old password",
-                            style: TextStyle(fontSize: 14, color: Colors.grey),
-                          ),
-                        )),
+                    SizedBox(
+                      width: 380,
+                      child: TextFormField(
+                          controller: _userEmailCont,
+                          onSaved: (newValue) {
+                            userEmail = newValue;
+                          },
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(
+                              Icons.email,
+                              color: Colors.grey,
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Color.fromARGB(255, 88, 207, 108)),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(100.0))),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(100.0)),
+                                borderSide: BorderSide(
+                                    width: 3,
+                                    color: Color.fromARGB(255, 88, 207, 108))),
+                            label: Text(
+                              "enter your email",
+                              style:
+                                  TextStyle(fontSize: 14, color: Colors.grey),
+                            ),
+                          )),
+                    ),
                     const SizedBox(
                       height: 40,
                     ),
-                    TextFormField(
-                        onSaved: (newValue) {
-                          newPass = newValue;
-                        },
-                        validator: (value) {
-                          if (value!.length > 50)
-                            return "password can not be more than 50 letters";
-                          else if (value.length < 6)
-                            return "password is too short";
-                          else
-                            return null;
-                        },
-                        obscureText: true,
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.lock,
-                            color: Colors.grey,
+                    SizedBox(
+                      width: 330,
+                      height: 45,
+                      child: ElevatedButton(
+                          onPressed: () {
+                            _resetPassword();
+                          },
+                          child: const Text(
+                            "Reset",
+                            selectionColor: Colors.white,
+                            style: TextStyle(fontSize: 27),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xFF66CDAA)),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(100.0))),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(100.0)),
-                              borderSide: BorderSide(
-                                  width: 3, color: Color(0xFF66CDAA))),
-                          label: Text(
-                            "New password",
-                            style: TextStyle(fontSize: 14, color: Colors.grey),
-                          ),
-                        )),
-                    const SizedBox(
-                      height: 40,
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                                Color.fromARGB(255, 88, 207, 108)),
+                            foregroundColor:
+                                MaterialStateProperty.all(Colors.white),
+                          )),
                     ),
-                    ElevatedButton(
-                        onPressed: () {
-                          var formFields = formKey.currentState;
-                          if (formFields!.validate()) {
-                            formFields.save();
-                            _changePassword(oldPass, newPass);
-                          }
-                        },
-                        child: const Text(
-                          "Update",
-                          selectionColor: Colors.white,
-                          style: TextStyle(fontSize: 27),
-                        ),
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Color(0xFF66CDAA)),
-                          foregroundColor:
-                              MaterialStateProperty.all(Colors.white),
-                        )),
                   ],
                 ))
           ],
