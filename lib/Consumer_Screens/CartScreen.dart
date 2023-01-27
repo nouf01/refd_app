@@ -9,6 +9,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:refd_app/Consumer_Screens/ConfirmOrder.dart';
 import 'package:refd_app/Consumer_Screens/LoggedConsumer.dart';
 import 'package:refd_app/DataModel/Consumer.dart';
+import 'package:refd_app/Elements/path.dart';
 import '../DataModel/DB_Service.dart';
 import '../DataModel/DailyMenu_Item.dart';
 import '../DataModel/Provider.dart';
@@ -401,7 +402,9 @@ class _CartScreen extends State<CartScreen> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ConfirmOrder()));
+                              builder: (context) => path(
+                                    p: prov!,
+                                  )));
                     },
                     child: Text("Continue"),
                   ),

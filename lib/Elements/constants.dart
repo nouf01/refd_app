@@ -10,3 +10,7 @@ enum Status {
   pickedUp,
   canceled,
 }
+class Constants {
+  //TODO: PLACE YOUR API-KEY
+  static const String apiKey = "AIzaSyC02VeFbURsmFAN8jKyl_OhoqE0IMPSvQM";
+}
