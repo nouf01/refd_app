@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:refd_app/DataModel/DB_Service.dart';
 import 'package:refd_app/DataModel/Provider.dart';
 import 'package:refd_app/LoginSignUp/providerSign/ProviderProfile.dart';
+import 'package:refd_app/Provider_Screens/anlysis.dart';
 
 import '../messaging_service.dart';
 import 'DailyMenu.dart';
@@ -36,9 +37,9 @@ class _ProviderNavigationState extends State<ProviderNavigation> {
   int _pageIndex = 0;
   List<Widget> _Pages = [
     HomeScreenProvider(),
-    MenuScreen(),
     DailyMenuScreen(),
     OrdersHistoryProvider(),
+    AnalysisScreen(),
     ProviderProfile(),
   ];
   void _onItemTapped(int index) {
@@ -60,18 +61,18 @@ class _ProviderNavigationState extends State<ProviderNavigation> {
                 backgroundColor: Color(0xFF66CDAA),
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.menu_book),
-                label: 'Menu',
-                backgroundColor: Color(0xFF66CDAA),
-              ),
-              BottomNavigationBarItem(
                 icon: Icon(Icons.dinner_dining),
-                label: 'DailyMenu',
+                label: 'Menu',
                 backgroundColor: Color(0xFF66CDAA),
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.history),
                 label: 'Orders History',
+                backgroundColor: Color(0xFF66CDAA),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.show_chart_outlined),
+                label: 'Analysis',
                 backgroundColor: Color(0xFF66CDAA),
               ),
               BottomNavigationBarItem(

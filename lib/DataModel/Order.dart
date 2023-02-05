@@ -28,6 +28,7 @@ class Order_object {
   final int _isCancelledByProv;
   final int _remainingTimer;
   int _hasRate;
+  String _roomID = 'non';
 
   Order_object(
       {required date,
@@ -63,6 +64,7 @@ class Order_object {
       'providerName': _providerName,
       'hasRate': _hasRate,
       'remainingTimer': _remainingTimer,
+      'roomID': _roomID,
       'isCancelledByProv': _isCancelledByProv,
     };
   }
@@ -78,6 +80,7 @@ class Order_object {
         _total = orderMap['total'],
         _hasRate = orderMap['hasRate'],
         _remainingTimer = orderMap['remainingTimer'],
+        _roomID = orderMap['roomID'],
         _isCancelledByProv = orderMap['isCancelledByProv'];
 
   Order_object.fromDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> doc)
@@ -93,9 +96,16 @@ class Order_object {
         _isCancelledByProv = doc.data()!["isCancelledByProv"],
         _hasRate = doc.data()!["hasRate"],
         _remainingTimer = doc.data()!['remainingTimer'],
+        _roomID = doc.data()!['roomID'],
         _providerLogo = doc.data()!["providerLogo"];
 
   get getorderID => this._orderID;
+
+  get getRoomID => this._roomID;
+
+  void setRoomID(String value) {
+    this._roomID = value;
+  }
 
   get getdate => this._date;
 

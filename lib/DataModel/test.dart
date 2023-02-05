@@ -17,6 +17,7 @@ void test() async {
 
   //addProviderToFirebase
   Provider p1 = Provider(
+    uid: '11223344',
     Lang: 0.1,
     Lat: 0.1,
     commercialName: 'Lilio Patisserie',
@@ -88,7 +89,7 @@ void test() async {
   db.removeFromPrvoiderMenu(t1);
 
   //update item info
-  db.updateItemInfo(t1, {'name': 'pizza', 'originalPrice': 17});
+  //db.updateItemInfo(t1, {'name': 'pizza', 'originalPrice': 17});
 
   //retrive all menu items
   List<Item> menu = await db.retrieveMenuItems('MacDonalds2008');
@@ -121,6 +122,7 @@ void test() async {
 
   //create new consumer
   Consumer c1 = Consumer(
+      uid: '3334444',
       name: 'Nouf',
       email: 'nouf888s@gmail.com',
       phoneNumber: '0531180988',

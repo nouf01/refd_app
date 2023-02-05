@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:refd_app/Consumer_Screens/LoggedConsumer.dart';
 import 'package:refd_app/Consumer_Screens/track.dart';
 import 'package:refd_app/Consumer_Screens/trackCancelled.dart';
@@ -62,12 +63,13 @@ class _OrdersHistoryScreenState extends State<OrdersHistoryScreen> {
                           child: ListTile(
                             leading: Image.network(o1.getProviderLogo),
                             isThreeLine: true,
-                            onTap: () {
+                            onTap: () async {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        trackOrder(order: o1)),
+                                    builder: (context) => trackOrder(
+                                          order: o1,
+                                        )),
                               );
                             },
                             shape: RoundedRectangleBorder(

@@ -7,6 +7,8 @@ class Item {
   String _description;
   double _originalPrice;
   String _imageURL; //or id based on fire storage
+  int _inDm;
+  int _howManyPickedUp;
 
   Item({
     required providerID,
@@ -18,6 +20,8 @@ class Item {
         this._description = description,
         this._name = name,
         this._originalPrice = originalPrice,
+        this._inDm = 0,
+        this._howManyPickedUp = 0,
         this._imageURL = imageURL;
 
   Map<String, dynamic> toMap() {
@@ -26,6 +30,8 @@ class Item {
       'name': _name,
       'description': _description,
       'originalPrice': _originalPrice,
+      'inDM': _inDm,
+      'howManyPickedUp': _howManyPickedUp,
       'imageURL': _imageURL,
     };
   }
@@ -36,6 +42,8 @@ class Item {
         _name = doc.data()!["name"],
         _description = doc.data()!["description"],
         _originalPrice = doc.data()!["originalPrice"],
+        _howManyPickedUp = doc.data()!['howManyPickedUp'],
+        _inDm = doc.data()!['inDM'],
         _imageURL = doc.data()!['imageURL'];
 
   Item.fromMap(Map<String, dynamic> itemMap)
@@ -43,6 +51,8 @@ class Item {
         _name = itemMap["name"],
         _description = itemMap["description"],
         _originalPrice = itemMap["originalPrice"],
+        _howManyPickedUp = itemMap['howManyPickedUp'],
+        _inDm = itemMap['inDM'],
         _imageURL = itemMap["imageURL"];
 
   String get get_providerID => this._providerID;
@@ -56,7 +66,7 @@ class Item {
     _imageURL = new_imageURL;
   }
 
-    void set_description(new_description) {
+  void set_description(new_description) {
     _description = new_description;
   }
 
@@ -86,5 +96,17 @@ class Item {
 
   String get_imageURL() {
     return _imageURL;
+  }
+
+  int get_inDM() {
+    return _inDm;
+  }
+
+  int get_HowManyPicked() {
+    return _howManyPickedUp;
+  }
+
+  void set_inDM(int value) {
+    _inDm = value;
   }
 }

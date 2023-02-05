@@ -158,17 +158,20 @@ class Database {
         .collection('Providers')
         .doc(newItem.get_providerID)
         .collection('itemsList')
-        .doc(newItem.get_name() + newItem.get_providerID)
+        .doc(newItem.getId())
         .delete();
   }
 
-  void updateItemInfo(Item item, Map<String, dynamic> field_value_map) {
+  void updateItemInfo(
+      String? itemUID, Item item, Map<String, dynamic> field_value_map) async {
     //Done tested
-    FirebaseFirestore.instance
+    print('#########################################################');
+    print(item.getId());
+    await FirebaseFirestore.instance
         .collection('Providers')
         .doc(item.get_providerID)
         .collection('itemsList')
-        .doc(item.getId())
+        .doc(itemUID)
         .update(field_value_map);
   }
 
@@ -201,20 +204,22 @@ class Database {
     ref = ref + 1;
     updateProviderInfo(DM_Item.getItem().get_providerID, false, '',
         {'NumberOfItemsInDM': ref});
+    updateItemInfo(DM_Item.getItem().getId(), DM_Item.getItem(), {'inDM': 1});
   }
 
-  void removeFromPrvoiderDM(String providerID, String itemID) async {
+  void removeFromPrvoiderDM(String providerID, DailyMenu_Item item) async {
     //Done tested
     await _db
         .collection('Providers')
         .doc(providerID)
         .collection('DailyMenu')
-        .doc(itemID)
+        .doc(item.get_uid)
         .delete();
     int ref = (await _db.collection('Providers').doc(providerID).get())
         .data()!['NumberOfItemsInDM'];
     ref = ref - 1;
     updateProviderInfo(providerID, false, '', {'NumberOfItemsInDM': ref});
+    updateItemInfo(item.get_uid, item.getItem(), {'inDM': 0});
   }
 
   void update_DM_Item_Info(String providerID, String dmItemID,

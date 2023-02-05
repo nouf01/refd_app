@@ -14,10 +14,16 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart';
 import 'package:chips_choice/chips_choice.dart';
 import 'package:flexi_chip/flexi_chip.dart';
+import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class ProviderSignUp extends StatefulWidget {
-  const ProviderSignUp({super.key});
+  final double providerLat;
+  final double providerLong;
 
+  const ProviderSignUp({super.key, providerLat, providerLong})
+      : this.providerLat = providerLat,
+        this.providerLong = providerLong;
   @override
   State<ProviderSignUp> createState() => _MyWidgetState();
 }
@@ -142,11 +148,20 @@ class _MyWidgetState extends State<ProviderSignUp> {
             accountStatus: Status.Active,
             rate: 0.0001,
             tagList: choosedTags,
+            uid: credential.user!.uid,
             logoURL:
                 'https://firebasestorage.googleapis.com/v0/b/refd-d5769.appspot.com/o/ah2FODKt_400x400.jpg?alt=media&token=94a0d1e9-e28d-4525-b33b-9933d1da67ba',
-            Lat: 24.777263, //double.parse("$userLat"),
-            Lang: 46.710267, //double.parse("$UserLang"));
+            Lat: widget.providerLat, //double.parse("$userLat"),
+            Lang: widget.providerLong, //double.parse("$UserLang"));
           );
+          var otherUser = types.User(
+            firstName: newProvider!.get_commercialName(),
+            id: newProvider!.get_uid(),
+            imageUrl:
+                'https://firebasestorage.googleapis.com/v0/b/refd-d5769.appspot.com/o/User-avatar.svg.png?alt=media&token=5b494d57-6154-4fb3-a670-f454f6b77cc3',
+            lastName: newProvider!.get_commercialName,
+          );
+          await FirebaseChatCore.instance.createUserInFirestore(otherUser);
           await db.addNewProviderToFirebase(newProvider);
 
           return newProvider;
@@ -199,8 +214,7 @@ class _MyWidgetState extends State<ProviderSignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          automaticallyImplyLeading: false, backgroundColor: Color(0xFF66CDAA)),
+      appBar: AppBar(backgroundColor: Color(0xFF66CDAA)),
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -369,85 +383,6 @@ class _MyWidgetState extends State<ProviderSignUp> {
                               borderSide: BorderSide(
                                   width: 3, color: Color(0xFF66CDAA))),
                         )),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(top: 7),
-                        width: 140,
-                        height: 50,
-                        child: TextFormField(
-                            onSaved: (newValue) {
-                              userLat = newValue;
-                            },
-                            validator: (value) {
-                              if (value!.isEmpty)
-                                return "latitude";
-                              else
-                                return null;
-                            },
-                            decoration: const InputDecoration(
-                              hintText: "latitude",
-                              hintStyle:
-                                  TextStyle(fontSize: 14, color: Colors.grey),
-                              prefixIcon: Icon(
-                                Icons.location_pin,
-                                color: Colors.grey,
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Color(0xFF66CDAA)),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(100.0))),
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(100.0)),
-                                  borderSide: BorderSide(
-                                      width: 3, color: Color(0xFF66CDAA))),
-                            )),
-                      ),
-                      SizedBox(
-                        width: 30,
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 7),
-                        width: 140,
-                        height: 50,
-                        child: TextFormField(
-                            onSaved: (newValue) {
-                              UserLang = newValue;
-                            },
-                            validator: (value) {
-                              if (value!.isEmpty)
-                                return "longitude";
-                              else
-                                return null;
-                            },
-                            decoration: const InputDecoration(
-                              hintText: "longitude",
-                              hintStyle:
-                                  TextStyle(fontSize: 14, color: Colors.grey),
-                              prefixIcon: Icon(
-                                Icons.location_pin,
-                                color: Colors.grey,
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Color(0xFF66CDAA)),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(100.0))),
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(100.0)),
-                                  borderSide: BorderSide(
-                                      width: 3, color: Color(0xFF66CDAA))),
-                            )),
-                      ),
-                    ],
                   ),
                   const SizedBox(
                     height: 20,

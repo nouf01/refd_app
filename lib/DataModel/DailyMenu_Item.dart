@@ -16,7 +16,8 @@ class DailyMenu_Item {
   })  : this._item = item,
         this._quantity = quantity,
         this._discount = discount,
-        this._priceAfterDiscount = item.get_originalPrice() * discount,
+        this._priceAfterDiscount =
+            item.get_originalPrice() - (item.get_originalPrice() * discount),
         this._choosedCartQuantity = 0;
 
   Map<String, dynamic> toMap() {

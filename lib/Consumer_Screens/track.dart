@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:refd_app/Consumer_Screens/trackCancelled.dart';
 import 'package:refd_app/Consumer_Screens/trackPickedUp.dart';
 import 'package:refd_app/Consumer_Screens/trackUnderProcess.dart';
@@ -10,9 +11,8 @@ import 'package:refd_app/DataModel/Order.dart';
 import 'ConsumerNavigation.dart';
 
 class trackOrder extends StatefulWidget {
-  final Order_object order;
-
-  const trackOrder({super.key, required this.order});
+  Order_object order;
+  trackOrder({super.key, required this.order});
 
   @override
   State<trackOrder> createState() => _trackOrderState();

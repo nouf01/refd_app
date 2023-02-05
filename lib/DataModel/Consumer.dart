@@ -12,13 +12,16 @@ class Consumer {
   double _cartTotal = 0.0;
   int _numOfCartItems = 0;
   String _token;
+  String _uid;
 
   Consumer({
     required name,
     required email,
     required phoneNumber,
     required cancelCounter,
+    required uid,
   })  : this._name = name,
+        this._uid = uid,
         this._cancelCounter = cancelCounter,
         this._email = email,
         this._phoneNumber = phoneNumber,
@@ -32,6 +35,7 @@ class Consumer {
       'cancelCounter': _cancelCounter,
       'cartTotal': _cartTotal,
       'numOfCartItems': _numOfCartItems,
+      'uid': _uid,
       'token': _token
     };
   }
@@ -43,10 +47,15 @@ class Consumer {
         _cancelCounter = doc.data()!["cancelCounter"],
         _cartTotal = doc.data()!["cartTotal"],
         _token = doc.data()!['token'],
+        _uid = doc.data()!['uid'],
         _numOfCartItems = doc.data()!["numOfCartItems"];
 
   String get_name() {
     return _name;
+  }
+
+  String get_uid() {
+    return _uid;
   }
 
   String get_email() {

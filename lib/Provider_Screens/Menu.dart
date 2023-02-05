@@ -1,4 +1,11 @@
+// ignore_for_file: prefer_const_constructors, sort_child_properties_last
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:refd_app/DataModel/DailyMenu_Item.dart';
+import 'package:refd_app/Elements/appText.dart';
+import 'package:refd_app/Elements/itemCard.dart';
+import 'package:refd_app/Provider_Screens/EditItem.dart';
 import 'package:refd_app/Provider_Screens/LoggedProv.dart';
 
 import '../DataModel/DB_Service.dart';
@@ -32,10 +39,6 @@ class _MenuScreenState extends State<MenuScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Center(child: Text('Menu')),
-        backgroundColor: Color(0xFF66CDAA),
-      ),
       body: RefreshIndicator(
         onRefresh: _refresh,
         child: Padding(
@@ -51,44 +54,70 @@ class _MenuScreenState extends State<MenuScreen> {
                           height: 10,
                         ),
                     itemBuilder: (context, index) {
-                      return Dismissible(
-                        onDismissed: ((direction) async {
-                          await service.removeFromPrvoiderMenu(
-                              retrieveditemList![index]);
-                          _dismiss();
-                        }),
-                        background: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.circular(16.0)),
-                          padding: const EdgeInsets.only(right: 28.0),
-                          alignment: AlignmentDirectional.centerEnd,
-                          child: const Text(
-                            "DELETE",
-                            style: TextStyle(color: Colors.white),
+                      return Container(
+                        width: 174,
+                        height: 150,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Color(0xffE2E2E2),
+                          ),
+                          borderRadius: BorderRadius.circular(
+                            18,
                           ),
                         ),
-                        direction: DismissDirection.endToStart,
-                        resizeDuration: const Duration(milliseconds: 200),
-                        key: UniqueKey(),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16.0)),
-                          child: ListTile(
-                            onTap: () {
-                              Navigator.pushNamed(context, "/edit",
-                                  arguments: retrieveditemList![index]);
-                            },
-                            leading: Image.network(
-                                retrieveditemList![index].get_imageURL()),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            title: Text(retrieveditemList![index].get_name()),
-                            subtitle: Text(
-                                "${retrieveditemList![index].getDecription()}, ${retrieveditemList![index].get_originalPrice()}"),
-                            trailing: const Icon(Icons.arrow_right_sharp),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 15,
+                            vertical: 15,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    imageWidget(index),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        AppText(
+                                          textAlign: TextAlign.start,
+                                          text: retrieveditemList![index]
+                                              .get_name(),
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        Container(
+                                          width: 170,
+                                          height: 55,
+                                          child: Text(
+                                            'lore ipsuim hjter dhg slryfs hfsmf sgeyw djslw dgsjwnr sh fjwle shioryw ',
+                                            maxLines: 5,
+                                            softWrap: true,
+                                            textAlign: TextAlign.start,
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: Color(0xFF7C7C7C),
+                                            ),
+                                          ),
+                                        ),
+                                        AppText(
+                                          text:
+                                              "\$${retrieveditemList![index].get_originalPrice().toStringAsFixed(2)}",
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                      ],
+                                    ),
+                                    editButton(context, index),
+                                    deleteButton(context, index),
+                                  ]),
+                            ],
                           ),
                         ),
                       );
@@ -136,5 +165,91 @@ class _MenuScreenState extends State<MenuScreen> {
   Future<void> _initRetrieval() async {
     itemList = service.retrieveMenuItems(log.getEmailOnly());
     retrieveditemList = await service.retrieveMenuItems(log.getEmailOnly());
+  }
+
+  Widget imageWidget(int index) {
+    return Image.network(
+      height: 100,
+      width: 100,
+      fit: BoxFit.contain,
+      retrieveditemList![index].get_imageURL(),
+    );
+  }
+
+  Widget editButton(context, int index) {
+    return Container(
+      alignment: Alignment.centerRight,
+      height: 30,
+      width: 30,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(17)),
+      child: Center(
+        child: IconButton(
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => EditScreen(
+                          currentItem: retrieveditemList![index],
+                        )));
+            _refresh();
+          },
+          icon: Icon(Icons.edit),
+          color: Color(0xFF66CDAA),
+          iconSize: 25,
+        ),
+      ),
+    );
+  }
+
+  Widget deleteButton(context, int index) {
+    return Container(
+      alignment: Alignment.centerRight,
+      height: 30,
+      width: 30,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(17)),
+      child: Center(
+        child: IconButton(
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text(
+                    "Are you sure you want to delete this item",
+                  ),
+                  actions: [
+                    ElevatedButton(
+                      child: Text("OK"),
+                      style: ElevatedButton.styleFrom(
+                        primary: Color(0xFF66CDAA),
+                      ),
+                      onPressed: () async {
+                        Database db = Database();
+                        Item t = retrieveditemList![index];
+                        retrieveditemList!.remove(retrieveditemList![index]);
+                        db.removeFromPrvoiderMenu(t);
+                        DailyMenu_Item d = DailyMenu_Item.fromDocumentSnapshot(
+                            await FirebaseFirestore.instance
+                                .collection('Providers')
+                                .doc(t.get_providerID)
+                                .collection('DailyMenu')
+                                .doc(t.getId())
+                                .get());
+                        db.removeFromPrvoiderDM(t.get_providerID, d);
+                        _refresh();
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+          icon: Icon(Icons.delete),
+          color: Color.fromARGB(255, 205, 102, 102),
+          iconSize: 25,
+        ),
+      ),
+    );
   }
 }

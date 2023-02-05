@@ -399,12 +399,39 @@ class _CartScreen extends State<CartScreen> {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => path(
-                                    p: prov!,
-                                  )));
+                      int cancelCount = currentUser!.get_cancelCounter();
+                      if (cancelCount >= 10) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text(
+                                "You can't continue the order",
+                              ),
+                              content: Text(
+                                  'You will not be able to continue the order because you reach NO Pick-Up limit, please contact the Techincal support for more information'),
+                              actions: [
+                                ElevatedButton(
+                                  child: Text("OK"),
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Color(0xFF66CDAA),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      } else {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => path(
+                                      p: prov!,
+                                    )));
+                      }
                     },
                     child: Text("Continue"),
                   ),

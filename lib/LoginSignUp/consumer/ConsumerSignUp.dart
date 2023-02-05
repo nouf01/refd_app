@@ -6,6 +6,8 @@ import 'package:refd_app/DataModel/Consumer.dart';
 import 'package:refd_app/DataModel/DB_Service.dart';
 
 import 'ConsumerLogIn.dart';
+import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class ConsumerSignUp extends StatefulWidget {
   const ConsumerSignUp({super.key});
@@ -70,8 +72,17 @@ class _MyWidgetState extends State<ConsumerSignUp> {
             name: _userName,
             email: _userEmail,
             phoneNumber: _userPhoneNumber,
+            uid: credential.user!.uid,
             cancelCounter: 0,
           );
+          var otherUser = types.User(
+            firstName: newConsumer!.get_name(),
+            id: newConsumer!.get_uid(),
+            imageUrl:
+                'https://firebasestorage.googleapis.com/v0/b/refd-d5769.appspot.com/o/User-avatar.svg.png?alt=media&token=5b494d57-6154-4fb3-a670-f454f6b77cc3',
+            lastName: newConsumer!.get_name(),
+          );
+          await FirebaseChatCore.instance.createUserInFirestore(otherUser);
           _db.addNewConsumerToFirebase(newConsumer);
           return newConsumer;
         } on FirebaseAuthException catch (e) {

@@ -21,6 +21,8 @@ import '../DataModel/DB_Service.dart';
 import '../DataModel/DailyMenu_Item.dart';
 import '../Elements/restaurantInfo.dart';
 import 'ConsumerNavigation.dart';
+import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class ConfirmOrder extends StatefulWidget {
   //>>>>>>>>>>> Here must be the concumerCart
@@ -227,6 +229,21 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                         .add(Duration(minutes: 5))
                                         .millisecondsSinceEpoch,
                                   );
+                                  //create room for chatting
+                                  var doc = await FirebaseFirestore.instance
+                                      .collection('users')
+                                      .doc(prov!.get_uid())
+                                      .get();
+                                  var otherUser = types.User(
+                                    firstName: doc.data()!['commercialName'],
+                                    id: prov!.get_uid(),
+                                    imageUrl:
+                                        'https://firebasestorage.googleapis.com/v0/b/refd-d5769.appspot.com/o/User-avatar.svg.png?alt=media&token=5b494d57-6154-4fb3-a670-f454f6b77cc3',
+                                    lastName: doc.data()!['commercialName'],
+                                  );
+                                  var room = await FirebaseChatCore.instance
+                                      .createRoom(otherUser);
+                                  newOrder.setRoomID(room.id);
                                   //add the object to firebase
                                   DB.addNewOrderToFirebase(newOrder);
                                   //add items list to the order

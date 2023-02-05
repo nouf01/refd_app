@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'item.dart';
@@ -44,7 +46,11 @@ class Provider {
   final List<String> _searchCases;
   final double _Lat;
   final double _Lang;
+  String _uid;
   String _token;
+  int _isOpenNow = 1;
+  int _totalMeals = 0;
+  double _totalSales = 0.0001;
 
   //List<Item>? itemsList;
   //location
@@ -61,6 +67,7 @@ class Provider {
       required rate,
       required tagList,
       required Lat,
+      required uid,
       required Lang})
       : _NumberOfItemsInDM = 0,
         this._accountStatus =
@@ -72,6 +79,7 @@ class Provider {
         this._commercialReg = commercialReg,
         this._email = email.toString().toLowerCase(),
         this._phoneNumber = phoneNumber,
+        this._uid = uid,
         this._token = '',
         this._rate = rate,
         this._Lat = Lat,
@@ -107,10 +115,14 @@ class Provider {
       'rate': _rate,
       'NumberOfItemsInDM': _NumberOfItemsInDM,
       'searchCases': _searchCases,
+      'isOpenNow': _isOpenNow,
+      'totalSales': _totalSales,
+      'totalMeals': _totalMeals,
       'token': _token,
       'tags': _tags,
       'Lat': _Lat,
-      'Lang': _Lang
+      'Lang': _Lang,
+      'uid': _uid,
     };
   }
 
@@ -121,11 +133,15 @@ class Provider {
         _email = doc.data()!["email"],
         _phoneNumber = doc.data()!["phoneNumber"],
         _accountStatus = doc.data()!["accountStatus"],
+        _uid = doc.data()!['uid'],
         _rate = doc.data()!["rate"],
         _NumberOfItemsInDM = doc.data()!['NumberOfItemsInDM'],
         _tags = doc.data()?["tags"].cast<String>(),
         _searchCases = doc.data()?["searchCases"].cast<String>(),
         _token = doc.data()!['token'],
+        _totalMeals = doc.data()!['totalMeals'],
+        _totalSales = doc.data()!['totalSales'],
+        _isOpenNow = doc.data()!['isOpenNow'],
         _Lat = doc.data()!["Lat"],
         _Lang = doc.data()!["Lang"];
 
@@ -133,6 +149,10 @@ class Provider {
   //set setUid(String? uid) => this.uid = uid;
 
   get get_commercialName => this._commercialName;
+
+  String get_uid() {
+    return _uid;
+  }
 
   get get_commercialReg => this._commercialReg;
 
@@ -157,6 +177,39 @@ class Provider {
   get get_Lang => this._Lang;
 
   get get_token => this._token;
+
+  int get_isOpen() {
+    return this._isOpenNow;
+  }
+
+  set setIsOpenNow(int value) {
+    this._isOpenNow = value;
+  }
+
+  get totalMeals => this._totalMeals;
+
+  set totalMeals(value) => this._totalMeals = value;
+
+  get totalSales => this._totalSales;
+
+  set totalSales(value) => this._totalSales = value;
+
+  double calculateDistance(lat2, lon2) {
+    var p = 0.017453292519943295;
+    var c = cos;
+    var a = 0.5 -
+        c((lat2 - this._Lat) * p) / 2 +
+        c(this._Lat * p) * c(lat2 * p) * (1 - c((lon2 - this._Lang) * p)) / 2;
+    return 12742 * asin(sqrt(a));
+  }
+
+  double getLang() {
+    return _Lang;
+  }
+
+  double getLat() {
+    return _Lat;
+  }
 
   /*void set_commercialName(_commercialName) {
     this._commercialName = _commercialName;
