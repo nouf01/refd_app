@@ -5,6 +5,7 @@ import 'dart:core';
 import 'dart:developer';
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:refd_app/Consumer_Screens/ConsumerNavigation.dart';
 import 'package:refd_app/Consumer_Screens/OrdersHistoryConsumer.dart';
@@ -20,6 +21,10 @@ import 'package:refd_app/DataModel/DailyMenu_Item.dart';
 import 'package:refd_app/DataModel/item.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
+
+import 'chat.dart';
 
 class trackWaiting extends StatefulWidget {
   String orderID;
@@ -39,6 +44,8 @@ class _trackWaitingState extends State<trackWaiting> {
   List<DailyMenu_Item>? orderItems;
   Order_object? widgetOrder;
   Stream<DocumentSnapshot<Map<String, dynamic>>>? orderStream;
+  Stream<types.Room>? roomStream;
+
   /*void startTimer() {
     timer = Timer.periodic(Duration(seconds: 1), (_) {
       setState(() {
@@ -84,6 +91,7 @@ class _trackWaitingState extends State<trackWaiting> {
         .doc(widgetOrder!.getorderID)
         .snapshots();
     orderItems = await db.retrieve_Order_Items(widget.orderID);
+    roomStream = getRoom(widgetOrder!.getRoomID);
     setState(() {});
   }
 
@@ -165,37 +173,49 @@ class _trackWaitingState extends State<trackWaiting> {
                           border: Border.all(color: Colors.black),
                         ),
                         child: ListTile(
-                            //contentPadding: EdgeInsets.all(5.0),
-                            leading:
-                                Image.network(widgetOrder!.getProviderLogo),
-                            onTap: () {
-                              showModalBottomSheet(
-                                  context: context,
-                                  builder: (context) {
-                                    return bottomOrderDetails();
-                                  });
+                          //contentPadding: EdgeInsets.all(5.0),
+                          leading: Image.network(widgetOrder!.getProviderLogo),
+                          onTap: () {
+                            showModalBottomSheet(
+                                context: context,
+                                builder: (context) {
+                                  return bottomOrderDetails();
+                                });
+                          },
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          isThreeLine: true,
+                          title: Text('${widgetOrder!.getProviderName}'),
+                          subtitle: Text(
+                              'Order #${widgetOrder!.getorderID}\n${widgetOrder!.getdate.toString().substring(0, 16)}'),
+                          trailing: StreamBuilder<types.Room>(
+                            stream: roomStream!,
+                            builder: (context, snapshot) {
+                              if (snapshot.data == null ||
+                                  snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                return CircularProgressIndicator();
+                              }
+                              return IconButton(
+                                iconSize: 30.0,
+                                icon: Icon(
+                                  Icons.chat,
+                                  color: Color(0xFF66CDAA),
+                                ),
+                                onPressed: () async {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => ChatPage(
+                                        room: snapshot.data!,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
                             },
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            isThreeLine: true,
-                            title: Text('${widgetOrder!.getProviderName}'),
-                            subtitle: Text(
-                                'Order #${widgetOrder!.getorderID}\n${widgetOrder!.getdate.toString().substring(0, 16)}'),
-                            trailing: IconButton(
-                              iconSize: 30.0,
-                              icon: Icon(
-                                Icons.arrow_drop_down_circle_outlined,
-                                color: Colors.black,
-                              ),
-                              onPressed: () {
-                                showModalBottomSheet(
-                                    context: context,
-                                    builder: (context) {
-                                      return bottomOrderDetails();
-                                    });
-                              },
-                            ))),
+                          ),
+                        )),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(17.0),
@@ -367,5 +387,89 @@ class _trackWaitingState extends State<trackWaiting> {
                 ]))
           ],
         ));
+  }
+
+  Stream<types.Room> getRoom(String roomId) {
+    return FirebaseFirestore.instance
+        .collection('rooms')
+        .doc(roomId)
+        .snapshots()
+        .asyncMap(
+          (doc) => processRoomDocument(
+            doc,
+            FirebaseAuth.instance.currentUser!,
+            FirebaseFirestore.instance,
+            'users',
+          ),
+        );
+  }
+
+  Future<types.Room> processRoomDocument(
+    DocumentSnapshot<Map<String, dynamic>> doc,
+    User firebaseUser,
+    FirebaseFirestore instance,
+    String usersCollectionName,
+  ) async {
+    final data = doc.data()!;
+
+    data['createdAt'] = data['createdAt']?.millisecondsSinceEpoch;
+    data['id'] = doc.id;
+    data['updatedAt'] = data['updatedAt']?.millisecondsSinceEpoch;
+
+    var imageUrl = data['imageUrl'] as String?;
+    var name = data['name'] as String?;
+    final type = data['type'] as String;
+    final userIds = data['userIds'] as List<dynamic>;
+    final userRoles = data['userRoles'] as Map<String, dynamic>?;
+
+    final users = await Future.wait(
+      userIds.map(
+        (userId) => fetchUser(
+          instance,
+          userId as String,
+          usersCollectionName,
+          role: userRoles?[userId] as String?,
+        ),
+      ),
+    );
+
+    if (type == types.RoomType.direct.toShortString()) {
+      try {
+        final otherUser = users.firstWhere(
+          (u) => u['id'] != firebaseUser.uid,
+        );
+
+        imageUrl = otherUser['imageUrl'] as String?;
+        name = '${otherUser['firstName'] ?? ''} ${otherUser['lastName'] ?? ''}'
+            .trim();
+      } catch (e) {
+        // Do nothing if other user is not found, because he should be found.
+        // Consider falling back to some default values.
+      }
+    }
+
+    data['imageUrl'] = imageUrl;
+    data['name'] = name;
+    data['users'] = users;
+
+    if (data['lastMessages'] != null) {
+      final lastMessages = data['lastMessages'].map((lm) {
+        final author = users.firstWhere(
+          (u) => u['id'] == lm['authorId'],
+          orElse: () => {'id': lm['authorId'] as String},
+        );
+
+        lm['author'] = author;
+        lm['createdAt'] = lm['createdAt']?.millisecondsSinceEpoch;
+        lm['id'] = lm['id'] ?? '';
+        lm['updatedAt'] = lm['updatedAt']?.millisecondsSinceEpoch;
+
+        return lm;
+      }).toList();
+
+      data['lastMessages'] = lastMessages;
+    }
+
+    return types.Room.fromJson(data);
   }
 }

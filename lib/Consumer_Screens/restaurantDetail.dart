@@ -40,6 +40,12 @@ class _restaurantDetail extends State<restaurantDetail> {
     itemList = DB.retrieve_DMmenu_Items(this.widget.currentProv.get_email);
     retrieveditemList =
         await DB.retrieve_DMmenu_Items(this.widget.currentProv.get_email);
+    for (int i = 0; i < retrieveditemList!.length; i++) {
+      if (retrieveditemList![i].get_quantity == 0) {
+        retrieveditemList!.remove(retrieveditemList![i]);
+        i = i - 1;
+      }
+    }
     setState(() {});
   }
 
@@ -47,6 +53,12 @@ class _restaurantDetail extends State<restaurantDetail> {
     itemList = DB.retrieve_DMmenu_Items(this.widget.currentProv.get_email);
     retrieveditemList =
         await DB.retrieve_DMmenu_Items(this.widget.currentProv.get_email);
+    for (int i = 0; i < retrieveditemList!.length; i++) {
+      if (retrieveditemList![i].get_quantity() == 0) {
+        retrieveditemList!.remove(retrieveditemList![i]);
+        i = i - 1;
+      }
+    }
     setState(() {});
   }
 

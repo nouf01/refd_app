@@ -9,6 +9,8 @@ import '../../DataModel/DB_Service.dart';
 import '../../DataModel/Provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:io';
+import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter/services.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart';
@@ -144,7 +146,7 @@ class _MyWidgetState extends State<ProviderSignUp> {
             email: userEmail,
             phoneNumber: userPhoneNumber,
             accountStatus: Status.Active,
-            rate: 0.0001,
+            rate: 2.5,
             tagList: choosedTags,
             uid: credential.user!.uid,
             logoURL:

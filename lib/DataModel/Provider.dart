@@ -50,7 +50,7 @@ class Provider {
   String _token;
   int _isOpenNow = 1;
   int _totalMeals = 0;
-  double _totalSales = 0.0001;
+  double _totalSales = 0.5;
 
   //List<Item>? itemsList;
   //location
