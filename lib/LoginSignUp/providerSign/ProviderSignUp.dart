@@ -155,7 +155,7 @@ class _MyWidgetState extends State<ProviderSignUp> {
             Lang: widget.providerLong, //double.parse("$UserLang"));
           );
           var otherUser = types.User(
-            firstName: newProvider!.get_commercialName(),
+            firstName: newProvider!.get_commercialName,
             id: newProvider!.get_uid(),
             imageUrl:
                 'https://firebasestorage.googleapis.com/v0/b/refd-d5769.appspot.com/o/User-avatar.svg.png?alt=media&token=5b494d57-6154-4fb3-a670-f454f6b77cc3',

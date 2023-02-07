@@ -35,9 +35,9 @@ class UserType extends StatelessWidget {
             Container(
               height: 80,
               width: 80,
-              decoration: const BoxDecoration(
+              /*decoration: const BoxDecoration(
                   image: DecorationImage(
-                      image: AssetImage("assests/ShoppingBag.png"))),
+                      image: AssetImage("assests/emptyPlaceholder.jpg")))*/
             ),
             const SizedBox(
               height: 70,
