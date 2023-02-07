@@ -58,8 +58,8 @@ class _ConsumerNavigationState extends State<ConsumerNavigation> {
           onTap: _onItemTapped,
           showSelectedLabels: true,
           showUnselectedLabels: false,
-          selectedItemColor: Colors.black,
-          unselectedItemColor: Colors.white,
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Color.fromARGB(255, 208, 208, 208),
           items: const [
             BottomNavigationBarItem(
                 icon: Icon(Icons.home),

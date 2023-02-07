@@ -66,7 +66,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
         appBar: AppBar(
           backgroundColor: Color(0xFF66CDAA),
         ),
-        body: Stack(children: [
+        body: Column(children: [
           SafeArea(
             child: Column(
               children: [
@@ -92,7 +92,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Expanded(
+                              Container(
                                 child: Text(
                                   "${cart![index].getChoosedCartQuantity} x ${cart![index].getItem().get_name()} ",
                                   // maxLines: 2,
@@ -118,10 +118,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                     ),
                   ),
                 ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
+                Container(
                   child: Container(
                     color: Colors.white,
                     padding: const EdgeInsets.only(
@@ -201,137 +198,141 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                         ),
                         SizedBox(height: 16),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Expanded(
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 32,
-                                    vertical: 16.0,
+                            Container(
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 32,
+                                      vertical: 16.0,
+                                    ),
+                                    primary: Color(0xFF66CDAA),
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
                                   ),
-                                  primary: Color(0xFF66CDAA),
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                ),
-                                onPressed: () async {
-                                  //new order object
-                                  Order_object newOrder = Order_object(
-                                    date: DateTime.now(),
-                                    total: total,
-                                    providerID: prov!.get_email,
-                                    consumerID: currentUser!.get_email(),
-                                    status: OrderStatus.underProcess,
-                                    providerLogo: prov!.get_logoURL,
-                                    providerName: prov!.get_commercialName,
-                                    remainingTimer: DateTime.now()
-                                        .add(Duration(minutes: 5))
-                                        .millisecondsSinceEpoch,
-                                  );
-                                  //create room for chatting
-                                  var doc = await FirebaseFirestore.instance
-                                      .collection('users')
-                                      .doc(prov!.get_uid())
-                                      .get();
-                                  var otherUser = types.User(
-                                    firstName: doc.data()!['commercialName'],
-                                    id: prov!.get_uid(),
-                                    imageUrl:
-                                        'https://firebasestorage.googleapis.com/v0/b/refd-d5769.appspot.com/o/User-avatar.svg.png?alt=media&token=5b494d57-6154-4fb3-a670-f454f6b77cc3',
-                                    lastName: doc.data()!['commercialName'],
-                                  );
-                                  var room = await FirebaseChatCore.instance
-                                      .createRoom(otherUser);
-                                  newOrder.setRoomID(room.id);
-                                  //add the object to firebase
-                                  DB.addNewOrderToFirebase(newOrder);
-                                  //add items list to the order
-                                  DB.addItemsToOrder(newOrder, cart!);
-                                  //intilized the 5 minute time write the deadline in firebase
-                                  var target =
-                                      DateTime.now().add(Duration(minutes: 5));
-                                  DB.setOrderTimer(newOrder.getorderID,
-                                      target!.millisecondsSinceEpoch);
-                                  //intilize a timer in the background
-                                  await AndroidAlarmManager.oneShotAt(
-                                    DateTime.fromMillisecondsSinceEpoch(
-                                        target!.millisecondsSinceEpoch),
-                                    int.parse(newOrder.getorderID),
-                                    checkConfirm,
-                                    wakeup: true,
-                                  );
-                                  //empty the cart
-                                  DB.emptyTheCart(currentUser!.get_email());
-                                  //notification to the provider
-                                  _sendMessage(
-                                      consEmail: currentUser!.get_email(),
-                                      provEmail: prov!.get_email,
-                                      orderID: newOrder.getorderID);
-                                  //show dialog
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: const Text(
-                                          "your order placed sucessfully!",
-                                        ),
-                                        content: const Text(
-                                          " you can track it in the order history screen",
-                                        ),
-                                        actions: [
-                                          ElevatedButton(
-                                            child: Text("OK"),
-                                            style: ElevatedButton.styleFrom(
-                                              primary: Color.fromARGB(
-                                                  255, 88, 207, 108),
-                                            ),
-                                            onPressed: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        Scaffold(
-                                                            backgroundColor:
-                                                                Colors.white,
-                                                            appBar: AppBar(
-                                                              title: const Text(
-                                                                  'Order Status'),
-                                                              backgroundColor:
-                                                                  Color(
-                                                                      0xFF66CDAA),
-                                                              leading:
-                                                                  IconButton(
-                                                                icon: Icon(Icons
-                                                                    .arrow_back),
-                                                                onPressed: () {
-                                                                  Navigator
-                                                                      .pushAndRemoveUntil(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                        builder:
-                                                                            (context) =>
-                                                                                ConsumerNavigation(choosedIndex: 2)),
-                                                                    (Route<dynamic>
-                                                                            route) =>
-                                                                        false,
-                                                                  );
-                                                                },
-                                                              ),
-                                                            ),
-                                                            body:
-                                                                trackUnderProcess(
-                                                              order: newOrder,
-                                                            )),
-                                                  ));
-                                            },
+                                  onPressed: () async {
+                                    //new order object
+                                    Order_object newOrder = Order_object(
+                                      date: DateTime.now(),
+                                      total: total,
+                                      providerID: prov!.get_email,
+                                      consumerID: currentUser!.get_email(),
+                                      status: OrderStatus.underProcess,
+                                      providerLogo: prov!.get_logoURL,
+                                      providerName: prov!.get_commercialName,
+                                      remainingTimer: DateTime.now()
+                                          .add(Duration(minutes: 5))
+                                          .millisecondsSinceEpoch,
+                                    );
+                                    //create room for chatting
+                                    var doc = await FirebaseFirestore.instance
+                                        .collection('users')
+                                        .doc(prov!.get_uid())
+                                        .get();
+                                    var otherUser = types.User(
+                                      firstName: doc.data()!['commercialName'],
+                                      id: prov!.get_uid(),
+                                      imageUrl:
+                                          'https://firebasestorage.googleapis.com/v0/b/refd-d5769.appspot.com/o/User-avatar.svg.png?alt=media&token=5b494d57-6154-4fb3-a670-f454f6b77cc3',
+                                      lastName: doc.data()!['commercialName'],
+                                    );
+                                    var room = await FirebaseChatCore.instance
+                                        .createRoom(otherUser);
+                                    newOrder.setRoomID(room.id);
+                                    //add the object to firebase
+                                    DB.addNewOrderToFirebase(newOrder);
+                                    //add items list to the order
+                                    DB.addItemsToOrder(newOrder, cart!);
+                                    //intilized the 5 minute time write the deadline in firebase
+                                    var target = DateTime.now()
+                                        .add(Duration(minutes: 5));
+                                    DB.setOrderTimer(newOrder.getorderID,
+                                        target!.millisecondsSinceEpoch);
+                                    //intilize a timer in the background
+                                    await AndroidAlarmManager.oneShotAt(
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                          target!.millisecondsSinceEpoch),
+                                      int.parse(newOrder.getorderID),
+                                      checkConfirm,
+                                      wakeup: true,
+                                    );
+                                    //empty the cart
+                                    DB.emptyTheCart(currentUser!.get_email());
+                                    //notification to the provider
+                                    _sendMessage(
+                                        consEmail: currentUser!.get_email(),
+                                        provEmail: prov!.get_email,
+                                        orderID: newOrder.getorderID);
+                                    //show dialog
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Text(
+                                            "your order placed sucessfully!",
                                           ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                },
-                                child: Text("Confirm my order"),
+                                          content: const Text(
+                                            " you can track it in the order history screen",
+                                          ),
+                                          actions: [
+                                            ElevatedButton(
+                                              child: Text("OK"),
+                                              style: ElevatedButton.styleFrom(
+                                                  primary: Color(0xFF66CDAA)),
+                                              onPressed: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Scaffold(
+                                                              backgroundColor:
+                                                                  Colors.white,
+                                                              appBar: AppBar(
+                                                                title: const Text(
+                                                                    'Order Status'),
+                                                                backgroundColor:
+                                                                    Color(
+                                                                        0xFF66CDAA),
+                                                                leading:
+                                                                    IconButton(
+                                                                  icon: Icon(Icons
+                                                                      .arrow_back),
+                                                                  onPressed:
+                                                                      () {
+                                                                    Navigator
+                                                                        .pushAndRemoveUntil(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                          builder: (context) =>
+                                                                              ConsumerNavigation(choosedIndex: 2)),
+                                                                      (Route<dynamic>
+                                                                              route) =>
+                                                                          false,
+                                                                    );
+                                                                  },
+                                                                ),
+                                                              ),
+                                                              body: trackUnderProcess(
+                                                                  order:
+                                                                      newOrder,
+                                                                  provider:
+                                                                      prov ////////////////////////////////////////////////////////////////////////
+                                                                  )),
+                                                    ));
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: Text("Confirm my order"),
+                                ),
                               ),
                             ),
                           ],

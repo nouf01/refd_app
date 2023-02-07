@@ -47,7 +47,7 @@ class _path extends State<path> {
           ? Center(
               child: SpinKitFadingCube(
                 size: 85,
-                color: Colors.green,
+                color: Color(0xFF66CDAA),
               ),
             )
           : Stack(alignment: Alignment.center, children: [

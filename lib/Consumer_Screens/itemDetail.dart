@@ -292,7 +292,7 @@ class _items extends State<items> {
             builder: (BuildContext context) {
               return AlertDialog(
                   title: Text(
-                      "You have previous order in the cart from diiferen store!"),
+                      "You have previous order in the cart from a different store!"),
                   content: Text("Do you want to discard the previous order?"),
                   actions: [
                     ElevatedButton(

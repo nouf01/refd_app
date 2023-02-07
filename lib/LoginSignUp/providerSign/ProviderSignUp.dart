@@ -14,14 +14,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart';
 import 'package:chips_choice/chips_choice.dart';
 import 'package:flexi_chip/flexi_chip.dart';
-import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class ProviderSignUp extends StatefulWidget {
   final double providerLat;
   final double providerLong;
 
-  const ProviderSignUp({super.key, providerLat, providerLong})
+  const ProviderSignUp({super.key, required providerLat, required providerLong})
       : this.providerLat = providerLat,
         this.providerLong = providerLong;
   @override
@@ -141,27 +139,19 @@ class _MyWidgetState extends State<ProviderSignUp> {
           print(userLat);
           print(UserLang);
           newProvider = Provider(
-            commercialName: userName,
-            commercialReg: userRegNumber,
-            email: userEmail,
-            phoneNumber: userPhoneNumber,
-            accountStatus: Status.Active,
-            rate: 0.0001,
-            tagList: choosedTags,
-            uid: credential.user!.uid,
-            logoURL:
-                'https://firebasestorage.googleapis.com/v0/b/refd-d5769.appspot.com/o/ah2FODKt_400x400.jpg?alt=media&token=94a0d1e9-e28d-4525-b33b-9933d1da67ba',
-            Lat: widget.providerLat, //double.parse("$userLat"),
-            Lang: widget.providerLong, //double.parse("$UserLang"));
-          );
-          var otherUser = types.User(
-            firstName: newProvider!.get_commercialName(),
-            id: newProvider!.get_uid(),
-            imageUrl:
-                'https://firebasestorage.googleapis.com/v0/b/refd-d5769.appspot.com/o/User-avatar.svg.png?alt=media&token=5b494d57-6154-4fb3-a670-f454f6b77cc3',
-            lastName: newProvider!.get_commercialName,
-          );
-          await FirebaseChatCore.instance.createUserInFirestore(otherUser);
+              commercialName: userName,
+              commercialReg: userRegNumber,
+              email: userEmail,
+              phoneNumber: userPhoneNumber,
+              accountStatus: Status.Active,
+              rate: 0.0001,
+              tagList: choosedTags,
+              logoURL:
+                  'https://firebasestorage.googleapis.com/v0/b/refd-d5769.appspot.com/o/ah2FODKt_400x400.jpg?alt=media&token=94a0d1e9-e28d-4525-b33b-9933d1da67ba',
+              Lat: widget.providerLat, //double.parse("$userLat"),
+              Lang: widget.providerLong,
+              uid: credential.user!.uid //double.parse("$UserLang"));
+              );
           await db.addNewProviderToFirebase(newProvider);
 
           return newProvider;
@@ -529,7 +519,7 @@ class _MyWidgetState extends State<ProviderSignUp> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ProviderLogIn()),
+                                  builder: (context) => ProviderNavigation()),
                             );
                           } else {
                             print("SIGN UP FAILED");
