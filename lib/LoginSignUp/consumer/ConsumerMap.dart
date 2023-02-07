@@ -199,6 +199,10 @@ class _ConsumerMapState extends State<ConsumerMap> {
                               style: TextStyle(fontSize: 15),
                             ),
                             SizedBox(
+                              height: 5,
+                            ),
+                            Text("$SelectedprovphoneNumber"),
+                            SizedBox(
                               height: 18,
                             ),
                             SizedBox(

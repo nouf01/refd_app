@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:refd_app/Consumer_Screens/LoggedConsumer.dart';
 import 'package:refd_app/Consumer_Screens/track.dart';
 import 'package:refd_app/Consumer_Screens/trackCancelled.dart';
@@ -100,7 +101,13 @@ class _OrdersHistoryScreenState extends State<OrdersHistoryScreen> {
                   ),
                 );
               } else {
-                return const Center(child: CircularProgressIndicator());
+                return const Center(
+                    child: Center(
+                  child: SpinKitFadingCube(
+                    size: 85,
+                    color: Color(0xFF66CDAA),
+                  ),
+                ));
               }
             },
           ),

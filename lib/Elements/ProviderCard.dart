@@ -55,8 +55,7 @@ class _PCardState extends State<P_card> {
                           style: TextStyle(fontSize: 18),
                         ),
                         subtitle: Text(
-                          ' ${this.widget.p.get_tags}',
-                        ),
+                            ' ${widget.p.get_tags.toString().replaceAll('[', '').replaceAll(']', '')}'),
                       ),
                     ),
                     Expanded(
@@ -133,7 +132,7 @@ class _PCardState extends State<P_card> {
                           style: TextStyle(fontSize: 18),
                         ),
                         subtitle: Text(
-                          ' ${this.widget.p.get_tags}',
+                          ' ${widget.p.get_tags.toString().replaceAll('[', '').replaceAll(']', '')}',
                         ),
                       ),
                     ),

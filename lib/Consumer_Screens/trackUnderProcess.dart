@@ -27,13 +27,12 @@ import 'package:refd_app/DataModel/DailyMenu_Item.dart';
 import 'package:refd_app/DataModel/item.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class trackUnderProcess extends StatefulWidget {
   Order_object order;
-  trackUnderProcess({
-    super.key,
-    required this.order,
-  });
+  late Provider? provider;
+  trackUnderProcess({super.key, required this.order, this.provider});
   @override
   _trackUnderProcessState createState() => _trackUnderProcessState();
 }
@@ -220,11 +219,30 @@ class _trackUnderProcessState extends State<trackUnderProcess> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(17.0),
-                    child: Container(
-                      height: 200,
-                      child: Image.network(
-                          'https://firebasestorage.googleapis.com/v0/b/refd-d5769.appspot.com/o/GoogleMapTA.webp?alt=media&token=b524dd01-c9fd-4ddc-ab76-565ca5cc6a92'),
+                    child: SizedBox(
+                      height: 45,
+                      width: 300,
+                      child: ElevatedButton(
+                          onPressed: () async {
+                            await launchUrl(Uri.parse(
+                                'google.navigation:q=${widget.provider!.get_Lat}, ${widget.provider!.get_Lang}&key=AIzaSyC02VeFbURsmFAN8jKyl_OhoqE0IMPSvQM'));
+                          },
+                          child: Text(
+                            "Take me to ${widget.provider!.get_commercialName}!",
+                            softWrap: false,
+                            selectionColor: Colors.white,
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Color(0xFF66CDAA)),
+                            foregroundColor:
+                                MaterialStateProperty.all(Colors.white),
+                          )),
                     ),
+                  ),
+                  SizedBox(
+                    height: 50,
                   ),
                   ElevatedButton(
                       style: const ButtonStyle(

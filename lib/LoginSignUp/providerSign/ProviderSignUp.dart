@@ -14,14 +14,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart';
 import 'package:chips_choice/chips_choice.dart';
 import 'package:flexi_chip/flexi_chip.dart';
-import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class ProviderSignUp extends StatefulWidget {
   final double providerLat;
   final double providerLong;
 
-  const ProviderSignUp({super.key, providerLat, providerLong})
+  const ProviderSignUp({super.key, required providerLat, required providerLong})
       : this.providerLat = providerLat,
         this.providerLong = providerLong;
   @override
@@ -529,7 +527,7 @@ class _MyWidgetState extends State<ProviderSignUp> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ProviderLogIn()),
+                                  builder: (context) => ProviderNavigation()),
                             );
                           } else {
                             print("SIGN UP FAILED");

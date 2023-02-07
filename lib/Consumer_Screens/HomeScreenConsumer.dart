@@ -1,4 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+//import 'dart:ffi';
+
 import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +18,7 @@ import 'package:chips_choice/chips_choice.dart';
 import 'package:flexi_chip/flexi_chip.dart';
 import 'package:refd_app/Elements/ProviderCard.dart';
 import 'package:flutter_geocoder/geocoder.dart';
+import 'package:flutter/material.dart';
 
 import '../DataModel/Consumer.dart';
 import '../Elements/SearchBar.dart';
@@ -120,61 +123,60 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           )
         : Scaffold(
-            appBar: AppBar(
-              backgroundColor: Color(0xFF66CDAA),
-              actions: [
-                StreamBuilder(
-                    stream: ref,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
-                            snapshot) {
-                      if (snapshot.data == null) {
-                        return CircularProgressIndicator();
-                      }
-                      int numCart = snapshot.data!.get('numOfCartItems');
-                      bool showB = false;
-                      if (numCart > 0) {
-                        showB = true;
-                      }
-                      return Badge(
-                        position: BadgePosition.topEnd(top: 3, end: 18),
-                        showBadge: showB,
-                        badgeContent: Text(numCart.toString(),
-                            style: TextStyle(color: Colors.white)),
-                        child: IconButton(
-                            icon: Icon(Icons.shopping_cart),
-                            padding: EdgeInsets.only(right: 30.0),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => CartScreen()),
-                              );
-                            }),
-                      );
-                    }),
-              ],
-              leading: IconButton(
-                icon: Icon(Icons.location_pin),
-                onPressed: () {},
-              ),
-              centerTitle: false,
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Location',
-                    style: TextStyle(fontSize: 13),
-                  ),
-                  adress == null
-                      ? Text("")
-                      : Text(
-                          adress!,
-                          style: TextStyle(fontSize: 15),
-                          maxLines: 3,
-                          softWrap: true,
-                        ),
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(65.0), // here the desired height
+              child: AppBar(
+                backgroundColor: Color(0xFF66CDAA),
+                actions: [
+                  StreamBuilder(
+                      stream: ref,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
+                              snapshot) {
+                        if (snapshot.data == null) {
+                          return CircularProgressIndicator();
+                        }
+                        int numCart = snapshot.data!.get('numOfCartItems');
+                        bool showB = false;
+                        if (numCart > 0) {
+                          showB = true;
+                        }
+                        return Badge(
+                          position: BadgePosition.topEnd(top: 3, end: 18),
+                          showBadge: showB,
+                          badgeContent: Text(numCart.toString(),
+                              style: TextStyle(color: Colors.white)),
+                          child: IconButton(
+                              icon: Icon(Icons.shopping_cart),
+                              padding: EdgeInsets.only(right: 30.0),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CartScreen()),
+                                );
+                              }),
+                        );
+                      }),
                 ],
+                leading: IconButton(
+                  icon: Icon(Icons.location_pin),
+                  onPressed: () {},
+                ),
+                centerTitle: true,
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    adress == null
+                        ? Text("")
+                        : Text(
+                            adress!,
+                            style: TextStyle(fontSize: 15),
+                            maxLines: 5,
+                            softWrap: true,
+                          ),
+                  ],
+                ),
               ),
             ),
             body: Column(

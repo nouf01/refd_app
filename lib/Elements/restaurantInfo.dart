@@ -66,7 +66,7 @@ class _restaurantInfo extends State<restaurantInfo> {
                       ),
                     ),
                     Text(
-                      ' ${this.widget.currentProve.get_tags}',
+                      ' ${widget.currentProve.get_tags.toString().replaceAll('[', '').replaceAll(']', '')}',
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         color: Colors.white,
