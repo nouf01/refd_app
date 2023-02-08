@@ -14,6 +14,7 @@ import 'package:refd_app/Consumer_Screens/track.dart';
 import 'package:refd_app/Consumer_Screens/trackCancelled.dart';
 import 'package:refd_app/Consumer_Screens/trackPickedUp.dart';
 import 'package:refd_app/DataModel/Consumer.dart';
+import 'package:refd_app/Provider_Screens/LoggedProv.dart';
 import 'package:refd_app/Provider_Screens/ProvHome.dart';
 import 'package:refd_app/Provider_Screens/ProviderNavigation.dart';
 import 'package:refd_app/Provider_Screens/pickedUp.dart';
@@ -50,6 +51,7 @@ class _WaitingForPickUpState extends State<WaitingForPickUp> {
   List<DailyMenu_Item>? orderItems;
   Consumer? consumer;
   Stream<types.Room>? roomStream;
+  LoggedProvider log = LoggedProvider();
 
   /*void startTimer() {
     timer = Timer.periodic(Duration(seconds: 1), (_) {
@@ -292,8 +294,14 @@ class _WaitingForPickUpState extends State<WaitingForPickUp> {
                                   onPressed: () {
                                     //change order status to picked up
                                     changeOrderStatus();
-                                    //send notification
-
+                                    //add To Total Sales
+                                    db.updateTotalSales(log.getEmailOnly(),
+                                        widget.order.get_total);
+                                    //add to Total meals
+                                    db.updateMeals(log.getEmailOnly());
+                                    //for all items increment num of pick up
+                                    db.updateNumOfPick(orderItems!);
+                                    //go to the next status page
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(

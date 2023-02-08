@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_icons_null_safety/flutter_icons_null_safety.dart';
 import 'package:refd_app/DataModel/DB_Service.dart';
 import 'package:refd_app/DataModel/Provider.dart';
 import 'package:refd_app/LoginSignUp/providerSign/ProviderProfile.dart';
-import 'package:refd_app/Provider_Screens/anlysis.dart';
-
+import 'package:refd_app/Provider_Screens/stat/analysis.dart';
 import '../messaging_service.dart';
 import 'DailyMenu.dart';
 import 'ProvHome.dart';
@@ -39,7 +39,7 @@ class _ProviderNavigationState extends State<ProviderNavigation> {
     HomeScreenProvider(),
     DailyMenuScreen(),
     OrdersHistoryProvider(),
-    AnalysisScreen(),
+    StatsPage(),
     ProviderProfile(),
   ];
   void _onItemTapped(int index) {
@@ -71,7 +71,7 @@ class _ProviderNavigationState extends State<ProviderNavigation> {
                 backgroundColor: Color(0xFF66CDAA),
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.show_chart_outlined),
+                icon: Icon(Ionicons.md_stats),
                 label: 'Analysis',
                 backgroundColor: Color(0xFF66CDAA),
               ),

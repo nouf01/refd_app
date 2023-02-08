@@ -64,6 +64,13 @@ dependencies:
   open_filex: ^4.3.2
   path_provider: ^2.0.12
   flutter_chat_types: ^3.6.0
+  flutter_icons_null_safety: ^1.1.0
+  percent_indicator: ^4.2.2
+  animated_bottom_navigation_bar: ^1.1.0+1
+  fl_chart: ^0.60.0
+  animate_do: ^3.0.2
+  carousel_slider: ^4.2.1
+  line_icons: ^2.0.1
 
 flutter_native_splash:
   color: "#42a5f5"

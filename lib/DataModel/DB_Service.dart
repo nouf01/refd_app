@@ -140,6 +140,21 @@ class Database {
     updateProviderInfo(provID, false, '', {'rate': newRate});
   }
 
+  void updateTotalSales(String provID, double amount) async {
+    double totalSales = (await _db.collection('Providers').doc(provID).get())
+        .data()!['totalSales'];
+    totalSales = totalSales + amount;
+    totalSales = double.parse(totalSales.toStringAsFixed(2));
+    updateProviderInfo(provID, false, '', {'totalSales': totalSales});
+  }
+
+  void updateMeals(String provID) async {
+    int totalMeals = (await _db.collection('Providers').doc(provID).get())
+        .data()!['totalMeals'];
+    totalMeals = totalMeals + 1;
+    updateProviderInfo(provID, false, '', {'totalMeals': totalMeals});
+  }
+
   //************************ Menu **********************/
 
   void addToProviderMenu(Item newItem) async {
@@ -185,6 +200,22 @@ class Database {
     return snapshot.docs
         .map((docSnapshot) => Item.fromDocumentSnapshot(docSnapshot))
         .toList();
+  }
+
+  void updateNumOfPick(List<DailyMenu_Item> dmList) async {
+    String provID = dmList[0].getItem().get_providerID;
+    for (var i = 0; i < dmList.length; i++) {
+      int numPick = (await _db
+              .collection('Providers')
+              .doc(provID)
+              .collection('itemsList')
+              .doc(dmList[i].get_uid)
+              .get())
+          .data()!['howManyPickedUp'];
+      numPick = numPick + 1;
+      updateItemInfo(
+          dmList[i].get_uid, dmList[i].getItem(), {'howManyPickedUp': numPick});
+    }
   }
 
   //************************Daily Menu **********************/
