@@ -46,13 +46,20 @@ class _HomeScreenProviderState extends State<HomeScreenProvider> {
             appBar: AppBar(
                 leading: GestureDetector(
                   onTap: () => Navigator.of(context).pop(),
-                  child: Image.network(p!.get_logoURL),
+                  child: ClipOval(
+                      clipBehavior: Clip.hardEdge,
+                      child: Image.network(
+                        p!.get_logoURL,
+                        height: 110,
+                        width: 110,
+                        fit: BoxFit.cover,
+                      )),
                 ),
                 title: Center(
                   child: Text(p!.get_commercialName),
                 ),
                 backgroundColor: Color(0xFF66CDAA),
-                actions: [
+                /*actions: [
                   SliderButton(
                     action: () {
                       ///Do something here OnSlide
@@ -93,15 +100,15 @@ class _HomeScreenProviderState extends State<HomeScreenProvider> {
                     highlightedColor: Colors.white,
                     baseColor: Colors.red,
                   ),
-                ],
+                ],*/
                 bottom: TabBar(
                   tabs: [
                     Tab(
                         child: Text('Under process',
-                            style: TextStyle(fontSize: 12))),
+                            style: TextStyle(fontSize: 15))),
                     Tab(
                         child: Text('Waiting for pickup',
-                            style: TextStyle(fontSize: 12))),
+                            style: TextStyle(fontSize: 15))),
                   ],
                 )),
             resizeToAvoidBottomInset: true,

@@ -214,6 +214,7 @@ class _EditScreenState extends State<EditScreen> {
                   width: 355,
                   height: 100,
                   child: TextFormField(
+                    maxLines: 7,
                     initialValue: widget.currentItem.getDecription(),
                     onSaved: (newValue) {
                       itemDescrib = newValue;
@@ -239,6 +240,9 @@ class _EditScreenState extends State<EditScreen> {
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(100))),
                   ),
+                ),
+                SizedBox(
+                  height: 40,
                 ),
                 Container(
                   width: 330,

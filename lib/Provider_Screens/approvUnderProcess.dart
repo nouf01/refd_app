@@ -251,13 +251,12 @@ class _approveUnderProcessState extends State<approveUnderProcess> {
                                     color: Color(0xFF66CDAA),
                                   ),
                                   onPressed: () async {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => ChatPage(
-                                          room: snapshot.data!,
-                                        ),
+                                    Navigator.of(context, rootNavigator: true)
+                                        .push(MaterialPageRoute(
+                                      builder: (_) => ChatPage(
+                                        room: snapshot.data!,
                                       ),
-                                    );
+                                    ));
                                   },
                                 );
                               },

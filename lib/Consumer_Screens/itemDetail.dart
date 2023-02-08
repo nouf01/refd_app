@@ -117,11 +117,26 @@ class _items extends State<items> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: EdgeInsets.all(10),
                               child: Text(
-                                widget.currentItem.getItem().getDecription(),
-                                style: const TextStyle(
-                                  fontSize: 15,
+                                widget.currentItem.getItem().get_name(),
+                                softWrap: true,
+                                style: TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.center,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  widget.currentItem.getItem().getDecription(),
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                  ),
                                 ),
                               ),
                             ),
@@ -440,24 +455,12 @@ class itemAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
+      automaticallyImplyLeading: false,
       backgroundColor: Color(0xFF66CDAA),
       pinned: true,
       expandedHeight: 250.0,
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
-        title: Padding(
-          padding: const EdgeInsets.all(6.0),
-          child: Text(
-            widget.currentItem.getItem().get_name(),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              backgroundColor: Color.fromARGB(133, 254, 255, 254),
-              color: Color(0xFF66CDAA),
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
         background: Image.network(
           widget.currentItem.getItem().get_imageURL(),
           fit: BoxFit.cover,

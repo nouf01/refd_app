@@ -321,8 +321,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                                                   order:
                                                                       newOrder,
                                                                   provider:
-                                                                      prov ////////////////////////////////////////////////////////////////////////
-                                                                  )),
+                                                                      prov)),
                                                     ));
                                               },
                                             ),

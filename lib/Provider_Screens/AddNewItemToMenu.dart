@@ -224,6 +224,7 @@ class _AddDish extends State<AddDish> {
                   width: 355,
                   height: 100,
                   child: TextFormField(
+                    maxLines: 7,
                     onSaved: (newValue) {
                       itemDescrib = newValue;
                       setState(() {});
@@ -248,6 +249,9 @@ class _AddDish extends State<AddDish> {
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(100))),
                   ),
+                ),
+                SizedBox(
+                  height: 40,
                 ),
                 Container(
                   width: 330,

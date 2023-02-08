@@ -29,7 +29,17 @@ class _OrderCardState extends State<OrderCard> {
         ),
         elevation: 0,*/
         decoration: BoxDecoration(
-            border: Border.all(color: Colors.black), color: Colors.white),
+            boxShadow: [
+              BoxShadow(
+                color: Color.fromARGB(255, 176, 176, 176).withOpacity(0.2),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
+            borderRadius: BorderRadius.all(Radius.circular(15)),
+            border: Border.all(color: Color.fromARGB(255, 209, 209, 209)),
+            color: Colors.white),
         //color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.all(8),

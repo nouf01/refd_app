@@ -32,6 +32,7 @@ class _ChatPageState extends State<ChatPage> {
         appBar: AppBar(
           systemOverlayStyle: SystemUiOverlayStyle.light,
           title: const Text('Chat'),
+          backgroundColor: Color(0xFF66CDAA),
         ),
         body: StreamBuilder<types.Room>(
           initialData: widget.room,
@@ -40,6 +41,11 @@ class _ChatPageState extends State<ChatPage> {
             initialData: const [],
             stream: FirebaseChatCore.instance.messages(snapshot.data!),
             builder: (context, snapshot) => Chat(
+              theme: DefaultChatTheme(
+                  inputBackgroundColor: Colors.grey,
+                  inputTextColor: Colors.white,
+                  inputTextCursorColor: Colors.white,
+                  primaryColor: Color(0xFF66CDAA)),
               isAttachmentUploading: _isAttachmentUploading,
               messages: snapshot.data ?? [],
               onAttachmentPressed: _handleAtachmentPressed,

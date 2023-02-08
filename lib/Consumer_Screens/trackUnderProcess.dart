@@ -11,6 +11,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:refd_app/Consumer_Screens/ConsumerNavigation.dart';
 import 'package:refd_app/Consumer_Screens/OrdersHistoryConsumer.dart';
 import 'package:refd_app/Consumer_Screens/chat.dart';
@@ -82,7 +83,8 @@ class _trackUnderProcessState extends State<trackUnderProcess> {
         .snapshots();
     orderItems = await db.retrieve_Order_Items(widget.order.getorderID);
     roomStream = getRoom(widget.order.getRoomID);
-    setState(() {});
+
+    setState(() async {});
   }
 
   void dispose() {
@@ -112,246 +114,267 @@ class _trackUnderProcessState extends State<trackUnderProcess> {
 
   @override
   Widget build(BuildContext context) {
-    if (orderStream == null) {
-      return CircularProgressIndicator();
-    } else {
-      return StreamBuilder(
-          stream: orderStream,
-          builder: (BuildContext context,
-              AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
-            if (snapshot == null ||
-                !snapshot.hasData ||
-                snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
-            }
-            String status = snapshot.data!.get('status');
-            String theID = snapshot.data!.get('orderID');
-            int isByProv = snapshot.data!.get('isCancelledByProv');
-            if (status == OrderStatus.canceled.toString()) {
-              orderStream = null;
-              return trackCancelled(orderID: theID, cancelByProv: isByProv);
-            } else if (status == OrderStatus.waitingForPickUp.toString()) {
-              orderStream = null;
-              return trackWaiting(orderID: theID);
-            } else {
-              return SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const TimeLineStatus(
-                      whichStatus: 0,
-                    ),
-                    SizedBox(height: 50),
-                    Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+    return Scaffold(
+      body: orderStream == null
+          ? Center(
+              child: SpinKitFadingCube(
+                size: 85,
+                color: Color(0xFF66CDAA),
+              ),
+            )
+          : StreamBuilder(
+              stream: orderStream,
+              builder: (BuildContext context,
+                  AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
+                      snapshot) {
+                if (snapshot.hasData && !snapshot.hasError) {
+                  String status = snapshot.data!.get('status');
+                  String theID = snapshot.data!.get('orderID');
+                  int isByProv = snapshot.data!.get('isCancelledByProv');
+                  if (status == OrderStatus.canceled.toString()) {
+                    orderStream = null;
+                    return trackCancelled(
+                        orderID: theID, cancelByProv: isByProv);
+                  } else if (status ==
+                      OrderStatus.waitingForPickUp.toString()) {
+                    orderStream = null;
+                    return trackWaiting(orderID: theID);
+                  } else {
+                    return SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          SizedBox(width: 30),
-                          Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: buildTimer()),
-                          Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Text(
-                              'Wait for ${widget.order.getProviderName} \n to accepet your order',
-                              style: const TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 0, 0, 0)),
-                              textAlign: TextAlign.center,
-                            ),
+                          const TimeLineStatus(
+                            whichStatus: 0,
                           ),
-                        ]),
-                    const SizedBox(height: 30),
-                    Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(16.0),
-                            border: Border.all(color: Colors.black),
-                          ),
-                          child: ListTile(
-                            //contentPadding: EdgeInsets.all(5.0),
-                            leading:
-                                Image.network(widget.order.getProviderLogo),
-                            onTap: () {
-                              showModalBottomSheet(
-                                  context: context,
-                                  builder: (context) {
-                                    return bottomOrderDetails();
-                                  });
-                            },
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            isThreeLine: true,
-                            title: Text('${widget.order.getProviderName}'),
-                            subtitle: Text(
-                                'Order #${widget.order.getorderID}\n${widget.order.getdate.toString().substring(0, 16)}'),
-                            trailing: StreamBuilder<types.Room>(
-                              stream: roomStream!,
-                              builder: (context, snapshot) {
-                                if (snapshot.data == null ||
-                                    snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                  return CircularProgressIndicator();
-                                }
-                                return IconButton(
-                                  iconSize: 30.0,
-                                  icon: Icon(
-                                    Icons.chat,
-                                    color: Color(0xFF66CDAA),
+                          SizedBox(height: 50),
+                          Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(width: 30),
+                                Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: buildTimer()),
+                                Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Text(
+                                    'Wait for ${widget.order.getProviderName} \n to accepet your order',
+                                    style: const TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color.fromARGB(255, 0, 0, 0)),
+                                    textAlign: TextAlign.center,
                                   ),
-                                  onPressed: () async {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => ChatPage(
-                                          room: snapshot.data!,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                            /*IconButton(
-                                  iconSize: 30.0,
-                                  icon: Icon(
-                                    Icons.arrow_drop_down_circle_outlined,
-                                    color: Colors.black,
-                                  ),
-                                  onPressed: () {
+                                ),
+                              ]),
+                          const SizedBox(height: 30),
+                          Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16.0),
+                                  border: Border.all(color: Colors.black),
+                                ),
+                                child: ListTile(
+                                  //contentPadding: EdgeInsets.all(5.0),
+                                  leading: Image.network(
+                                      widget.order.getProviderLogo),
+                                  onTap: () {
                                     showModalBottomSheet(
                                         context: context,
                                         builder: (context) {
                                           return bottomOrderDetails();
                                         });
                                   },
-                                ),*/
-                          )),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(17.0),
-                      child: SizedBox(
-                        height: 45,
-                        width: 300,
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              await launchUrl(Uri.parse(
-                                  'google.navigation:q=${widget.provider!.get_Lat}, ${widget.provider!.get_Lang}&key=AIzaSyC02VeFbURsmFAN8jKyl_OhoqE0IMPSvQM'));
-                            },
-                            child: Text(
-                              "Take me to ${widget.provider!.get_commercialName}!",
-                              softWrap: false,
-                              selectionColor: Colors.white,
-                              style: TextStyle(fontSize: 20),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  isThreeLine: true,
+                                  title:
+                                      Text('${widget.order.getProviderName}'),
+                                  subtitle: Text(
+                                      'Order #${widget.order.getorderID}\n${widget.order.getdate.toString().substring(0, 16)}'),
+                                  trailing: StreamBuilder<types.Room>(
+                                    stream: roomStream!,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.data == null ||
+                                          snapshot.connectionState ==
+                                              ConnectionState.waiting) {
+                                        return CircularProgressIndicator();
+                                      }
+                                      return IconButton(
+                                        iconSize: 30.0,
+                                        icon: Icon(
+                                          Icons.chat,
+                                          color: Color(0xFF66CDAA),
+                                        ),
+                                        onPressed: () async {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) => ChatPage(
+                                                room: snapshot.data!,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                  ),
+                                  /*IconButton(
+                                    iconSize: 30.0,
+                                    icon: Icon(
+                                      Icons.arrow_drop_down_circle_outlined,
+                                      color: Colors.black,
+                                    ),
+                                    onPressed: () {
+                                      showModalBottomSheet(
+                                          context: context,
+                                          builder: (context) {
+                                            return bottomOrderDetails();
+                                          });
+                                    },
+                                  ),*/
+                                )),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(17.0),
+                            child: SizedBox(
+                              height: 45,
+                              width: 300,
+                              child: ElevatedButton(
+                                  onPressed: () async {
+                                    await launchUrl(Uri.parse(
+                                        'google.navigation:q=${widget.provider!.get_Lat}, ${widget.provider!.get_Lang}&key=AIzaSyC02VeFbURsmFAN8jKyl_OhoqE0IMPSvQM'));
+                                  },
+                                  child: Text(
+                                    "Take me to ${widget.provider!.get_commercialName}!",
+                                    softWrap: false,
+                                    selectionColor: Colors.white,
+                                    style: TextStyle(fontSize: 20),
+                                  ),
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                        Color(0xFF66CDAA)),
+                                    foregroundColor:
+                                        MaterialStateProperty.all(Colors.white),
+                                  )),
                             ),
-                            style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.all(Color(0xFF66CDAA)),
-                              foregroundColor:
-                                  MaterialStateProperty.all(Colors.white),
-                            )),
+                          ),
+                          SizedBox(
+                            height: 50,
+                          ),
+                          ElevatedButton(
+                              style: const ButtonStyle(
+                                backgroundColor:
+                                    MaterialStatePropertyAll<Color>(
+                                        Color.fromARGB(255, 246, 77, 65)),
+                                fixedSize: MaterialStatePropertyAll<Size>(
+                                    Size(200.0, 20.0)),
+                              ),
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                          title: Text("Confirm Cancellation"),
+                                          content: Text(
+                                              "Do you want to cancel the current order?"),
+                                          actions: [
+                                            ElevatedButton(
+                                                child: Text("Yes Cancel"),
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      Color.fromARGB(
+                                                          255, 175, 91, 76),
+                                                ),
+                                                onPressed: () async {
+                                                  changeOrderStatus();
+                                                  db.updateOrderInfo(
+                                                      widget.order.getorderID,
+                                                      {'isCancelledByProv': 0});
+                                                  db.returnItemsToDailyMenu(
+                                                      orderItems!,
+                                                      widget.order
+                                                          .get_ProviderID);
+                                                  _sendMessage();
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            Scaffold(
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .white,
+                                                                appBar: AppBar(
+                                                                  title: const Text(
+                                                                      'Order Status'),
+                                                                  backgroundColor:
+                                                                      Color.fromARGB(
+                                                                          255,
+                                                                          88,
+                                                                          207,
+                                                                          108),
+                                                                  leading:
+                                                                      IconButton(
+                                                                    icon: Icon(Icons
+                                                                        .arrow_back),
+                                                                    onPressed:
+                                                                        () {
+                                                                      Navigator
+                                                                          .pushAndRemoveUntil(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                            builder: (context) =>
+                                                                                ConsumerNavigation(choosedIndex: 2)),
+                                                                        (Route<dynamic>
+                                                                                route) =>
+                                                                            false,
+                                                                      );
+                                                                    },
+                                                                  ),
+                                                                ),
+                                                                body:
+                                                                    trackCancelled(
+                                                                  orderID: widget
+                                                                      .order
+                                                                      .getorderID,
+                                                                  cancelByProv:
+                                                                      0,
+                                                                )),
+                                                      ));
+                                                }),
+                                            ElevatedButton(
+                                                child: Text("No"),
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      Color.fromARGB(
+                                                          255, 108, 114, 108),
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                })
+                                          ]);
+                                    });
+                              },
+                              child: const Text(
+                                'Cancel Order',
+                                style: TextStyle(fontSize: 18),
+                              )),
+                        ],
                       ),
+                    );
+                  }
+                } else {
+                  return Center(
+                    child: SpinKitFadingCube(
+                      size: 85,
+                      color: Color(0xFF66CDAA),
                     ),
-                    SizedBox(
-                      height: 50,
-                    ),
-                    ElevatedButton(
-                        style: const ButtonStyle(
-                          backgroundColor: MaterialStatePropertyAll<Color>(
-                              Color.fromARGB(255, 246, 77, 65)),
-                          fixedSize:
-                              MaterialStatePropertyAll<Size>(Size(200.0, 20.0)),
-                        ),
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                    title: Text("Confirm Cancellation"),
-                                    content: Text(
-                                        "Do you want to cancel the current order?"),
-                                    actions: [
-                                      ElevatedButton(
-                                          child: Text("Yes Cancel"),
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Color.fromARGB(
-                                                255, 175, 91, 76),
-                                          ),
-                                          onPressed: () async {
-                                            changeOrderStatus();
-                                            db.updateOrderInfo(
-                                                widget.order.getorderID,
-                                                {'isCancelledByProv': 0});
-                                            db.returnItemsToDailyMenu(
-                                                orderItems!,
-                                                widget.order.get_ProviderID);
-                                            _sendMessage();
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      Scaffold(
-                                                          backgroundColor:
-                                                              Colors.white,
-                                                          appBar: AppBar(
-                                                            title: const Text(
-                                                                'Order Status'),
-                                                            backgroundColor:
-                                                                Color.fromARGB(
-                                                                    255,
-                                                                    88,
-                                                                    207,
-                                                                    108),
-                                                            leading: IconButton(
-                                                              icon: Icon(Icons
-                                                                  .arrow_back),
-                                                              onPressed: () {
-                                                                Navigator
-                                                                    .pushAndRemoveUntil(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                      builder: (context) =>
-                                                                          ConsumerNavigation(
-                                                                              choosedIndex: 2)),
-                                                                  (Route<dynamic>
-                                                                          route) =>
-                                                                      false,
-                                                                );
-                                                              },
-                                                            ),
-                                                          ),
-                                                          body: trackCancelled(
-                                                            orderID: widget
-                                                                .order
-                                                                .getorderID,
-                                                            cancelByProv: 0,
-                                                          )),
-                                                ));
-                                          }),
-                                      ElevatedButton(
-                                          child: Text("No"),
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Color.fromARGB(
-                                                255, 108, 114, 108),
-                                          ),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          })
-                                    ]);
-                              });
-                        },
-                        child: const Text(
-                          'Cancel Order',
-                          style: TextStyle(fontSize: 18),
-                        )),
-                  ],
-                ),
-              );
-            }
-          });
-    }
+                  );
+                }
+              }),
+    );
   }
 
   changeOrderStatus() {

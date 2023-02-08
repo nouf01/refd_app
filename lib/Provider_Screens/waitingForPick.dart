@@ -186,9 +186,20 @@ class _WaitingForPickUpState extends State<WaitingForPickUp> {
                     padding: const EdgeInsets.all(15.0),
                     child: Container(
                         decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color.fromARGB(255, 176, 176, 176)
+                                  .withOpacity(0.2),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset:
+                                  Offset(0, 3), // changes position of shadow
+                            ),
+                          ],
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(16.0),
-                          border: Border.all(color: Colors.black),
+                          border: Border.all(
+                              color: Color.fromARGB(255, 212, 212, 212)),
                         ),
                         child: ListTile(
                             //contentPadding: EdgeInsets.all(5.0),
@@ -212,7 +223,7 @@ class _WaitingForPickUpState extends State<WaitingForPickUp> {
                               iconSize: 30.0,
                               icon: Icon(
                                 Icons.arrow_drop_down_circle_outlined,
-                                color: Colors.black,
+                                color: Color(0xFF66CDAA),
                               ),
                               onPressed: () {
                                 showModalBottomSheet(
@@ -227,9 +238,20 @@ class _WaitingForPickUpState extends State<WaitingForPickUp> {
                     padding: const EdgeInsets.all(15.0),
                     child: Container(
                         decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color.fromARGB(255, 176, 176, 176)
+                                  .withOpacity(0.2),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset:
+                                  Offset(0, 3), // changes position of shadow
+                            ),
+                          ],
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(16.0),
-                          border: Border.all(color: Colors.black),
+                          border: Border.all(
+                              color: Color.fromARGB(255, 212, 212, 212)),
                         ),
                         child: ListTile(
                             //contentPadding: EdgeInsets.all(5.0),
@@ -281,7 +303,7 @@ class _WaitingForPickUpState extends State<WaitingForPickUp> {
                                 "Confirm pick up",
                               ),
                               content: const Text(
-                                "Confirm that the consumer has pick up the order",
+                                "Confirm that the consumer has picked up the order",
                               ),
                               actions: [
                                 ElevatedButton(

@@ -82,7 +82,8 @@ class _ProviderNavigationState extends State<ProviderNavigation> {
               ),
             ],
             currentIndex: _pageIndex,
-            selectedItemColor: Colors.black,
+            selectedItemColor: Colors.white,
+            unselectedItemColor: Color.fromARGB(255, 208, 208, 208),
             onTap: _onItemTapped,
           )),
     );
