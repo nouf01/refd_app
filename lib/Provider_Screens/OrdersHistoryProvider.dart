@@ -40,21 +40,24 @@ class _OrdersHistoryProviderState extends State<OrdersHistoryProvider> {
                       color: Colors.white,
                     )),*/
                 title: Center(
-                  child: Text('Orders History'),
+                  child: Text(
+                    'Orders History',
+                    style: TextStyle(fontSize: 25),
+                  ),
                 ),
                 backgroundColor: Color(0xFF66CDAA),
                 bottom: TabBar(
                   tabs: [
                     Tab(
                         child: Text('Under process',
-                            style: TextStyle(fontSize: 12))),
+                            style: TextStyle(fontSize: 13))),
                     Tab(
                         child: Text('Waiting for pickup',
-                            style: TextStyle(fontSize: 12))),
+                            style: TextStyle(fontSize: 13))),
                     Tab(
                         child:
-                            Text('Picked Up', style: TextStyle(fontSize: 12))),
-                    Tab(child: Text('Canceled', style: TextStyle(fontSize: 12)))
+                            Text('Picked Up', style: TextStyle(fontSize: 13))),
+                    Tab(child: Text('Canceled', style: TextStyle(fontSize: 13)))
                   ],
                 )),
             resizeToAvoidBottomInset: true,

@@ -84,7 +84,7 @@ class _restaurantInfo extends State<restaurantInfo> {
                     )),
                 Icon(
                   Icons.star,
-                  color: Colors.white,
+                  color: Colors.yellow,
                 ),
               ],
             ),

@@ -152,6 +152,8 @@ class _PCardState extends State<P_card> {
                             ),
                             child: Row(
                               children: <Widget>[
+                                Text(
+                                    '${this.widget.p.get_rate.toString().substring(0, 3)}'),
                                 Icon(
                                   star = IconData(
                                     0xe5f9,
@@ -159,8 +161,6 @@ class _PCardState extends State<P_card> {
                                   ),
                                   color: Colors.yellow,
                                 ),
-                                Text(
-                                    '${this.widget.p.get_rate.toString().substring(0, 3)}'),
                               ],
                             ),
                           ),

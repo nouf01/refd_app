@@ -111,84 +111,97 @@ class _restaurantDetail extends State<restaurantDetail> {
               }),
         ],
       ),
-      body: Column(
-        children: [
-          restaurantInfo(
-            currentProve: widget.currentProv,
-          ),
-          Container(
-            height: 600,
-            child: RefreshIndicator(
-              onRefresh: _refresh,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: FutureBuilder(
-                  future: itemList,
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<DailyMenu_Item>> snapshot) {
-                    if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                      return ListView.separated(
-                          itemCount: retrieveditemList!.length,
-                          separatorBuilder: (context, index) => const SizedBox(
-                                height: 10,
-                              ),
-                          itemBuilder: (context, index) {
-                            return Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(16.0)),
-                              child: Card(
-                                child: ListTile(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => items(
-                                                currentItem: retrieveditemList![
-                                                    index])));
-                                  },
-                                  leading: Image.network(
-                                      retrieveditemList![index]
-                                          .getItem()
-                                          .get_imageURL()),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            restaurantInfo(
+              currentProve: widget.currentProv,
+            ),
+            Container(
+              height: 600,
+              child: RefreshIndicator(
+                onRefresh: _refresh,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: FutureBuilder(
+                    future: itemList,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<DailyMenu_Item>> snapshot) {
+                      if (snapshot.hasData &&
+                          snapshot.data!.isNotEmpty &&
+                          snapshot.connectionState == ConnectionState.done) {
+                        return SingleChildScrollView(
+                          child: ListView.separated(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: retrieveditemList!.length,
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(
+                                    height: 10,
                                   ),
-                                  title: Text(
-                                    retrieveditemList![index]
-                                        .getItem()
-                                        .get_name(),
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                              itemBuilder: (context, index) {
+                                return Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius:
+                                          BorderRadius.circular(16.0)),
+                                  child: Card(
+                                    child: ListTile(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => items(
+                                                    currentItem:
+                                                        retrieveditemList![
+                                                            index])));
+                                      },
+                                      leading: Image.network(
+                                          retrieveditemList![index]
+                                              .getItem()
+                                              .get_imageURL()),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                      ),
+                                      title: Text(
+                                        retrieveditemList![index]
+                                            .getItem()
+                                            .get_name(),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      subtitle: Text(
+                                          "${retrieveditemList![index].getItem().getDecription()}, \n ${retrieveditemList![index].getPriceAfetr_discount} SAR"),
+                                      trailing:
+                                          const Icon(Icons.arrow_right_sharp),
+                                    ),
                                   ),
-                                  subtitle: Text(
-                                      "${retrieveditemList![index].getItem().getDecription()}, \n ${retrieveditemList![index].getPriceAfetr_discount} SAR"),
-                                  trailing: const Icon(Icons.arrow_right_sharp),
-                                ),
-                              ),
-                            );
-                          });
-                    } else if (snapshot.connectionState ==
-                            ConnectionState.done &&
-                        retrieveditemList!.isEmpty) {
-                      return Center(
-                        child: ListView(
-                          children: const <Widget>[
-                            Align(
-                                alignment: AlignmentDirectional.center,
-                                child: Text('No data available')),
-                          ],
-                        ),
-                      );
-                    } else {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                  },
+                                );
+                              }),
+                        );
+                      } else if (snapshot.connectionState ==
+                              ConnectionState.done &&
+                          retrieveditemList!.isEmpty) {
+                        return Center(
+                          child: ListView(
+                            children: const <Widget>[
+                              Align(
+                                  alignment: AlignmentDirectional.center,
+                                  child: Text('No data available')),
+                            ],
+                          ),
+                        );
+                      } else {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                    },
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

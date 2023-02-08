@@ -42,7 +42,7 @@ class _DailyMenuWidgetState extends State<DailyMenuWidget> {
         direction: Axis.horizontal, //use vertical to show  on vertical axis
         children: <Widget>[
           Container(
-              margin: EdgeInsets.all(10),
+              margin: EdgeInsets.all(15),
               child: FloatingActionButton.extended(
                 label: Text('             Save Updates             '),
                 onPressed: () {
@@ -92,7 +92,7 @@ class _DailyMenuWidgetState extends State<DailyMenuWidget> {
               )), //button first
 
           Container(
-              margin: EdgeInsets.all(10),
+              margin: const EdgeInsets.all(5),
               child: FloatingActionButton(
                 onPressed: () {
                   showModalBottomSheet(
@@ -142,7 +142,7 @@ class _DailyMenuWidgetState extends State<DailyMenuWidget> {
                                   ),
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
-                                      horizontal: 15,
+                                      horizontal: 3,
                                       vertical: 15,
                                     ),
                                     child: Column(
@@ -177,7 +177,9 @@ class _DailyMenuWidgetState extends State<DailyMenuWidget> {
                                                     width: 150,
                                                     height: 55,
                                                     child: Text(
-                                                      'lore ipsuim hjter dhg slryfs hfsmf sgeyw djslw dgsjwnr sh fjwle shioryw ',
+                                                      retrieveditemList![index]
+                                                          .getItem()
+                                                          .getDecription(),
                                                       maxLines: 5,
                                                       softWrap: true,
                                                       textAlign:

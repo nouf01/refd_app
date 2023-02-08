@@ -93,7 +93,8 @@ class _MenuScreenState extends State<MenuScreen> {
                                           width: 170,
                                           height: 55,
                                           child: Text(
-                                            'lore ipsuim hjter dhg slryfs hfsmf sgeyw djslw dgsjwnr sh fjwle shioryw ',
+                                            retrieveditemList![index]
+                                                .getDecription(),
                                             maxLines: 5,
                                             softWrap: true,
                                             textAlign: TextAlign.start,
@@ -105,8 +106,8 @@ class _MenuScreenState extends State<MenuScreen> {
                                         ),
                                         AppText(
                                           text:
-                                              "\$${retrieveditemList![index].get_originalPrice().toStringAsFixed(2)}",
-                                          fontSize: 18,
+                                              "${retrieveditemList![index].get_originalPrice().toStringAsFixed(2)}SR",
+                                          fontSize: 15,
                                           fontWeight: FontWeight.bold,
                                         ),
                                         SizedBox(
@@ -169,8 +170,8 @@ class _MenuScreenState extends State<MenuScreen> {
 
   Widget imageWidget(int index) {
     return Image.network(
-      height: 100,
-      width: 100,
+      height: 60,
+      width: 60,
       fit: BoxFit.contain,
       retrieveditemList![index].get_imageURL(),
     );

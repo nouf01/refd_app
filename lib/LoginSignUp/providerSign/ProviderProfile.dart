@@ -419,6 +419,9 @@ class _MyConsumerProfileState extends State<ProviderProfile> {
                           )),
                     ),
                   ),
+                  SizedBox(
+                    height: 40,
+                  )
                 ],
               ),
             ),
