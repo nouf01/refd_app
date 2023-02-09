@@ -5,8 +5,11 @@ import 'dart:core';
 import 'dart:developer';
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:refd_app/Consumer_Screens/ConsumerNavigation.dart';
 import 'package:refd_app/Consumer_Screens/OrdersHistoryConsumer.dart';
 import 'package:refd_app/Consumer_Screens/track.dart';
@@ -23,6 +26,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'chat.dart';
 
@@ -45,6 +49,7 @@ class _trackWaitingState extends State<trackWaiting> {
   Order_object? widgetOrder;
   Stream<DocumentSnapshot<Map<String, dynamic>>>? orderStream;
   Stream<types.Room>? roomStream;
+  Provider? prov;
 
   /*void startTimer() {
     timer = Timer.periodic(Duration(seconds: 1), (_) {
@@ -64,10 +69,10 @@ class _trackWaitingState extends State<trackWaiting> {
 
     if (target!.isBefore(DateTime.now())) {
       setState(() {
-        timeLeft = 'Timer     ';
+        timeLeft = 'Expired';
         isExpired = true;
+        checkPickUp(widget.orderID);
       });
-      print(timeLeft);
     } else {
       executeTimer();
     }
@@ -92,6 +97,8 @@ class _trackWaitingState extends State<trackWaiting> {
         .snapshots();
     orderItems = await db.retrieve_Order_Items(widget.orderID);
     roomStream = getRoom(widgetOrder!.getRoomID);
+    prov = Provider.fromDocumentSnapshot(
+        await db.searchForProvider(widgetOrder!.get_ProviderID));
     setState(() {});
   }
 
@@ -122,128 +129,189 @@ class _trackWaitingState extends State<trackWaiting> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-        stream: orderStream,
-        builder: (BuildContext context,
-            AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
-          if (snapshot.data == null) {
-            return CircularProgressIndicator();
-          }
-          String status = snapshot.data!.get('status');
-          String theID = snapshot.data!.get('orderID');
-          int isByProv = snapshot.data!.get('isCancelledByProv');
-          if (status == OrderStatus.canceled.toString()) {
-            orderStream = null;
-            return trackCancelled(orderID: theID, cancelByProv: isByProv);
-          } else if (status == OrderStatus.pickedUp.toString()) {
-            orderStream = null;
-            return trackPickedUp(orderID: theID);
-          } else {
-            int remTime = snapshot.data!.get('remainingTimer');
-            _initTimer();
-            return SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const TimeLineStatus(
-                    whichStatus: 1,
-                  ),
-                  Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Padding(
-                        padding: const EdgeInsets.all(32.0),
-                        child: buildTimer()),
-                    Padding(
-                      padding: const EdgeInsets.all(32.0),
-                      child: Text(
-                        'Your order from ${widgetOrder!.getProviderName} \nis ready for pick up',
-                        style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 0, 0, 0)),
-                        textAlign: TextAlign.center,
+    return orderStream == null
+        ? Center(
+            child: SpinKitFadingCube(
+              //size: 85,
+              color: Color(0xFF66CDAA),
+            ),
+          )
+        : StreamBuilder(
+            stream: orderStream,
+            builder: (BuildContext context,
+                AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
+                    snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting ||
+                  snapshot.connectionState == ConnectionState.none) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.hasError) {
+                return const Center(
+                  child: Text('Snapshot error'),
+                );
+              }
+              if (!snapshot.hasData) {
+                return const Center(
+                  child: Text('Snapshot data missing'),
+                );
+              }
+              String status = snapshot.data!.get('status');
+              String theID = snapshot.data!.get('orderID');
+              int isByProv = snapshot.data!.get('isCancelledByProv');
+              if (status == OrderStatus.canceled.toString()) {
+                //orderStream = null;
+                return trackCancelled(orderID: theID, cancelByProv: isByProv);
+              } else if (status == OrderStatus.pickedUp.toString()) {
+                //orderStream = null;
+                return trackPickedUp(orderID: theID);
+              } else {
+                int remTime = snapshot.data!.get('remainingTimer');
+                _initTimer();
+                return SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const TimeLineStatus(
+                        whichStatus: 1,
                       ),
-                    ),
-                  ]),
-                  Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16.0),
-                          border: Border.all(color: Colors.black),
-                        ),
-                        child: ListTile(
-                          //contentPadding: EdgeInsets.all(5.0),
-                          leading: Image.network(widgetOrder!.getProviderLogo),
-                          onTap: () {
-                            showModalBottomSheet(
-                                context: context,
-                                builder: (context) {
-                                  return bottomOrderDetails();
-                                });
-                          },
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          isThreeLine: true,
-                          title: Text('${widgetOrder!.getProviderName}'),
-                          subtitle: Text(
-                              'Order #${widgetOrder!.getorderID}\n${widgetOrder!.getdate.toString().substring(0, 16)}'),
-                          trailing: StreamBuilder<types.Room>(
-                            stream: roomStream!,
-                            builder: (context, snapshot) {
-                              if (snapshot.data == null ||
-                                  snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                return CircularProgressIndicator();
-                              }
-                              return IconButton(
-                                iconSize: 30.0,
-                                icon: Icon(
-                                  Icons.chat,
-                                  color: Color(0xFF66CDAA),
-                                ),
-                                onPressed: () async {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => ChatPage(
-                                        room: snapshot.data!,
-                                      ),
+                      Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                                padding: const EdgeInsets.all(32.0),
+                                child: buildTimer()),
+                            Padding(
+                              padding: const EdgeInsets.all(32.0),
+                              child: Text(
+                                'Your order from ${widgetOrder!.getProviderName} \nis ready for pick up',
+                                style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromARGB(255, 0, 0, 0)),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ]),
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16.0),
+                              border: Border.all(color: Colors.black),
+                            ),
+                            child: ListTile(
+                              //contentPadding: EdgeInsets.all(5.0),
+                              leading:
+                                  Image.network(widgetOrder!.getProviderLogo),
+                              onTap: () {
+                                showModalBottomSheet(
+                                    context: context,
+                                    builder: (context) {
+                                      return bottomOrderDetails();
+                                    });
+                              },
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              isThreeLine: true,
+                              title: Text('${widgetOrder!.getProviderName}'),
+                              subtitle: Text(
+                                  'Order #${widgetOrder!.getorderID}\n${widgetOrder!.getdate.toString().substring(0, 16)}'),
+                              trailing: roomStream == null
+                                  ? Container(
+                                      height: 10,
+                                      width: 10,
+                                      child: CircularProgressIndicator(),
+                                    )
+                                  : StreamBuilder<types.Room>(
+                                      stream: roomStream!,
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                                ConnectionState.waiting ||
+                                            snapshot.connectionState ==
+                                                ConnectionState.none) {
+                                          return Container(
+                                            height: 10,
+                                            width: 10,
+                                            child: CircularProgressIndicator(),
+                                          );
+                                        }
+                                        if (snapshot.hasError) {
+                                          return Container(
+                                            height: 10,
+                                            width: 10,
+                                            child: Text('error'),
+                                          );
+                                        }
+                                        if (!snapshot.hasData) {
+                                          return Container(
+                                            height: 10,
+                                            width: 10,
+                                            child: Text('miss'),
+                                          );
+                                        }
+                                        if (snapshot.data == null ||
+                                            snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                          return Container(
+                                            height: 10,
+                                            width: 10,
+                                            child: CircularProgressIndicator(),
+                                          );
+                                        }
+                                        return IconButton(
+                                          iconSize: 30.0,
+                                          icon: Icon(
+                                            Icons.chat,
+                                            color: Color(0xFF66CDAA),
+                                          ),
+                                          onPressed: () async {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) => ChatPage(
+                                                  room: snapshot.data!,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      },
                                     ),
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                        )),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(17.0),
-                    child: Container(
-                      height: 200,
-                      child: Image.network(
-                          'https://firebasestorage.googleapis.com/v0/b/refd-d5769.appspot.com/o/GoogleMapTA.webp?alt=media&token=b524dd01-c9fd-4ddc-ab76-565ca5cc6a92'),
-                    ),
-                  ),
-                  ElevatedButton(
-                      style: const ButtonStyle(
-                        backgroundColor:
-                            MaterialStatePropertyAll<Color>(Color(0xFF66CDAA)),
-                        fixedSize:
-                            MaterialStatePropertyAll<Size>(Size(300.0, 20.0)),
+                            )),
                       ),
-                      onPressed: () {
-                        //Google Map Code Here
-                      },
-                      child: const Text(
-                        'Start Google Map Directions',
-                        style: TextStyle(fontSize: 18),
-                      )),
-                ],
-              ),
-            );
-          }
-        });
+                      Padding(
+                        padding: const EdgeInsets.all(17.0),
+                        child: SizedBox(
+                          height: 45,
+                          width: 300,
+                          child: ElevatedButton(
+                              onPressed: () async {
+                                await launchUrl(Uri.parse(
+                                    'google.navigation:q=${prov!.get_Lat}, ${prov!.get_Lang}&key=AIzaSyC02VeFbURsmFAN8jKyl_OhoqE0IMPSvQM'));
+                              },
+                              child: Text(
+                                "Take me to ${widgetOrder!.getProviderName}!",
+                                softWrap: false,
+                                selectionColor: Colors.white,
+                                style: TextStyle(fontSize: 20),
+                              ),
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    Color(0xFF66CDAA)),
+                                foregroundColor:
+                                    MaterialStateProperty.all(Colors.white),
+                              )),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 50,
+                      ),
+                    ],
+                  ),
+                );
+              }
+            });
   }
 
   changeOrderStatus() {
@@ -471,5 +539,62 @@ class _trackWaitingState extends State<trackWaiting> {
     }
 
     return types.Room.fromJson(data);
+  }
+
+  @pragma('vm:entry-point')
+  static void checkPickUp(orderID) async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+    final FirebaseFirestore _db = FirebaseFirestore.instance;
+    Database db = Database();
+    Order_object order = Order_object.fromDocumentSnapshot(
+        await FirebaseFirestore.instance
+            .collection('Orders')
+            .doc(orderID.toString())
+            .get());
+    if (order.get_status == OrderStatus.waitingForPickUp.toString()) {
+      //change the status of the order to canceled
+      db.updateOrderInfo(orderID.toString(),
+          {'status': OrderStatus.canceled.toString(), 'isCancelledByProv': 0});
+      //return items to daily menu
+      List<DailyMenu_Item> orderItems =
+          await db.retrieve_Order_Items(orderID.toString());
+      db.returnItemsToDailyMenu(orderItems!, order.get_ProviderID);
+      //increment the cancelation counter
+      int counter = (await FirebaseFirestore.instance
+              .collection('Consumers')
+              .doc(order.get_consumerID)
+              .get())
+          .data()!['cancelCounter'];
+      counter++;
+      await FirebaseFirestore.instance
+          .collection('Consumers')
+          .doc(order.get_consumerID)
+          .update({'cancelCounter': counter});
+      //Notification to the consumer that his order is canceled due to no picked up
+      _sendMessageCanceled(
+          consEmail: order.get_consumerID,
+          provName: order.get_consumerID,
+          orderID: orderID);
+    }
+  }
+
+  static Future _sendMessageCanceled(
+      {required String consEmail,
+      required String provName,
+      required String orderID}) async {
+    String consumerToken = (await FirebaseFirestore.instance
+            .collection('Consumers')
+            .doc(consEmail)
+            .get())
+        .data()!['token'];
+    var func = FirebaseFunctions.instance.httpsCallable("notifySubscribers");
+    var res = await func.call(<String, dynamic>{
+      "targetDevices": [consumerToken],
+      "messageTitle": "Your order from ${provName} is canceled",
+      "messageBody": 'The pick up timer expired'
+    });
+
+    print("message was ${res.data as bool ? "sent!" : "not sent!"}");
   }
 }

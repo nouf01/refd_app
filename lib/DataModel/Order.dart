@@ -23,6 +23,7 @@ class Order_object {
   final double _total;
   final String _providerID;
   final String _consumerID;
+  final String _consumerName;
   final String _providerLogo;
   final String _providerName;
   final int _isCancelledByProv;
@@ -35,6 +36,7 @@ class Order_object {
       required total,
       required providerID,
       required consumerID,
+      required consumerName,
       required status,
       required providerLogo,
       required providerName,
@@ -50,6 +52,7 @@ class Order_object {
         this._isCancelledByProv = 0,
         this._hasRate = 0,
         this._remainingTimer = remainingTimer,
+        this._consumerName = consumerName,
         this._providerName = providerName;
 
   Map<String, dynamic> toMap() {
@@ -59,6 +62,7 @@ class Order_object {
       'total': _total,
       'providerID': _providerID,
       'consumerID': _consumerID,
+      'consumerName': _consumerName,
       'status': _status,
       'providerLogo': _providerLogo,
       'providerName': _providerName,
@@ -71,6 +75,7 @@ class Order_object {
 
   Order_object.fromMap(Map<String, dynamic> orderMap)
       : _providerID = orderMap["providerID"],
+        _consumerName = orderMap["consumerName"],
         _orderID = orderMap["orderID"],
         _date = orderMap["date"],
         _consumerID = orderMap["consumerID"],
@@ -96,6 +101,7 @@ class Order_object {
         _isCancelledByProv = doc.data()!["isCancelledByProv"],
         _hasRate = doc.data()!["hasRate"],
         _remainingTimer = doc.data()!['remainingTimer'],
+        _consumerName = doc.data()!['consumerName'],
         _roomID = doc.data()!['roomID'],
         _providerLogo = doc.data()!["providerLogo"];
 
@@ -105,6 +111,10 @@ class Order_object {
 
   void setRoomID(String value) {
     this._roomID = value;
+  }
+
+  String getConsumerName() {
+    return _consumerName;
   }
 
   get getdate => this._date;

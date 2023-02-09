@@ -222,6 +222,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                       total: total,
                                       providerID: prov!.get_email,
                                       consumerID: currentUser!.get_email(),
+                                      consumerName: currentUser!.get_name(),
                                       status: OrderStatus.underProcess,
                                       providerLogo: prov!.get_logoURL,
                                       providerName: prov!.get_commercialName,
@@ -319,9 +320,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                                               ),
                                                               body: trackUnderProcess(
                                                                   order:
-                                                                      newOrder,
-                                                                  provider:
-                                                                      prov)),
+                                                                      newOrder)),
                                                     ));
                                               },
                                             ),

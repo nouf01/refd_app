@@ -240,7 +240,6 @@ class _approveUnderProcessState extends State<approveUnderProcess> {
                             ),
                             isThreeLine: false,
                             title: Text('${consumer!.get_name()}'),
-                            subtitle: Text('${consumer!.get_email()}'),
                             trailing: StreamBuilder<types.Room>(
                               stream: roomStream,
                               builder: (context, snapshot) {
@@ -273,7 +272,7 @@ class _approveUnderProcessState extends State<approveUnderProcess> {
                         //change order status to waiting for pick up
                         changeOrderStatus();
                         //start the 45 min waiting for pick up timer
-                        var target = DateTime.now().add(Duration(minutes: 45));
+                        var target = DateTime.now().add(Duration(minutes: 2));
                         db.setOrderTimer(widget.order.getorderID,
                             target!.millisecondsSinceEpoch);
                         //start timer in the background
@@ -302,34 +301,7 @@ class _approveUnderProcessState extends State<approveUnderProcess> {
                                     primary: Color(0xFF66CDAA),
                                   ),
                                   onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => Scaffold(
-                                              backgroundColor: Colors.white,
-                                              appBar: AppBar(
-                                                title:
-                                                    const Text('Order Status'),
-                                                backgroundColor: Color.fromARGB(
-                                                    255, 88, 207, 108),
-                                                leading: IconButton(
-                                                  icon: Icon(Icons.arrow_back),
-                                                  onPressed: () {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              ProviderNavigation(
-                                                                  choosedIndex:
-                                                                      0)),
-                                                    );
-                                                  },
-                                                ),
-                                              ),
-                                              body: WaitingForPickUp(
-                                                order: widget.order,
-                                              ))),
-                                    );
+                                    Navigator.pop(context);
                                   },
                                 ),
                               ],
@@ -569,7 +541,7 @@ class _approveUnderProcessState extends State<approveUnderProcess> {
       _sendMessageCanceled(
           consEmail: order.get_consumerID,
           provName: order.get_consumerID,
-          orderID: orderID);
+          orderID: orderID.toString());
     }
   }
 

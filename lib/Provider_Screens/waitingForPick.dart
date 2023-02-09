@@ -7,15 +7,10 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:refd_app/Consumer_Screens/ConsumerNavigation.dart';
-import 'package:refd_app/Consumer_Screens/OrdersHistoryConsumer.dart';
-import 'package:refd_app/Consumer_Screens/track.dart';
-import 'package:refd_app/Consumer_Screens/trackCancelled.dart';
-import 'package:refd_app/Consumer_Screens/trackPickedUp.dart';
 import 'package:refd_app/DataModel/Consumer.dart';
 import 'package:refd_app/Provider_Screens/LoggedProv.dart';
-import 'package:refd_app/Provider_Screens/ProvHome.dart';
 import 'package:refd_app/Provider_Screens/ProviderNavigation.dart';
 import 'package:refd_app/Provider_Screens/pickedUp.dart';
 import 'package:refd_app/Provider_Screens/timeLineWidget.dart';
@@ -53,34 +48,17 @@ class _WaitingForPickUpState extends State<WaitingForPickUp> {
   Stream<types.Room>? roomStream;
   LoggedProvider log = LoggedProvider();
 
-  /*void startTimer() {
-    timer = Timer.periodic(Duration(seconds: 1), (_) {
-      setState(() {
-        if (seconds > 0) {
-          seconds--;
-        } else {
-          timer!.cancel();
-        }
-      });
-    });
-  }*/
-
   _initTimer() async {
-    //prefs = await SharedPreferences.getInstance();
-
     var remainingTimeFromDB =
         await db.getOrderRemainingTimer(widget.order.getorderID);
     target = DateTime.fromMillisecondsSinceEpoch(remainingTimeFromDB);
-    //target = DateTime.fromMillisecondsSinceEpoch(prefs.getInt('target'));
 
     if (target!.isBefore(DateTime.now())) {
-      print(
-          'Yaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaay');
       setState(() {
-        timeLeft = 'expired';
+        timeLeft = 'Expired';
         isExpired = true;
+        checkPickUp(widget.order.getorderID);
       });
-      print(timeLeft);
     } else {
       executeTimer();
     }
@@ -265,7 +243,7 @@ class _WaitingForPickUpState extends State<WaitingForPickUp> {
                             ),
                             isThreeLine: false,
                             title: Text('${consumer!.get_name()}'),
-                            subtitle: Text('${consumer!.get_email()}'),
+                            subtitle: Text('  '),
                             trailing: StreamBuilder<types.Room>(
                               stream: roomStream,
                               builder: (context, snapshot) {
@@ -332,8 +310,8 @@ class _WaitingForPickUpState extends State<WaitingForPickUp> {
                                               appBar: AppBar(
                                                 title:
                                                     const Text('Order Status'),
-                                                backgroundColor: Color.fromARGB(
-                                                    255, 88, 207, 108),
+                                                backgroundColor:
+                                                    Color(0xFF66CDAA),
                                                 leading: IconButton(
                                                   icon: Icon(Icons.arrow_back),
                                                   onPressed: () {
@@ -619,5 +597,62 @@ class _WaitingForPickUpState extends State<WaitingForPickUp> {
     }
 
     return types.Room.fromJson(data);
+  }
+
+  @pragma('vm:entry-point')
+  static void checkPickUp(orderID) async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+    final FirebaseFirestore _db = FirebaseFirestore.instance;
+    Database db = Database();
+    Order_object order = Order_object.fromDocumentSnapshot(
+        await FirebaseFirestore.instance
+            .collection('Orders')
+            .doc(orderID.toString())
+            .get());
+    if (order.get_status == OrderStatus.waitingForPickUp.toString()) {
+      //change the status of the order to canceled
+      db.updateOrderInfo(orderID.toString(),
+          {'status': OrderStatus.canceled.toString(), 'isCancelledByProv': 0});
+      //return items to daily menu
+      List<DailyMenu_Item> orderItems =
+          await db.retrieve_Order_Items(orderID.toString());
+      db.returnItemsToDailyMenu(orderItems!, order.get_ProviderID);
+      //increment the cancelation counter
+      int counter = (await FirebaseFirestore.instance
+              .collection('Consumers')
+              .doc(order.get_consumerID)
+              .get())
+          .data()!['cancelCounter'];
+      counter++;
+      await FirebaseFirestore.instance
+          .collection('Consumers')
+          .doc(order.get_consumerID)
+          .update({'cancelCounter': counter});
+      //Notification to the consumer that his order is canceled due to no picked up
+      _sendMessageCanceled(
+          consEmail: order.get_consumerID,
+          provName: order.getProviderName,
+          orderID: orderID);
+    }
+  }
+
+  static Future _sendMessageCanceled(
+      {required String consEmail,
+      required String provName,
+      required String orderID}) async {
+    String consumerToken = (await FirebaseFirestore.instance
+            .collection('Consumers')
+            .doc(consEmail)
+            .get())
+        .data()!['token'];
+    var func = FirebaseFunctions.instance.httpsCallable("notifySubscribers");
+    var res = await func.call(<String, dynamic>{
+      "targetDevices": [consumerToken],
+      "messageTitle": "Your order from ${provName} is canceled",
+      "messageBody": 'The pick up timer expired'
+    });
+    print('Sent to ${consumerToken}');
+    print("message was ${res.data as bool ? "sent!" : "not sent!"}");
   }
 }

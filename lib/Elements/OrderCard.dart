@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -103,12 +105,11 @@ class _OrderCardState extends State<OrderCard> {
                           height: 8,
                         ),
                         Text(
-                          '${this.widget.order.get_consumerID}',
+                          '${this.widget.order.getConsumerName()}',
                           style: TextStyle(fontSize: 13),
                         ),
                       ],
                     ),
-                    VerticalDivider(thickness: 1),
                   ],
                 ),
               ),

@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, sort_child_properties_last
 
 import 'dart:async';
 import 'dart:core';
@@ -32,15 +32,13 @@ import 'package:url_launcher/url_launcher.dart';
 
 class trackUnderProcess extends StatefulWidget {
   Order_object order;
-  late Provider? provider;
-  trackUnderProcess({super.key, required this.order, this.provider});
+  trackUnderProcess({super.key, required this.order});
   @override
   _trackUnderProcessState createState() => _trackUnderProcessState();
 }
 
 class _trackUnderProcessState extends State<trackUnderProcess> {
   Timer? timer;
-
   DateTime? target;
   String timeLeft = "Timer    ";
   bool running = true;
@@ -49,6 +47,7 @@ class _trackUnderProcessState extends State<trackUnderProcess> {
   List<DailyMenu_Item>? orderItems;
   Stream<DocumentSnapshot<Map<String, dynamic>>>? orderStream;
   Stream<types.Room>? roomStream;
+  Provider? prov;
 
   _initTimer() async {
     var remainingTimeFromDB =
@@ -57,13 +56,11 @@ class _trackUnderProcessState extends State<trackUnderProcess> {
     //target = DateTime.fromMillisecondsSinceEpoch(prefs.getInt('target'));
 
     if (target!.isBefore(DateTime.now())) {
-      print(
-          'Yaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaay');
       setState(() {
-        timeLeft = 'Timer           ';
+        timeLeft = 'Expired';
         isExpired = true;
+        checkConfirm(widget.order.getorderID);
       });
-      print(timeLeft);
     } else {
       executeTimer();
     }
@@ -83,8 +80,10 @@ class _trackUnderProcessState extends State<trackUnderProcess> {
         .snapshots();
     orderItems = await db.retrieve_Order_Items(widget.order.getorderID);
     roomStream = getRoom(widget.order.getRoomID);
+    prov = Provider.fromDocumentSnapshot(
+        await db.searchForProvider(widget.order.get_ProviderID));
 
-    setState(() async {});
+    setState(() {});
   }
 
   void dispose() {
@@ -118,26 +117,43 @@ class _trackUnderProcessState extends State<trackUnderProcess> {
       body: orderStream == null
           ? Center(
               child: SpinKitFadingCube(
-                size: 85,
+                //size: 85,
                 color: Color(0xFF66CDAA),
               ),
             )
           : StreamBuilder(
-              stream: orderStream,
+              stream: orderStream!,
               builder: (BuildContext context,
                   AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
                       snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting ||
+                    snapshot.connectionState == ConnectionState.none) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (snapshot.hasError) {
+                  return const Center(
+                    child: Text('Snapshot error'),
+                  );
+                }
+                if (!snapshot.hasData) {
+                  return const Center(
+                    child: Text('Snapshot data missing'),
+                  );
+                }
                 if (snapshot.hasData && !snapshot.hasError) {
                   String status = snapshot.data!.get('status');
                   String theID = snapshot.data!.get('orderID');
                   int isByProv = snapshot.data!.get('isCancelledByProv');
                   if (status == OrderStatus.canceled.toString()) {
-                    orderStream = null;
+                    //orderStream = null;
                     return trackCancelled(
                         orderID: theID, cancelByProv: isByProv);
                   } else if (status ==
                       OrderStatus.waitingForPickUp.toString()) {
-                    orderStream = null;
+                    //orderStream = null;
+                    return trackWaiting(orderID: theID);
+                  } else if (status == OrderStatus.pickedUp.toString()) {
+                    //orderStream = null;
                     return trackWaiting(orderID: theID);
                   } else {
                     return SingleChildScrollView(
@@ -195,32 +211,69 @@ class _trackUnderProcessState extends State<trackUnderProcess> {
                                       Text('${widget.order.getProviderName}'),
                                   subtitle: Text(
                                       'Order #${widget.order.getorderID}\n${widget.order.getdate.toString().substring(0, 16)}'),
-                                  trailing: StreamBuilder<types.Room>(
-                                    stream: roomStream!,
-                                    builder: (context, snapshot) {
-                                      if (snapshot.data == null ||
-                                          snapshot.connectionState ==
-                                              ConnectionState.waiting) {
-                                        return CircularProgressIndicator();
-                                      }
-                                      return IconButton(
-                                        iconSize: 30.0,
-                                        icon: Icon(
-                                          Icons.chat,
-                                          color: Color(0xFF66CDAA),
-                                        ),
-                                        onPressed: () async {
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (context) => ChatPage(
-                                                room: snapshot.data!,
+                                  trailing: roomStream == null
+                                      ? Container(
+                                          height: 10,
+                                          width: 10,
+                                          child: CircularProgressIndicator(),
+                                        )
+                                      : StreamBuilder<types.Room>(
+                                          stream: roomStream!,
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                    ConnectionState.waiting ||
+                                                snapshot.connectionState ==
+                                                    ConnectionState.none) {
+                                              return Container(
+                                                height: 10,
+                                                width: 10,
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              );
+                                            }
+                                            if (snapshot.hasError) {
+                                              return Container(
+                                                height: 10,
+                                                width: 10,
+                                                child: Text('error'),
+                                              );
+                                            }
+                                            if (!snapshot.hasData) {
+                                              return Container(
+                                                height: 10,
+                                                width: 10,
+                                                child: Text('miss'),
+                                              );
+                                            }
+                                            if (snapshot.data == null ||
+                                                snapshot.connectionState ==
+                                                    ConnectionState.waiting) {
+                                              return Container(
+                                                height: 10,
+                                                width: 10,
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              );
+                                            }
+                                            return IconButton(
+                                              iconSize: 30.0,
+                                              icon: Icon(
+                                                Icons.chat,
+                                                color: Color(0xFF66CDAA),
                                               ),
-                                            ),
-                                          );
-                                        },
-                                      );
-                                    },
-                                  ),
+                                              onPressed: () async {
+                                                Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ChatPage(
+                                                      room: snapshot.data!,
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          },
+                                        ),
                                   /*IconButton(
                                     iconSize: 30.0,
                                     icon: Icon(
@@ -245,10 +298,10 @@ class _trackUnderProcessState extends State<trackUnderProcess> {
                               child: ElevatedButton(
                                   onPressed: () async {
                                     await launchUrl(Uri.parse(
-                                        'google.navigation:q=${widget.provider!.get_Lat}, ${widget.provider!.get_Lang}&key=AIzaSyC02VeFbURsmFAN8jKyl_OhoqE0IMPSvQM'));
+                                        'google.navigation:q=${prov!.get_Lat}, ${prov!.get_Lang}&key=AIzaSyC02VeFbURsmFAN8jKyl_OhoqE0IMPSvQM'));
                                   },
                                   child: Text(
-                                    "Take me to ${widget.provider!.get_commercialName}!",
+                                    "Take me to ${widget.order.getProviderName}!",
                                     softWrap: false,
                                     selectionColor: Colors.white,
                                     style: TextStyle(fontSize: 20),
@@ -310,11 +363,8 @@ class _trackUnderProcessState extends State<trackUnderProcess> {
                                                                   title: const Text(
                                                                       'Order Status'),
                                                                   backgroundColor:
-                                                                      Color.fromARGB(
-                                                                          255,
-                                                                          88,
-                                                                          207,
-                                                                          108),
+                                                                      Color(
+                                                                          0xFF66CDAA),
                                                                   leading:
                                                                       IconButton(
                                                                     icon: Icon(Icons
@@ -619,5 +669,52 @@ class _trackUnderProcessState extends State<trackUnderProcess> {
     }
 
     return types.Room.fromJson(data);
+  }
+
+  @pragma('vm:entry-point')
+  static void checkConfirm(orderID) async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+    final FirebaseFirestore _db = FirebaseFirestore.instance;
+    Database db = Database();
+    Order_object order = Order_object.fromDocumentSnapshot(
+        await FirebaseFirestore.instance
+            .collection('Orders')
+            .doc(orderID.toString())
+            .get());
+    if (order.get_status == OrderStatus.underProcess.toString()) {
+      //change the status of the order to canceled
+      db.updateOrderInfo(orderID.toString(),
+          {'status': OrderStatus.canceled.toString(), 'isCancelledByProv': 1});
+      //return items to daily menu
+      List<DailyMenu_Item> orderItems =
+          await db.retrieve_Order_Items(orderID.toString());
+      db.returnItemsToDailyMenu(orderItems!, order.get_ProviderID);
+      //Notification to the consumer that the order is not confirmed
+      _sendMessageNoResponse(
+          provName: order.getProviderName,
+          consEmail: order.get_consumerID,
+          orderID: order.getorderID);
+    }
+  }
+
+  static Future _sendMessageNoResponse(
+      {required String consEmail,
+      required String provName,
+      required String orderID}) async {
+    String consumerToken = (await FirebaseFirestore.instance
+            .collection('Consumers')
+            .doc(consEmail)
+            .get())
+        .data()!['token'];
+    var func = FirebaseFunctions.instance.httpsCallable("notifySubscribers");
+    var res = await func.call(<String, dynamic>{
+      "targetDevices": [consumerToken],
+      "messageTitle": "Your order from ${provName} is canceled",
+      "messageBody":
+          'Sorry ${provName} could not accepet your order at the moment'
+    });
+
+    print("message was ${res.data as bool ? "sent!" : "not sent!"}");
   }
 }

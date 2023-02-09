@@ -376,7 +376,7 @@ class Database {
       update_DM_Item_Info(
           orderOBJ.get_ProviderID, dmList[i].get_uid, {'quantity': ref});
       if (ref == 0) {
-        removeFromPrvoiderDM(orderOBJ.get_ProviderID, dmList[0].get_uid);
+        removeFromPrvoiderDM(orderOBJ.get_ProviderID, dmList[0]);
         int numOfItems = (await _db
                 .collection('Providers')
                 .doc(dmList[i].getItem().get_providerID)
