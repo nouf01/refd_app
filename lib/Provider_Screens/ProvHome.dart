@@ -9,6 +9,7 @@ import 'package:refd_app/Elements/listOfOrdersWidget.dart';
 import 'package:refd_app/Elements/restaurantInfo.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:refd_app/Provider_Screens/LoggedProv.dart';
+import 'package:lite_rolling_switch/lite_rolling_switch.dart';
 
 import '../DataModel/Provider.dart';
 import '../messaging_service.dart';
@@ -44,21 +45,79 @@ class _HomeScreenProviderState extends State<HomeScreenProvider> {
           length: 2,
           child: Scaffold(
             appBar: AppBar(
-                leading: GestureDetector(
+                toolbarHeight: 120,
+                leadingWidth: 80,
+                /*leading: GestureDetector(
                   onTap: () => Navigator.of(context).pop(),
                   child: ClipOval(
                       clipBehavior: Clip.hardEdge,
                       child: Image.network(
                         p!.get_logoURL,
                         height: 110,
-                        width: 110,
+                        width: 10,
                         fit: BoxFit.cover,
                       )),
-                ),
-                title: Center(
-                  child: Text(p!.get_commercialName),
+                ),*/
+                title: Column(
+                  children: [
+                    Center(
+                      child: Row(
+                        children: [
+                          ClipOval(
+                              clipBehavior: Clip.hardEdge,
+                              child: Image.network(
+                                p!.get_logoURL,
+                                height: 50,
+                                width: 50,
+                                fit: BoxFit.cover,
+                              )),
+                          SizedBox(
+                            width: 80,
+                          ),
+                          Text(p!.get_commercialName),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      height: 50,
+                      child: LiteRollingSwitch(
+                        width: 300,
+                        value: p!.get_isOpen() == 0 ? false : true,
+                        textOn: 'open',
+                        textOff: 'closed',
+                        colorOn: Color.fromARGB(255, 75, 177, 143),
+                        colorOff: Colors.grey,
+                        textOnColor: Colors.white,
+                        iconOn: Icons.store,
+                        iconOff: Icons.event_busy_outlined,
+                        onChanged: (bool state) {
+                          if (state) {
+                            Database _db = Database();
+                            _db.updateProviderInfo(p!.get_email, false,
+                                p!.get_commercialName, {'isOpenNow': 1});
+                            print(
+                                "${p!.get_isOpen()}+++++++++++++++++++++++++++++++++");
+                          } else {
+                            Database _db = Database();
+                            _db.updateProviderInfo(p!.get_email, false,
+                                p!.get_commercialName, {'isOpenNow': 0});
+                            print(
+                                "${p!.get_isOpen()}+++++++++++++++++++++++++++++++++");
+                          }
+                          print('turned ${(state) ? 'on' : 'off'}');
+                        },
+                        onDoubleTap: () => null,
+                        onSwipe: () => null,
+                        onTap: () => null,
+                      ),
+                    )
+                  ],
                 ),
                 backgroundColor: Color(0xFF66CDAA),
+
                 /*actions: [
                   SliderButton(
                     action: () {

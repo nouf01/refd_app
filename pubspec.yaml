@@ -71,6 +71,7 @@ dependencies:
   animate_do: ^3.0.2
   carousel_slider: ^4.2.1
   line_icons: ^2.0.1
+  lite_rolling_switch: ^1.0.0
 
 flutter_native_splash:
   color: "#42a5f5"

@@ -23,7 +23,7 @@ class _restaurantInfo extends State<restaurantInfo> {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black38,
+            color: Color.fromARGB(96, 154, 154, 154),
             offset: const Offset(
               3.0,
               3.0,
@@ -44,14 +44,15 @@ class _restaurantInfo extends State<restaurantInfo> {
             Row(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(right: 7),
-                  child: Image.network(
-                    this.widget.currentProve.get_logoURL,
-
-                    // scale: 26.0,
-                    //   alignment: Alignment.topLeft,
-                  ),
-                ),
+                    padding: const EdgeInsets.only(right: 7),
+                    child: ClipOval(
+                        clipBehavior: Clip.hardEdge,
+                        child: Image.network(
+                          this.widget.currentProve.get_logoURL,
+                          height: 120,
+                          width: 90,
+                          fit: BoxFit.cover,
+                        ))),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   textDirection: TextDirection.ltr,

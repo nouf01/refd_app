@@ -121,6 +121,7 @@ class _items extends State<items> {
                               child: Text(
                                 widget.currentItem.getItem().get_name(),
                                 softWrap: true,
+                                maxLines: 7,
                                 style: TextStyle(
                                   fontSize: 25,
                                   fontWeight: FontWeight.bold,
@@ -132,10 +133,22 @@ class _items extends State<items> {
                               alignment: Alignment.center,
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  widget.currentItem.getItem().getDecription(),
-                                  style: const TextStyle(
-                                    fontSize: 15,
+                                child: Container(
+                                  height: 40,
+                                  child: Container(
+                                    height: 50,
+                                    width: 350,
+                                    child: Text(
+                                      widget.currentItem
+                                          .getItem()
+                                          .getDecription(),
+                                      maxLines: 7,
+                                      softWrap: true,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 15,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),

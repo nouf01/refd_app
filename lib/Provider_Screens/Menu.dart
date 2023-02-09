@@ -56,7 +56,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     itemBuilder: (context, index) {
                       return Container(
                         width: 174,
-                        height: 150,
+                        height: 170,
                         decoration: BoxDecoration(
                           border: Border.all(
                             color: Color(0xffE2E2E2),
@@ -82,21 +82,25 @@ class _MenuScreenState extends State<MenuScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        AppText(
-                                          textAlign: TextAlign.start,
-                                          text: retrieveditemList![index]
-                                              .get_name(),
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                        Container(
+                                            width: 150,
+                                            child: Text(
+                                              retrieveditemList![index]
+                                                  .get_name(),
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold),
+                                              softWrap: true,
+                                            )),
                                         Container(
                                           width: 170,
-                                          height: 55,
+                                          height: 40,
                                           child: Text(
                                             retrieveditemList![index]
                                                 .getDecription(),
                                             maxLines: 5,
                                             softWrap: true,
+                                            overflow: TextOverflow.fade,
                                             textAlign: TextAlign.start,
                                             style: TextStyle(
                                               fontSize: 12,

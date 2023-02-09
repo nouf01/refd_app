@@ -152,8 +152,8 @@ class _DailyMenuWidgetState extends State<DailyMenuWidget> {
                                           Row(
                                             children: [
                                               Image.network(
-                                                height: 70,
-                                                width: 70,
+                                                height: 60,
+                                                width: 60,
                                                 fit: BoxFit.contain,
                                                 retrieveditemList![index]
                                                     .getItem()
@@ -164,15 +164,20 @@ class _DailyMenuWidgetState extends State<DailyMenuWidget> {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
-                                                  AppText(
-                                                    textAlign: TextAlign.start,
-                                                    text: retrieveditemList![
-                                                            index]
-                                                        .getItem()
-                                                        .get_name(),
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
+                                                  Container(
+                                                      width: 150,
+                                                      child: Text(
+                                                        retrieveditemList![
+                                                                index]
+                                                            .getItem()
+                                                            .get_name(),
+                                                        style: TextStyle(
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                        softWrap: true,
+                                                      )),
                                                   Container(
                                                     width: 150,
                                                     height: 55,
