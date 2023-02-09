@@ -25,7 +25,7 @@ class _MyConsumerProfileState extends State<ProviderProfile> {
 
   //firebase variables
   Database _db = Database();
-  var _currentProvider;
+  late Provider _currentProvider;
   var _currentUser;
 
   //user info
@@ -399,6 +399,7 @@ class _MyConsumerProfileState extends State<ProviderProfile> {
                       height: 45,
                       child: ElevatedButton(
                           onPressed: () {
+                            _currentProvider!.setIsOpenNow = 0;
                             FirebaseAuth.instance.signOut();
                             Navigator.push(
                               context,

@@ -310,11 +310,8 @@ class _trackUnderProcessState extends State<trackUnderProcess> {
                                                                   title: const Text(
                                                                       'Order Status'),
                                                                   backgroundColor:
-                                                                      Color.fromARGB(
-                                                                          255,
-                                                                          88,
-                                                                          207,
-                                                                          108),
+                                                                      Color(
+                                                                          0xFF66CDAA),
                                                                   leading:
                                                                       IconButton(
                                                                     icon: Icon(Icons

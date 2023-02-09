@@ -332,8 +332,8 @@ class _WaitingForPickUpState extends State<WaitingForPickUp> {
                                               appBar: AppBar(
                                                 title:
                                                     const Text('Order Status'),
-                                                backgroundColor: Color.fromARGB(
-                                                    255, 88, 207, 108),
+                                                backgroundColor:
+                                                    Color(0xFF66CDAA),
                                                 leading: IconButton(
                                                   icon: Icon(Icons.arrow_back),
                                                   onPressed: () {

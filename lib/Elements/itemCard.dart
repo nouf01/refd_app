@@ -54,7 +54,7 @@ class GroceryItemCardWidget extends StatelessWidget {
                     width: 170,
                     height: 55,
                     child: Text(
-                      'lore ipsuim hjter dhg slryfs hfsmf sgeyw djslw dgsjwnr sh fjwle shioryw ',
+                      item.getDecription(),
                       maxLines: 5,
                       softWrap: true,
                       textAlign: TextAlign.start,

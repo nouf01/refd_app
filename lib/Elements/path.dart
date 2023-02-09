@@ -21,7 +21,7 @@ class path extends StatefulWidget {
 
 class _path extends State<path> {
   Completer<GoogleMapController> _controller = Completer();
-  late Directions _info;
+  Directions? _info = null;
   static LatLng _userCurrentPosition = LatLng(0, 0);
   var consumerLan, consumerLat;
   Database service = Database();
@@ -36,21 +36,27 @@ class _path extends State<path> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xFF66CDAA),
-        title: Text("Your route to " + this.widget.p.get_commercialName),
-        centerTitle: true,
-      ),
-      body: _userCurrentPosition.latitude == 0 &&
-              _userCurrentPosition.longitude == 0
-          ? Center(
+    return _userCurrentPosition.latitude == 0 ||
+            _userCurrentPosition.longitude == 0 ||
+            _info == null
+        ? Container(
+            color: Colors.white,
+            child: Center(
               child: SpinKitFadingCube(
                 size: 85,
                 color: Color(0xFF66CDAA),
               ),
-            )
-          : Stack(alignment: Alignment.center, children: [
+            ),
+          )
+        : Scaffold(
+            appBar: AppBar(
+              backgroundColor: Color(0xFF66CDAA),
+              title: Text("Your route to " +
+                  this.widget.p.get_commercialName +
+                  "\n${_info!.totalDistance}, ${_info!.totalDuration} away"),
+              centerTitle: true,
+            ),
+            body: Stack(alignment: Alignment.center, children: [
               GoogleMap(
                 mapType: MapType.normal,
                 initialCameraPosition: CameraPosition(
@@ -68,7 +74,7 @@ class _path extends State<path> {
               ),
               _buildBottom(),
             ]),
-    );
+          );
   }
 
   Future<void> _drawPolyline(LatLng from, LatLng to) async {
@@ -167,6 +173,8 @@ class _path extends State<path> {
     Position currentPosition = await Geolocator.getCurrentPosition();
     consumerLat = currentPosition.latitude;
     consumerLan = currentPosition.longitude;
+    _drawPolyline(_userCurrentPosition,
+        LatLng(this.widget.p.get_Lat, this.widget.p.get_Lang));
     setState(() {
       _userCurrentPosition =
           LatLng(currentPosition.latitude, currentPosition.longitude);

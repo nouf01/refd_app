@@ -310,8 +310,8 @@ class _approveUnderProcessState extends State<approveUnderProcess> {
                                               appBar: AppBar(
                                                 title:
                                                     const Text('Order Status'),
-                                                backgroundColor: Color.fromARGB(
-                                                    255, 88, 207, 108),
+                                                backgroundColor:
+                                                    Color(0xFF66CDAA),
                                                 leading: IconButton(
                                                   icon: Icon(Icons.arrow_back),
                                                   onPressed: () {
