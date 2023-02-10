@@ -179,6 +179,9 @@ class _CartScreen extends State<CartScreen> {
                                                             crossAxisAlignment:
                                                                 CrossAxisAlignment
                                                                     .start,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
                                                             children: [
                                                               Text(
                                                                 cartItems![
@@ -189,102 +192,128 @@ class _CartScreen extends State<CartScreen> {
                                                                 overflow:
                                                                     TextOverflow
                                                                         .ellipsis,
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                ),
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        16,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                                softWrap: true,
                                                               ),
                                                               Text(
-                                                                "${cartItems![index].getPriceAfetr_discount.toStringAsFixed(2)} SAR",
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                ),
-                                                              ),
+                                                                  "\$${cartItems![index].getItem().get_originalPrice().toStringAsFixed(2)}",
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        16,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .normal,
+                                                                    decoration:
+                                                                        TextDecoration
+                                                                            .lineThrough,
+                                                                  )),
+                                                              Text(
+                                                                  "${cartItems![index].getPriceAfetr_discount.toStringAsFixed(2)}",
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          16,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      color: Colors
+                                                                          .red)),
                                                             ],
                                                           ),
                                                         ),
                                                       ),
-                                                      Row(
+                                                      Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
                                                         children: [
-                                                          IconButton(
-                                                              iconSize: 10,
-                                                              icon: Icon(
-                                                                Icons.remove,
-                                                              ),
-                                                              onPressed:
-                                                                  () async {
-                                                                print(
-                                                                    'quantity: ${currentQuantity[index]}');
-                                                                if (currentQuantity[
-                                                                        index] !=
-                                                                    0) {
-                                                                  currentQuantity[
-                                                                      index]--;
-                                                                  currentTotal =
-                                                                      currentTotal -
-                                                                          cartItems![index]
-                                                                              .getPriceAfetr_discount;
-                                                                  setState(
-                                                                      () {});
-                                                                  await DB.decermentQuantity(
-                                                                      currentUser!
-                                                                          .get_email(),
-                                                                      cartItems![
-                                                                          index]);
-                                                                  if (currentQuantity[
-                                                                          index] ==
-                                                                      0) {
-                                                                    cartItems!.remove(
-                                                                        cartItems![
-                                                                            index]);
-                                                                    currentQuantity
-                                                                        .remove(
-                                                                            currentQuantity[index]);
-                                                                    maxQuantity.remove(
-                                                                        maxQuantity[
-                                                                            index]);
-                                                                  }
-                                                                  setState(
-                                                                      () {});
-                                                                }
-                                                              }),
-                                                          Container(
-                                                            // padding: EdgeInsets.all(8.0),
-                                                            child: Text(
-                                                                currentQuantity[
-                                                                        index]
-                                                                    .toString()),
-                                                          ),
-                                                          IconButton(
-                                                              iconSize: 10,
-                                                              icon: Icon(
-                                                                Icons.add,
-                                                              ),
-                                                              onPressed:
-                                                                  () async {
-                                                                if (currentQuantity[
-                                                                        index] <
-                                                                    maxQuantity[
-                                                                        index]) {
-                                                                  setState(() {
+                                                          Text('Quantity',
+                                                              style: TextStyle(
+                                                                  fontSize: 12,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold)),
+                                                          Row(
+                                                            children: [
+                                                              IconButton(
+                                                                  iconSize: 10,
+                                                                  icon: Icon(
+                                                                    Icons
+                                                                        .remove,
+                                                                  ),
+                                                                  onPressed:
+                                                                      () async {
+                                                                    print(
+                                                                        'quantity: ${currentQuantity[index]}');
+                                                                    if (currentQuantity[
+                                                                            index] !=
+                                                                        0) {
+                                                                      currentQuantity[
+                                                                          index]--;
+                                                                      currentTotal =
+                                                                          currentTotal -
+                                                                              cartItems![index].getPriceAfetr_discount;
+                                                                      setState(
+                                                                          () {});
+                                                                      await DB.decermentQuantity(
+                                                                          currentUser!
+                                                                              .get_email(),
+                                                                          cartItems![
+                                                                              index]);
+                                                                      if (currentQuantity[
+                                                                              index] ==
+                                                                          0) {
+                                                                        cartItems!
+                                                                            .remove(cartItems![index]);
+                                                                        currentQuantity
+                                                                            .remove(currentQuantity[index]);
+                                                                        maxQuantity
+                                                                            .remove(maxQuantity[index]);
+                                                                      }
+                                                                      setState(
+                                                                          () {});
+                                                                    }
+                                                                  }),
+                                                              Container(
+                                                                // padding: EdgeInsets.all(8.0),
+                                                                child: Text(
                                                                     currentQuantity[
-                                                                        index]++;
-                                                                    currentTotal =
-                                                                        currentTotal +
-                                                                            cartItems![index].getPriceAfetr_discount;
-                                                                  });
-                                                                  await DB.incrementQuantity(
-                                                                      currentUser!
-                                                                          .get_email(),
-                                                                      cartItems![
-                                                                          index]);
-                                                                }
-                                                              }),
+                                                                            index]
+                                                                        .toString()),
+                                                              ),
+                                                              IconButton(
+                                                                  iconSize: 10,
+                                                                  icon: Icon(
+                                                                    Icons.add,
+                                                                  ),
+                                                                  onPressed:
+                                                                      () async {
+                                                                    if (currentQuantity[
+                                                                            index] <
+                                                                        maxQuantity[
+                                                                            index]) {
+                                                                      setState(
+                                                                          () {
+                                                                        currentQuantity[
+                                                                            index]++;
+                                                                        currentTotal =
+                                                                            currentTotal +
+                                                                                cartItems![index].getPriceAfetr_discount;
+                                                                      });
+                                                                      await DB.incrementQuantity(
+                                                                          currentUser!
+                                                                              .get_email(),
+                                                                          cartItems![
+                                                                              index]);
+                                                                    }
+                                                                  }),
+                                                            ],
+                                                          ),
                                                         ],
                                                       ),
                                                     ],

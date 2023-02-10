@@ -270,12 +270,7 @@ class _AddDish extends State<AddDish> {
                               imageURL: image_URL);
                           Database db = Database();
                           db.addToProviderMenu(dish);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ProviderNavigation(
-                                        choosedIndex: 1,
-                                      )));
+                          Navigator.pop(context);
                         }
                       },
                       child: const Text(

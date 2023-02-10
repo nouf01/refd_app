@@ -14,10 +14,15 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/services.dart';
+import 'package:refd_app/Consumer_Screens/restaurantDetail.dart';
 import 'package:refd_app/DataModel/Provider.dart';
 import '../../DataModel/DB_Service.dart';
 import 'dart:math' show cos, sqrt, asin;
 import 'package:url_launcher/url_launcher.dart';
+
+import 'dart:async';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 class ConsumerMap extends StatefulWidget {
   const ConsumerMap({super.key});
@@ -49,7 +54,8 @@ class _ConsumerMapState extends State<ConsumerMap> {
       lat,
       lang;
 
-  var Selectedprovname,
+  var SelectedProv,
+      Selectedprovname,
       SelectedprovphoneNumber,
       SelectedlogoURL,
       Selectedtags,
@@ -64,11 +70,24 @@ class _ConsumerMapState extends State<ConsumerMap> {
     _getProviders();
   }
 
+  var refdMarker;
+  // declared method to get Images
+  Future<Uint8List> getImages() async {
+    ByteData data = await rootBundle.load('images/refdLogo.png');
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
+        targetHeight: 80);
+    ui.FrameInfo fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
+        .buffer
+        .asUint8List();
+  }
+
   var markerid = 0;
 
   var providerInfoId = 0;
   List<Map> providersInfo = [{}];
   Future _getProviders() async {
+    var markerLogo = await getImages();
     //retrive all providers
     List<Provider> pList = await db.retrieveAllProviders();
     for (int i = 0; i < pList.length; i++) {
@@ -91,16 +110,23 @@ class _ConsumerMapState extends State<ConsumerMap> {
         "Lang": lang,
         "Lat": lat
       });
+
+      Uint8List bytes =
+          (await NetworkAssetBundle(Uri.parse(logoURL)).load(logoURL))
+              .buffer
+              .asUint8List();
       _mapMarkers.add(Marker(
         markerId: MarkerId("${i + 1}"),
         position: LatLng(lat, lang),
         infoWindow: InfoWindow(
           title: "$provname",
         ),
-        icon: BitmapDescriptor.defaultMarker,
+        icon: BitmapDescriptor.fromBytes(
+            markerLogo), //fromBytes(await getImages(logoURL, 80)),
         onTap: () {
           var thisMarker = i + 1;
           setState(() {
+            SelectedProv = pList[i];
             SelectedlogoURL = providersInfo[thisMarker]["logoURL"];
             Selectedprovname = providersInfo[thisMarker]["name"];
             SelectedprovphoneNumber = providersInfo[thisMarker]["phoneNumber"];
@@ -170,14 +196,23 @@ class _ConsumerMapState extends State<ConsumerMap> {
                   ]),
                   Row(
                     children: [
-                      ClipOval(
-                          clipBehavior: Clip.hardEdge,
-                          child: Image.network(
-                            SelectedlogoURL,
-                            height: 100,
-                            width: 100,
-                            fit: BoxFit.cover,
-                          )),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => restaurantDetail(
+                                      currentProv: SelectedProv)));
+                        },
+                        child: ClipOval(
+                            clipBehavior: Clip.hardEdge,
+                            child: Image.network(
+                              SelectedlogoURL,
+                              height: 100,
+                              width: 100,
+                              fit: BoxFit.cover,
+                            )),
+                      ),
                       SizedBox(
                         width: 20,
                       ),
@@ -201,7 +236,6 @@ class _ConsumerMapState extends State<ConsumerMap> {
                             SizedBox(
                               height: 5,
                             ),
-                            Text("$SelectedprovphoneNumber"),
                             SizedBox(
                               height: 18,
                             ),

@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:refd_app/DataModel/Provider.dart';
 import 'package:refd_app/Elements/PolylineService.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../Consumer_Screens/ConfirmOrder.dart';
 import '../DataModel/DB_Service.dart';
 import 'package:refd_app/Elements/directions_model.dart';
@@ -51,9 +52,7 @@ class _path extends State<path> {
         : Scaffold(
             appBar: AppBar(
               backgroundColor: Color(0xFF66CDAA),
-              title: Text("Your route to " +
-                  this.widget.p.get_commercialName +
-                  "\n${_info!.totalDistance}, ${_info!.totalDuration} away"),
+              title: Text("Your route to " + this.widget.p.get_commercialName),
               centerTitle: true,
             ),
             body: Stack(alignment: Alignment.center, children: [
@@ -137,6 +136,7 @@ class _path extends State<path> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
+            _showProvider(),
             Row(
               children: [
                 Expanded(
@@ -179,5 +179,66 @@ class _path extends State<path> {
       _userCurrentPosition =
           LatLng(currentPosition.latitude, currentPosition.longitude);
     });
+  }
+
+  Widget _showProvider() {
+    return AnimatedContainer(
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+        child: Column(
+          children: [
+            Container(
+              margin: EdgeInsets.all(5),
+              padding: EdgeInsets.all(5),
+              child: Row(
+                children: [
+                  ClipOval(
+                      clipBehavior: Clip.hardEdge,
+                      child: Image.network(
+                        this.widget.p.get_logoURL,
+                        height: 100,
+                        width: 100,
+                        fit: BoxFit.cover,
+                      )),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            height: 60,
+                            width: 60,
+                            child: Icon(Icons.timer, size: 35),
+                          ),
+                          Text(
+                            '${_info!.totalDuration} away',
+                            style: TextStyle(fontSize: 25),
+                          )
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            height: 60,
+                            width: 60,
+                            child: Icon(Icons.time_to_leave, size: 35),
+                          ),
+                          Text(
+                            '${_info!.totalDistance}',
+                            style: TextStyle(fontSize: 25),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            )
+          ],
+        ));
   }
 }

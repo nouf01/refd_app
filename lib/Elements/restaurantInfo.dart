@@ -35,8 +35,6 @@ class _restaurantInfo extends State<restaurantInfo> {
       ),
       child: Card(
         color: Color(0xFF66CDAA),
-
-        // color: Colors.grey,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -44,7 +42,7 @@ class _restaurantInfo extends State<restaurantInfo> {
             Row(
               children: [
                 Padding(
-                    padding: const EdgeInsets.only(right: 7),
+                    padding: const EdgeInsets.only(right: 10, left: 23),
                     child: ClipOval(
                         clipBehavior: Clip.hardEdge,
                         child: Image.network(
@@ -73,19 +71,20 @@ class _restaurantInfo extends State<restaurantInfo> {
                         color: Colors.white,
                       ),
                     ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.star,
+                          color: Colors.yellow,
+                          size: 20,
+                        ),
+                        Text(this.widget.currentProve.get_rate.toString(),
+                            style: TextStyle(
+                              color: Colors.white,
+                            )),
+                      ],
+                    ),
                   ],
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Text(this.widget.currentProve.get_rate.toString(),
-                    style: TextStyle(
-                      color: Colors.white,
-                    )),
-                Icon(
-                  Icons.star,
-                  color: Colors.yellow,
                 ),
               ],
             ),

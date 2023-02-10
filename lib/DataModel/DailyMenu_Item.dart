@@ -13,7 +13,8 @@ class DailyMenu_Item {
     required Item item,
     required quantity,
     required discount,
-  })  : this._item = item,
+  })  : this._uid = item.getId(),
+        this._item = item,
         this._quantity = quantity,
         this._discount = discount,
         this._priceAfterDiscount =
@@ -55,8 +56,6 @@ class DailyMenu_Item {
     return _item;
   }
 
-  set setItem(item) => this._item = item;
-
   get get_quantity => this._quantity;
 
   void set_quantity(quantity) {
@@ -72,4 +71,8 @@ class DailyMenu_Item {
   int get getChoosedCartQuantity => this._choosedCartQuantity;
 
   void setChoosedCartQuantity(int value) => this._choosedCartQuantity = value;
+
+  void setItem(Map<String, dynamic> t) {
+    _item = Item.fromMap(t);
+  }
 }

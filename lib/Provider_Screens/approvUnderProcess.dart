@@ -74,11 +74,10 @@ class _approveUnderProcessState extends State<approveUnderProcess> {
     //target = DateTime.fromMillisecondsSinceEpoch(prefs.getInt('target'));
 
     if (target!.isBefore(DateTime.now())) {
-      print(
-          'Yaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaay');
       setState(() {
-        timeLeft = 'expired';
+        timeLeft = 'Expired';
         isExpired = true;
+        checkConfirm(widget.order.getorderID);
       });
       print(timeLeft);
     } else {
@@ -119,11 +118,17 @@ class _approveUnderProcessState extends State<approveUnderProcess> {
 
   void executeTimer() async {
     while (running) {
-      setState(() {
-        timeLeft = DateTime.now().isAfter(target!)
-            ? 'expired   '
-            : target!.difference(DateTime.now()).toString();
-      });
+      if (target!.isBefore(DateTime.now())) {
+        setState(() {
+          timeLeft = 'Expired';
+          isExpired = true;
+          checkConfirm(widget.order.getorderID);
+        });
+      } else {
+        setState(() {
+          timeLeft = target!.difference(DateTime.now()).toString();
+        });
+      }
       await Future.delayed(Duration(seconds: 1), () {});
     }
   }
@@ -238,8 +243,8 @@ class _approveUnderProcessState extends State<approveUnderProcess> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0),
                             ),
-                            isThreeLine: false,
                             title: Text('${consumer!.get_name()}'),
+                            subtitle: Text('      '),
                             trailing: StreamBuilder<types.Room>(
                               stream: roomStream,
                               builder: (context, snapshot) {
@@ -375,7 +380,7 @@ class _approveUnderProcessState extends State<approveUnderProcess> {
         child: Text(
       '${timeLeft.substring(0, 7)}',
       style: const TextStyle(
-          fontSize: 28, color: Color(0xFF66CDAA), fontWeight: FontWeight.bold),
+          fontSize: 40, color: Color(0xFF66CDAA), fontWeight: FontWeight.bold),
     ));
   }
 
@@ -627,5 +632,52 @@ class _approveUnderProcessState extends State<approveUnderProcess> {
     }
 
     return types.Room.fromJson(data);
+  }
+
+  @pragma('vm:entry-point')
+  static void checkConfirm(orderID) async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+    final FirebaseFirestore _db = FirebaseFirestore.instance;
+    Database db = Database();
+    Order_object order = Order_object.fromDocumentSnapshot(
+        await FirebaseFirestore.instance
+            .collection('Orders')
+            .doc(orderID.toString())
+            .get());
+    if (order.get_status == OrderStatus.underProcess.toString()) {
+      //change the status of the order to canceled
+      db.updateOrderInfo(orderID.toString(),
+          {'status': OrderStatus.canceled.toString(), 'isCancelledByProv': 1});
+      //return items to daily menu
+      List<DailyMenu_Item> orderItems =
+          await db.retrieve_Order_Items(orderID.toString());
+      db.returnItemsToDailyMenu(orderItems!, order.get_ProviderID);
+      //Notification to the consumer that the order is not confirmed
+      _sendMessageNoResponse(
+          provName: order.getProviderName,
+          consEmail: order.get_consumerID,
+          orderID: order.getorderID);
+    }
+  }
+
+  static Future _sendMessageNoResponse(
+      {required String consEmail,
+      required String provName,
+      required String orderID}) async {
+    String consumerToken = (await FirebaseFirestore.instance
+            .collection('Consumers')
+            .doc(consEmail)
+            .get())
+        .data()!['token'];
+    var func = FirebaseFunctions.instance.httpsCallable("notifySubscribers");
+    var res = await func.call(<String, dynamic>{
+      "targetDevices": [consumerToken],
+      "messageTitle": "Your order from ${provName} is canceled",
+      "messageBody":
+          'Sorry ${provName} could not accepet your order at the moment'
+    });
+
+    print("message was ${res.data as bool ? "sent!" : "not sent!"}");
   }
 }

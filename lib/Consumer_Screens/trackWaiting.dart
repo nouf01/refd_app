@@ -9,6 +9,7 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_geocoder/geocoder.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:refd_app/Consumer_Screens/ConsumerNavigation.dart';
 import 'package:refd_app/Consumer_Screens/OrdersHistoryConsumer.dart';
@@ -50,6 +51,7 @@ class _trackWaitingState extends State<trackWaiting> {
   Stream<DocumentSnapshot<Map<String, dynamic>>>? orderStream;
   Stream<types.Room>? roomStream;
   Provider? prov;
+  String? address = '    ';
 
   /*void startTimer() {
     timer = Timer.periodic(Duration(seconds: 1), (_) {
@@ -99,6 +101,11 @@ class _trackWaitingState extends State<trackWaiting> {
     roomStream = getRoom(widgetOrder!.getRoomID);
     prov = Provider.fromDocumentSnapshot(
         await db.searchForProvider(widgetOrder!.get_ProviderID));
+    Coordinates coordinates = Coordinates(prov!.get_Lat, prov!.get_Lang);
+    var addressRecived =
+        await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    var first = addressRecived.first;
+    address = first.addressLine.toString();
     setState(() {});
   }
 
@@ -120,7 +127,7 @@ class _trackWaitingState extends State<trackWaiting> {
     while (running) {
       setState(() {
         timeLeft = DateTime.now().isAfter(target!)
-            ? 'Timer        '
+            ? 'Expired        '
             : target!.difference(DateTime.now()).toString();
       });
       await Future.delayed(Duration(seconds: 1), () {});
@@ -175,23 +182,25 @@ class _trackWaitingState extends State<trackWaiting> {
                         whichStatus: 1,
                       ),
                       Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                                padding: const EdgeInsets.all(32.0),
-                                child: buildTimer()),
-                            Padding(
-                              padding: const EdgeInsets.all(32.0),
-                              child: Text(
-                                'Your order from ${widgetOrder!.getProviderName} \nis ready for pick up',
-                                style: const TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color.fromARGB(255, 0, 0, 0)),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ]),
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                              padding: const EdgeInsets.all(28.0),
+                              child: buildTimer())
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Your order from ${widgetOrder!.getProviderName} is ready for pick up \nYou should pick up before the timer expired or the order will be canceled',
+                          style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(255, 0, 0, 0)),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                       Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: Container(
@@ -215,9 +224,10 @@ class _trackWaitingState extends State<trackWaiting> {
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                               isThreeLine: true,
-                              title: Text('${widgetOrder!.getProviderName}'),
-                              subtitle: Text(
-                                  'Order #${widgetOrder!.getorderID}\n${widgetOrder!.getdate.toString().substring(0, 16)}'),
+                              title: Text('${widgetOrder!.getProviderName}',
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.bold)),
+                              subtitle: Text('${address!}'),
                               trailing: roomStream == null
                                   ? Container(
                                       height: 10,
@@ -278,7 +288,64 @@ class _trackWaitingState extends State<trackWaiting> {
                                         );
                                       },
                                     ),
+                              /*IconButton(
+                                    iconSize: 30.0,
+                                    icon: Icon(
+                                      Icons.arrow_drop_down_circle_outlined,
+                                      color: Colors.black,
+                                    ),
+                                    onPressed: () {
+                                      showModalBottomSheet(
+                                          context: context,
+                                          builder: (context) {
+                                            return bottomOrderDetails();
+                                          });
+                                    },
+                                  ),*/
                             )),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16.0),
+                              border: Border.all(color: Colors.black),
+                            ),
+                            child: ListTile(
+                                //contentPadding: EdgeInsets.all(5.0),
+                                /*leading: Image.network(
+                                        widget.order.getProviderLogo),*/
+                                onTap: () {
+                                  showModalBottomSheet(
+                                      context: context,
+                                      builder: (context) {
+                                        return bottomOrderDetails();
+                                      });
+                                },
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                isThreeLine: false,
+                                title: Text(
+                                  'Order #${widgetOrder!.getorderID}',
+                                ),
+                                subtitle: Text(
+                                    '${widgetOrder!.getdate.toString().substring(0, 16)}'),
+                                trailing: IconButton(
+                                  iconSize: 30.0,
+                                  icon: Icon(
+                                    Icons.arrow_drop_down_circle_outlined,
+                                    color: Colors.black,
+                                  ),
+                                  onPressed: () {
+                                    showModalBottomSheet(
+                                        context: context,
+                                        builder: (context) {
+                                          return bottomOrderDetails();
+                                        });
+                                  },
+                                ))),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(17.0),
@@ -325,7 +392,7 @@ class _trackWaitingState extends State<trackWaiting> {
         child: Text(
       '${timeLeft.substring(2, 7)}',
       style: const TextStyle(
-          fontSize: 35, color: Color(0xFF66CDAA), fontWeight: FontWeight.bold),
+          fontSize: 40, color: Color(0xFF66CDAA), fontWeight: FontWeight.bold),
     ));
   }
 

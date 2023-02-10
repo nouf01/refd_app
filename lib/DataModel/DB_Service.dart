@@ -19,7 +19,7 @@ class Database {
   }
 
   void updateProviderInfo(String providerID, bool nameChanged,
-      String newCommercialName, Map<String, dynamic> field_value_map) {
+      String newCommercialName, Map<String, dynamic> field_value_map) async {
     //Done tested
     FirebaseFirestore.instance
         .collection('Providers')
@@ -28,8 +28,13 @@ class Database {
     //update search cases if name changed
     if (nameChanged == true) {
       var searchCases = setSearchParam(newCommercialName);
-      FirebaseFirestore.instance.collection('Providers').doc(providerID).update(
-          {'searchCases': searchCases, 'commercialName': newCommercialName});
+      await FirebaseFirestore.instance
+          .collection('Providers')
+          .doc(providerID)
+          .update({
+        'searchCases': searchCases,
+        'commercialName': newCommercialName
+      });
     }
   }
 
@@ -180,8 +185,10 @@ class Database {
   void updateItemInfo(
       String? itemUID, Item item, Map<String, dynamic> field_value_map) async {
     //Done tested
-    print('#########################################################');
-    print(item.getId());
+    print('###############################################${itemUID}}');
+    print(
+        '###############################################${item.get_providerID}}');
+    print(itemUID);
     await FirebaseFirestore.instance
         .collection('Providers')
         .doc(item.get_providerID)
@@ -225,16 +232,16 @@ class Database {
         .collection('Providers')
         .doc(DM_Item.getItem().get_providerID)
         .collection('DailyMenu')
-        .doc(DM_Item.getItem().getId())
+        .doc(DM_Item.get_uid)
         .set(DM_Item.toMap());
     int ref = (await _db
             .collection('Providers')
             .doc(DM_Item.getItem().get_providerID)
             .get())
         .data()!['NumberOfItemsInDM'];
-    ref = ref + 1;
+    /*ref = ref + 1;
     updateProviderInfo(DM_Item.getItem().get_providerID, false, '',
-        {'NumberOfItemsInDM': ref});
+        {'NumberOfItemsInDM': ref});*/
     updateItemInfo(DM_Item.getItem().getId(), DM_Item.getItem(), {'inDM': 1});
   }
 
@@ -254,9 +261,10 @@ class Database {
   }
 
   void update_DM_Item_Info(String providerID, String dmItemID,
-      Map<String, dynamic> field_value_map) {
+      Map<String, dynamic> field_value_map) async {
     //Done tested
-    FirebaseFirestore.instance
+    print('#########################################    ${dmItemID}');
+    await FirebaseFirestore.instance
         .collection('Providers')
         .doc(providerID)
         .collection('DailyMenu')
@@ -376,15 +384,15 @@ class Database {
       update_DM_Item_Info(
           orderOBJ.get_ProviderID, dmList[i].get_uid, {'quantity': ref});
       if (ref == 0) {
-        removeFromPrvoiderDM(orderOBJ.get_ProviderID, dmList[0]);
-        int numOfItems = (await _db
+        removeFromPrvoiderDM(orderOBJ.get_ProviderID, dmList[i]);
+        /*int numOfItems = (await _db
                 .collection('Providers')
                 .doc(dmList[i].getItem().get_providerID)
                 .get())
             .data()!['NumberOfItemsInDM'];
         numOfItems = numOfItems - 1;
         updateProviderInfo(orderOBJ.get_ProviderID, false, '',
-            {'NumberOfItemsInDM': numOfItems});
+            {'NumberOfItemsInDM': numOfItems});*/
       }
       print(total);
     }
@@ -417,9 +425,24 @@ class Database {
       });
       if (isExist == false) {
         o.set_quantity(o.getChoosedCartQuantity);
+        Item tm = o.getItem();
+        tm.set_inDM(1);
+        var map = tm.toMap();
+        /*var map = {      'providerID': tm.get_providerID,
+      'name': tm.get_name(),
+      'description': tm.getDecription(),
+      'originalPrice': tm.get_originalPrice(),
+      'inDM': tm.get_inDM(),
+      'howManyPickedUp': tm.get_HowManyPicked(),
+      'imageURL': tm.get_imageURL(),}*/
+        o.setItem(map);
         addToProviderDM(o);
+        updateItemInfo(o.get_uid, tm, {'inDM': 1});
       }
     });
+    List<DailyMenu_Item> list = await retrieve_DMmenu_Items(provID);
+    print('hhhhhhhhhhhhhhhhhhhhh ${list.length}');
+    updateProviderInfo(provID, false, '', {'NumberOfItemsInDM': list.length});
   }
 
   Future<List<DailyMenu_Item>> retrieve_Order_Items(String orderID) async {

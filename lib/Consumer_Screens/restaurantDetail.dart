@@ -5,10 +5,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_geocoder/geocoder.dart';
 import 'package:refd_app/Consumer_Screens/LoggedConsumer.dart';
 import 'package:refd_app/DataModel/Consumer.dart';
 import 'package:refd_app/DataModel/item.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../DataModel/DB_Service.dart';
 import '../DataModel/DailyMenu_Item.dart';
 import '../DataModel/Provider.dart';
@@ -33,6 +35,7 @@ class _restaurantDetail extends State<restaurantDetail> {
   Consumer? currentUser;
   bool cartIsEmpty = true;
   Stream<DocumentSnapshot<Map<String, dynamic>>>? ref;
+  String? address = '      ';
 
   Future<void> _initRetrieval() async {
     currentUser = await log.buildConsumer();
@@ -46,6 +49,12 @@ class _restaurantDetail extends State<restaurantDetail> {
         i = i - 1;
       }
     }
+    Coordinates coordinates = Coordinates(
+        this.widget.currentProv.get_Lat, this.widget.currentProv.get_Lang);
+    var addressRecived =
+        await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    var first = addressRecived.first;
+    address = first.addressLine.toString();
     setState(() {});
   }
 
@@ -113,9 +122,48 @@ class _restaurantDetail extends State<restaurantDetail> {
       ),
       body: SingleChildScrollView(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             restaurantInfo(
               currentProve: widget.currentProv,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListTile(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                tileColor: Colors.white,
+                leading: IconButton(
+                    onPressed: () async {
+                      await launchUrl(Uri.parse(
+                          'google.navigation:q=${this.widget.currentProv.get_Lat}, ${this.widget.currentProv!.get_Lang}&key=AIzaSyC02VeFbURsmFAN8jKyl_OhoqE0IMPSvQM'));
+                    },
+                    icon: Icon(
+                      Icons.location_pin,
+                      color: Color(0xFF66CDAA),
+                    )),
+                trailing: Container(
+                    width: MediaQuery.of(context).size.width - 100.0,
+                    child: Text(
+                      '${address!}',
+                      softWrap: true,
+                    )),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 20),
+              child: Text(
+                'Available Items',
+                softWrap: true,
+                maxLines: 7,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.start,
+              ),
             ),
             Container(
               height: 600,
@@ -140,43 +188,99 @@ class _restaurantDetail extends State<restaurantDetail> {
                                     height: 10,
                                   ),
                               itemBuilder: (context, index) {
-                                return Container(
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius:
-                                          BorderRadius.circular(16.0)),
-                                  child: Card(
-                                    child: ListTile(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => items(
-                                                    currentItem:
-                                                        retrieveditemList![
-                                                            index])));
-                                      },
-                                      leading: Image.network(
-                                          retrieveditemList![index]
-                                              .getItem()
-                                              .get_imageURL()),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => items(
+                                                currentItem: retrieveditemList![
+                                                    index])));
+                                  },
+                                  child: Container(
+                                      //width: 174,
+                                      //height: 160,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Color(0xffE2E2E2),
+                                        ),
+                                        borderRadius: BorderRadius.circular(18),
                                       ),
-                                      title: Text(
-                                        retrieveditemList![index]
-                                            .getItem()
-                                            .get_name(),
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      subtitle: Text(
-                                          "${retrieveditemList![index].getItem().getDecription()}, \n ${retrieveditemList![index].getPriceAfetr_discount} SAR"),
-                                      trailing:
-                                          const Icon(Icons.arrow_right_sharp),
-                                    ),
-                                  ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 3,
+                                          vertical: 15,
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            Image.network(
+                                              height: 85,
+                                              width: 85,
+                                              fit: BoxFit.contain,
+                                              retrieveditemList![index]
+                                                  .getItem()
+                                                  .get_imageURL(),
+                                            ),
+                                            SizedBox(width: 5),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                    width: 150,
+                                                    child: Text(
+                                                      retrieveditemList![index]
+                                                          .getItem()
+                                                          .get_name(),
+                                                      style: TextStyle(
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                      softWrap: true,
+                                                    )),
+                                                Container(
+                                                  width: 150,
+                                                  height: 55,
+                                                  child: Text(
+                                                    retrieveditemList![index]
+                                                        .getItem()
+                                                        .getDecription(),
+                                                    maxLines: 5,
+                                                    softWrap: true,
+                                                    textAlign: TextAlign.start,
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Color(0xFF7C7C7C),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Column(
+                                              children: [
+                                                Text(
+                                                    "\$${retrieveditemList![index].getItem().get_originalPrice().toStringAsFixed(2)}",
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      decoration: TextDecoration
+                                                          .lineThrough,
+                                                    )),
+                                                Text(
+                                                    '${retrieveditemList![index].getPriceAfetr_discount.toStringAsFixed(2)}',
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.red)),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      )),
                                 );
                               }),
                         );
@@ -204,5 +308,13 @@ class _restaurantDetail extends State<restaurantDetail> {
         ),
       ),
     );
+  }
+
+  goToDetailsPage(int theIndex) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                items(currentItem: retrieveditemList![theIndex])));
   }
 }

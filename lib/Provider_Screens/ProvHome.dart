@@ -184,11 +184,9 @@ class _HomeScreenProviderState extends State<HomeScreenProvider> {
 
   Future<void> _initRetrieval() async {
     p = await log.buildProvider();
-    print('********************************************** intit retrival');
     MessagingService _msgService =
         MessagingService(isProv: true, userID: p!.get_email);
     await _msgService.init();
     setState(() {});
-    print('mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm');
   }
 }

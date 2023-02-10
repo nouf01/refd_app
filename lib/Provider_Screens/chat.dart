@@ -80,16 +80,6 @@ class _ChatPageState extends State<ChatPage> {
                 ),
               ),
               TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  _handleFileSelection();
-                },
-                child: const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('File'),
-                ),
-              ),
-              TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: const Align(
                   alignment: Alignment.centerLeft,

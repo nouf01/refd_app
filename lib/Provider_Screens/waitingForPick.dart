@@ -254,7 +254,8 @@ class _WaitingForPickUpState extends State<WaitingForPickUp> {
                                     color: Color(0xFF66CDAA),
                                   ),
                                   onPressed: () async {
-                                    Navigator.of(context).push(
+                                    Navigator.of(context, rootNavigator: true)
+                                        .push(
                                       MaterialPageRoute(
                                         builder: (context) => ChatPage(
                                           room: snapshot.data!,

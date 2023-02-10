@@ -2,12 +2,14 @@
 
 import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:refd_app/Consumer_Screens/CartScreen.dart';
 import 'package:refd_app/Consumer_Screens/LoggedConsumer.dart';
 import 'package:refd_app/Consumer_Screens/restaurantDetail.dart';
+import 'package:refd_app/Consumer_Screens/uiKit/libUI/theme/colors.dart';
 import 'package:refd_app/DataModel/Consumer.dart';
 import 'package:refd_app/DataModel/DailyMenu_Item.dart';
 
@@ -117,22 +119,27 @@ class _items extends State<items> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Padding(
-                              padding: EdgeInsets.all(10),
-                              child: Text(
-                                widget.currentItem.getItem().get_name(),
-                                softWrap: true,
-                                maxLines: 7,
-                                style: TextStyle(
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold,
+                              padding: EdgeInsets.only(
+                                  left: 25, bottom: 10, top: 10),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width - 100,
+                                child: Text(
+                                  widget.currentItem.getItem().get_name(),
+                                  softWrap: true,
+                                  maxLines: 7,
+                                  style: TextStyle(
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.start,
                                 ),
-                                textAlign: TextAlign.center,
                               ),
                             ),
                             Align(
                               alignment: Alignment.center,
                               child: Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.only(
+                                    left: 25, bottom: 8.0),
                                 child: Container(
                                   height: 40,
                                   child: Container(
@@ -153,8 +160,25 @@ class _items extends State<items> {
                                 ),
                               ),
                             ),
+                            VerticalDivider(
+                              color: black,
+                            ),
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding:
+                                  const EdgeInsets.only(left: 25.0, bottom: 8),
+                              child: Text(
+                                "Quantity : " +
+                                    (widget.currentItem.get_quantity
+                                        .toString()) +
+                                    " Available",
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 25.0, bottom: 8),
                               child: Text(
                                 "Discount percentage : " +
                                     (100 -
@@ -168,7 +192,8 @@ class _items extends State<items> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding:
+                                  const EdgeInsets.only(left: 25.0, bottom: 8),
                               child: Text(
                                 "Original price : " +
                                     (widget.currentItem
@@ -177,19 +202,9 @@ class _items extends State<items> {
                                         .toString() +
                                     " SAR",
                                 style: const TextStyle(
-                                  fontSize: 15,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                "Quantity : " +
-                                    (widget.currentItem.get_quantity
-                                        .toString()) +
-                                    " Available",
-                                style: const TextStyle(
-                                  fontSize: 15,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.normal,
+                                  decoration: TextDecoration.lineThrough,
                                 ),
                               ),
                             ),
@@ -214,22 +229,22 @@ class _items extends State<items> {
                         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Price :  ",
+                            "Discounted Price :  ",
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                            ),
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black),
                           ),
                           Text(
                             widget.currentItem.getPriceAfetr_discount
-                                    .toString() +
+                                    .toStringAsFixed(2) +
                                 " SAR",
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                            ),
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.red),
                           ),
                         ],
                       ),

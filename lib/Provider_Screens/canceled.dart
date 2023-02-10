@@ -71,7 +71,7 @@ class _CanceledState extends State<Canceled> {
                     ),
                     Center(
                         child: widget.cancelByProv == 0
-                            ? Text('The order is cancelled by the consumer',
+                            ? Text('The order is cancelled',
                                 style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,

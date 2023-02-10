@@ -11,7 +11,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
+import 'package:flutter_geocoder/geocoder.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:refd_app/Consumer_Screens/ConsumerNavigation.dart';
 import 'package:refd_app/Consumer_Screens/OrdersHistoryConsumer.dart';
 import 'package:refd_app/Consumer_Screens/chat.dart';
@@ -48,6 +50,7 @@ class _trackUnderProcessState extends State<trackUnderProcess> {
   Stream<DocumentSnapshot<Map<String, dynamic>>>? orderStream;
   Stream<types.Room>? roomStream;
   Provider? prov;
+  String? address = '  ';
 
   _initTimer() async {
     var remainingTimeFromDB =
@@ -59,6 +62,7 @@ class _trackUnderProcessState extends State<trackUnderProcess> {
       setState(() {
         timeLeft = 'Expired';
         isExpired = true;
+        changeOrderStatus();
         checkConfirm(widget.order.getorderID);
       });
     } else {
@@ -82,6 +86,11 @@ class _trackUnderProcessState extends State<trackUnderProcess> {
     roomStream = getRoom(widget.order.getRoomID);
     prov = Provider.fromDocumentSnapshot(
         await db.searchForProvider(widget.order.get_ProviderID));
+    Coordinates coordinates = Coordinates(prov!.get_Lat, prov!.get_Lang);
+    var addressRecived =
+        await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    var first = addressRecived.first;
+    address = first.addressLine.toString();
 
     setState(() {});
   }
@@ -104,7 +113,7 @@ class _trackUnderProcessState extends State<trackUnderProcess> {
     while (running) {
       setState(() {
         timeLeft = DateTime.now().isAfter(target!)
-            ? 'Timer   '
+            ? 'Expired   '
             : target!.difference(DateTime.now()).toString();
       });
       await Future.delayed(Duration(seconds: 1), () {});
@@ -163,27 +172,27 @@ class _trackUnderProcessState extends State<trackUnderProcess> {
                           const TimeLineStatus(
                             whichStatus: 0,
                           ),
-                          SizedBox(height: 50),
+                          SizedBox(height: 35),
                           Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                SizedBox(width: 30),
                                 Padding(
                                     padding: const EdgeInsets.all(20.0),
-                                    child: buildTimer()),
-                                Padding(
-                                  padding: const EdgeInsets.all(20.0),
-                                  child: Text(
-                                    'Wait for ${widget.order.getProviderName} \n to accepet your order',
-                                    style: const TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(255, 0, 0, 0)),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
+                                    child: buildTimer())
                               ]),
-                          const SizedBox(height: 30),
+                          Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Text(
+                              'Wait for ${widget.order.getProviderName} to accepet your order',
+                              style: const TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 0, 0, 0)),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
                           Padding(
                             padding: const EdgeInsets.all(15.0),
                             child: Container(
@@ -207,10 +216,10 @@ class _trackUnderProcessState extends State<trackUnderProcess> {
                                     borderRadius: BorderRadius.circular(8.0),
                                   ),
                                   isThreeLine: true,
-                                  title:
-                                      Text('${widget.order.getProviderName}'),
-                                  subtitle: Text(
-                                      'Order #${widget.order.getorderID}\n${widget.order.getdate.toString().substring(0, 16)}'),
+                                  title: Text('${widget.order.getProviderName}',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold)),
+                                  subtitle: Text('${address!}'),
                                   trailing: roomStream == null
                                       ? Container(
                                           height: 10,
@@ -291,6 +300,49 @@ class _trackUnderProcessState extends State<trackUnderProcess> {
                                 )),
                           ),
                           Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16.0),
+                                  border: Border.all(color: Colors.black),
+                                ),
+                                child: ListTile(
+                                    //contentPadding: EdgeInsets.all(5.0),
+                                    /*leading: Image.network(
+                                        widget.order.getProviderLogo),*/
+                                    onTap: () {
+                                      showModalBottomSheet(
+                                          context: context,
+                                          builder: (context) {
+                                            return bottomOrderDetails();
+                                          });
+                                    },
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    isThreeLine: false,
+                                    title: Text(
+                                      'Order #${widget.order.getorderID}',
+                                    ),
+                                    subtitle: Text(
+                                        '${widget.order.getdate.toString().substring(0, 16)}'),
+                                    trailing: IconButton(
+                                      iconSize: 30.0,
+                                      icon: Icon(
+                                        Icons.arrow_drop_down_circle_outlined,
+                                        color: Colors.black,
+                                      ),
+                                      onPressed: () {
+                                        showModalBottomSheet(
+                                            context: context,
+                                            builder: (context) {
+                                              return bottomOrderDetails();
+                                            });
+                                      },
+                                    ))),
+                          ),
+                          Padding(
                             padding: const EdgeInsets.all(17.0),
                             child: SizedBox(
                               height: 45,
@@ -315,7 +367,7 @@ class _trackUnderProcessState extends State<trackUnderProcess> {
                             ),
                           ),
                           SizedBox(
-                            height: 50,
+                            height: 25,
                           ),
                           ElevatedButton(
                               style: const ButtonStyle(
@@ -323,7 +375,7 @@ class _trackUnderProcessState extends State<trackUnderProcess> {
                                     MaterialStatePropertyAll<Color>(
                                         Color.fromARGB(255, 246, 77, 65)),
                                 fixedSize: MaterialStatePropertyAll<Size>(
-                                    Size(200.0, 20.0)),
+                                    Size(150.0, 20.0)),
                               ),
                               onPressed: () {
                                 showDialog(
@@ -438,7 +490,7 @@ class _trackUnderProcessState extends State<trackUnderProcess> {
         child: Text(
       '${timeLeft.substring(0, 7)}',
       style: const TextStyle(
-          fontSize: 28, color: Color(0xFF66CDAA), fontWeight: FontWeight.bold),
+          fontSize: 40, color: Color(0xFF66CDAA), fontWeight: FontWeight.bold),
     ));
   }
 

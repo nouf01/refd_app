@@ -70,7 +70,7 @@ class _SelectMenuState extends State<SelectMenu> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         label: Text('             Add to daily menu             '),
-        onPressed: () {
+        onPressed: () async {
           for (int i = 0; i < retrieveditemList!.length; i++) {
             if (selectedFlag[i] == true) {
               var cureentItem = retrieveditemList![i];
@@ -80,6 +80,11 @@ class _SelectMenuState extends State<SelectMenu> {
               service.addToProviderDM(d);
             }
           }
+          List<DailyMenu_Item> list =
+              await service.retrieve_DMmenu_Items(log.getEmailOnly());
+          print('hhhhhhhhhhhhhhhhhhhhh ${list.length}');
+          service.updateProviderInfo(log.getEmailOnly(), false, '',
+              {'NumberOfItemsInDM': list.length});
           //show dialog
           showDialog(
             context: context,
@@ -161,7 +166,7 @@ class _SelectMenuState extends State<SelectMenu> {
     bool isSelected = selectedFlag[index];
     return Container(
       width: 174,
-      height: 110,
+      height: 150,
       decoration: BoxDecoration(
         border: Border.all(
           color: Color(0xffE2E2E2),
@@ -196,15 +201,17 @@ class _SelectMenuState extends State<SelectMenu> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      AppText(
-                        textAlign: TextAlign.start,
-                        text: retrieveditemList![index].get_name(),
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      Container(
+                          width: 150,
+                          child: Text(
+                            retrieveditemList![index].get_name(),
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                            softWrap: true,
+                          )),
                       Container(
                         width: 150,
-                        height: 55,
+                        height: 60,
                         child: Text(
                           retrieveditemList![index].getDecription(),
                           maxLines: 5,

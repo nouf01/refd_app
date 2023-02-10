@@ -47,7 +47,8 @@ class _MenuScreenState extends State<MenuScreen> {
             future: itemList,
             builder:
                 (BuildContext context, AsyncSnapshot<List<Item>> snapshot) {
-              if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+              if (snapshot.hasData && snapshot.data!.isNotEmpty ||
+                  retrieveditemList != null) {
                 return ListView.separated(
                     itemCount: retrieveditemList!.length,
                     separatorBuilder: (context, index) => const SizedBox(
@@ -88,13 +89,13 @@ class _MenuScreenState extends State<MenuScreen> {
                                               retrieveditemList![index]
                                                   .get_name(),
                                               style: TextStyle(
-                                                  fontSize: 16,
+                                                  fontSize: 20,
                                                   fontWeight: FontWeight.bold),
                                               softWrap: true,
                                             )),
                                         Container(
                                           width: 170,
-                                          height: 40,
+                                          height: 60,
                                           child: Text(
                                             retrieveditemList![index]
                                                 .getDecription(),

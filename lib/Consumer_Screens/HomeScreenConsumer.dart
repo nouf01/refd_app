@@ -166,6 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 centerTitle: true,
                 title: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     adress == null
                         ? Text("")
@@ -204,70 +205,95 @@ class _HomeScreenState extends State<HomeScreen> {
                     choiceCheckmark: true,
                   ),
                 ),
-                TextField(
-                  onChanged: ((value) => _search(value)),
-                  decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Color.fromARGB(255, 234, 232, 232),
-                      hintText: 'Search for resturant',
-                      suffixIcon: Icon(
-                        Icons.search,
-                        color: Color(0xFF66CDAA),
-                      ),
-                      contentPadding: const EdgeInsets.only(
-                          left: 20.0, bottom: 5.0, top: 12.5),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                          borderRadius: BorderRadius.circular(10))),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    onChanged: ((value) => _search(value)),
+                    decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Color.fromARGB(255, 234, 232, 232),
+                        hintText: 'Search for resturant',
+                        suffixIcon: Icon(
+                          Icons.search,
+                          color: Color(0xFF66CDAA),
+                        ),
+                        contentPadding: const EdgeInsets.only(
+                            left: 20.0, bottom: 5.0, top: 12.5),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                            borderRadius: BorderRadius.circular(10))),
+                  ),
                 ),
+                Container(
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Text(
+                        'Nearby Stores',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(width: 100),
+                    ],
+                  ),
+                ),
+                VerticalDivider(color: Colors.black),
                 Expanded(
-                  child: RefreshIndicator(
-                    onRefresh: _refresh,
-                    child: FutureBuilder(
-                        future: provList,
-                        builder: (BuildContext context,
-                            AsyncSnapshot<List<Provider>> snapshot) {
-                          if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                            return ListView.separated(
-                                itemCount: retrievedprovList!.length,
-                                separatorBuilder: (context, index) =>
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                itemBuilder: (context, index) {
-                                  Provider p1 = retrievedprovList![index];
-                                  return Container(
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(16.0)),
-                                      child: P_card(
-                                        p: retrievedprovList![index],
-                                        lat: _userCurrentPosition.latitude,
-                                        long: _userCurrentPosition.longitude,
-                                      ));
-                                });
-                          } else if (snapshot.connectionState ==
-                                  ConnectionState.done &&
-                              retrievedprovList!.isEmpty) {
-                            return Center(
-                              child: ListView(
-                                children: const <Widget>[
-                                  Align(
-                                      alignment: AlignmentDirectional.center,
-                                      child: Text('No data available')),
-                                ],
-                              ),
-                            );
-                          } else {
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          }
-                        }), //future
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: RefreshIndicator(
+                      onRefresh: _refresh,
+                      child: FutureBuilder(
+                          future: provList,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<List<Provider>> snapshot) {
+                            if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                              return ListView.separated(
+                                  itemCount: retrievedprovList!.length,
+                                  separatorBuilder: (context, index) =>
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                  itemBuilder: (context, index) {
+                                    Provider p1 = retrievedprovList![index];
+                                    return Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(16.0)),
+                                        child: P_card(
+                                          p: retrievedprovList![index],
+                                          lat: _userCurrentPosition.latitude,
+                                          long: _userCurrentPosition.longitude,
+                                        ));
+                                  });
+                            } else if (snapshot.connectionState ==
+                                    ConnectionState.done &&
+                                retrievedprovList!.isEmpty) {
+                              return Center(
+                                child: ListView(
+                                  children: const <Widget>[
+                                    Align(
+                                        alignment: AlignmentDirectional.center,
+                                        child: Text('No data available')),
+                                  ],
+                                ),
+                              );
+                            } else {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            }
+                          }), //future
+                    ),
                   ),
                 ),
               ],
