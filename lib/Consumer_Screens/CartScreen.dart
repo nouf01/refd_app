@@ -98,7 +98,7 @@ class _CartScreen extends State<CartScreen> {
     } else {*/
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xFF66CDAA),
+          backgroundColor: Color(0xFF89CDA7),
           title: Text('My Cart'),
           centerTitle: true,
         ),
@@ -421,7 +421,7 @@ class _CartScreen extends State<CartScreen> {
                         horizontal: 32,
                         vertical: 16.0,
                       ),
-                      backgroundColor: Color(0xFF66CDAA),
+                      backgroundColor: Color(0xFF89CDA7),
                       elevation: 0,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),
@@ -443,7 +443,7 @@ class _CartScreen extends State<CartScreen> {
                                 ElevatedButton(
                                   child: Text("OK"),
                                   style: ElevatedButton.styleFrom(
-                                    primary: Color(0xFF66CDAA),
+                                    primary: Color(0xFF89CDA7),
                                   ),
                                   onPressed: () {
                                     Navigator.of(context).pop();

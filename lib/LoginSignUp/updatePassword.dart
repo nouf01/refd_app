@@ -51,7 +51,7 @@ class _MyWidgetState extends State<UpdatePassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: Colors.green),
+      appBar: AppBar(backgroundColor: Color(0xFF89CDA7)),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -87,16 +87,15 @@ class _MyWidgetState extends State<UpdatePassword> {
                               color: Colors.grey,
                             ),
                             focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color.fromARGB(255, 88, 207, 108)),
+                                borderSide:
+                                    BorderSide(color: Color(0xFF89CDA7)),
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(100.0))),
                             enabledBorder: OutlineInputBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(100.0)),
                                 borderSide: BorderSide(
-                                    width: 3,
-                                    color: Color.fromARGB(255, 88, 207, 108))),
+                                    width: 3, color: Color(0xFF89CDA7))),
                             label: Text(
                               "enter your email",
                               style:
@@ -120,8 +119,8 @@ class _MyWidgetState extends State<UpdatePassword> {
                             style: TextStyle(fontSize: 27),
                           ),
                           style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                Color.fromARGB(255, 88, 207, 108)),
+                            backgroundColor:
+                                MaterialStateProperty.all(Color(0xFF89CDA7)),
                             foregroundColor:
                                 MaterialStateProperty.all(Colors.white),
                           )),

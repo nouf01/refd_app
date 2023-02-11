@@ -254,7 +254,7 @@ class _ConsumerMapState extends State<ConsumerMap> {
                                   ),
                                   style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty.all(
-                                        Color(0xFF66CDAA)),
+                                        Color(0xFF89CDA7)),
                                     foregroundColor:
                                         MaterialStateProperty.all(Colors.white),
                                   )),
@@ -279,7 +279,7 @@ class _ConsumerMapState extends State<ConsumerMap> {
           ? Center(
               child: SpinKitFadingCube(
                 size: 85,
-                color: Color(0xFF66CDAA),
+                color: Color(0xFF89CDA7),
               ),
             )
           : FutureBuilder(
@@ -328,7 +328,7 @@ class _ConsumerMapState extends State<ConsumerMap> {
                   return Center(
                     child: SpinKitFadingCube(
                       size: 85,
-                      color: Color(0xFF66CDAA),
+                      color: Color(0xFF89CDA7),
                     ),
                   );
                 else

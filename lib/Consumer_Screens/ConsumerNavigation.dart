@@ -65,19 +65,19 @@ class _ConsumerNavigationState extends State<ConsumerNavigation> {
             BottomNavigationBarItem(
                 icon: Icon(Icons.home),
                 label: "home",
-                backgroundColor: Color(0xFF66CDAA)),
+                backgroundColor: Color(0xFF89CDA7)),
             BottomNavigationBarItem(
                 icon: Icon(Icons.map_outlined),
                 label: "map",
-                backgroundColor: Color(0xFF66CDAA)),
+                backgroundColor: Color(0xFF89CDA7)),
             BottomNavigationBarItem(
                 icon: Icon(Icons.history),
                 label: "order history",
-                backgroundColor: Color(0xFF66CDAA)),
+                backgroundColor: Color(0xFF89CDA7)),
             BottomNavigationBarItem(
                 icon: Icon(Icons.person),
                 label: "profile",
-                backgroundColor: Color(0xFF66CDAA)),
+                backgroundColor: Color(0xFF89CDA7)),
           ]),
     )
         /*BottomNavigationBar(

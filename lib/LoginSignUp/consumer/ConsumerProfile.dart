@@ -92,7 +92,7 @@ class _MyConsumerProfileState extends State<ConsumerProfile> {
           return Scaffold(
             appBar: AppBar(
               toolbarHeight: 65,
-              backgroundColor: Color(0xFF66CDAA),
+              backgroundColor: Color(0xFF89CDA7),
               centerTitle: true,
               title: const Text(
                 "Account details",
@@ -132,7 +132,7 @@ class _MyConsumerProfileState extends State<ConsumerProfile> {
                         Text(
                           "$_userEmail",
                           style:
-                              TextStyle(fontSize: 20, color: Color(0xFF66CDAA)),
+                              TextStyle(fontSize: 20, color: Color(0xFF89CDA7)),
                           textAlign: TextAlign.left,
                         )
                       ],
@@ -165,7 +165,7 @@ class _MyConsumerProfileState extends State<ConsumerProfile> {
                                   labelStyle: TextStyle(fontSize: 17),
                                   prefixIcon: Icon(
                                     Icons.person,
-                                    color: Color(0xFF66CDAA),
+                                    color: Color(0xFF89CDA7),
                                   ),
                                   border: OutlineInputBorder(
                                       borderRadius:
@@ -197,7 +197,7 @@ class _MyConsumerProfileState extends State<ConsumerProfile> {
                                   labelStyle: TextStyle(fontSize: 17),
                                   prefixIcon: Icon(
                                     Icons.phone,
-                                    color: Color(0xFF66CDAA),
+                                    color: Color(0xFF89CDA7),
                                   ),
                                   border: OutlineInputBorder(
                                       borderRadius:
@@ -227,7 +227,7 @@ class _MyConsumerProfileState extends State<ConsumerProfile> {
                         ),
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(Color(0xFF66CDAA)),
+                              MaterialStateProperty.all(Color(0xFF89CDA7)),
                           foregroundColor:
                               MaterialStateProperty.all(Colors.white),
                         )),
@@ -295,7 +295,7 @@ class _MyConsumerProfileState extends State<ConsumerProfile> {
           return Center(
             child: SpinKitFadingCube(
               size: 85,
-              color: Color(0xFF66CDAA),
+              color: Color(0xFF89CDA7),
             ),
           );
         else

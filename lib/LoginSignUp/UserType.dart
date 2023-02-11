@@ -13,7 +13,7 @@ class UserType extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-          automaticallyImplyLeading: false, backgroundColor: Color(0xFF66CDAA)),
+          automaticallyImplyLeading: false, backgroundColor: Color(0xFF89CDA7)),
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -21,7 +21,7 @@ class UserType extends StatelessWidget {
           child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
             Center(
               child: Container(
-                  margin: const EdgeInsets.only(top: 140),
+                  margin: const EdgeInsets.only(top: 100),
                   width: Screenwidth,
                   alignment: Alignment.center,
                   child: const Text(
@@ -33,14 +33,13 @@ class UserType extends StatelessWidget {
               height: 30,
             ),
             Container(
-              height: 80,
-              width: 80,
-              /*decoration: const BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage("assests/emptyPlaceholder.jpg")))*/
-            ),
+                height: 150,
+                width: 150,
+                decoration: const BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage("images\\smile.png")))),
             const SizedBox(
-              height: 70,
+              height: 30,
             ),
             Container(
                 alignment: Alignment.center,
@@ -69,7 +68,7 @@ class UserType extends StatelessWidget {
                   ),
                   style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all(Color(0xFF66CDAA)),
+                        MaterialStateProperty.all(Color(0xFF89CDA7)),
                     foregroundColor: MaterialStateProperty.all(Colors.white),
                   )),
             ),
@@ -94,7 +93,7 @@ class UserType extends StatelessWidget {
                   ),
                   style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all(Color(0xFF66CDAA)),
+                        MaterialStateProperty.all(Color(0xFF89CDA7)),
                     foregroundColor: MaterialStateProperty.all(Colors.white),
                   )),
             ),

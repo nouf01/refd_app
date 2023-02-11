@@ -85,7 +85,7 @@ class _restaurantDetail extends State<restaurantDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF66CDAA),
+        backgroundColor: Color(0xFF89CDA7),
         title: Text(widget.currentProv.get_commercialName),
         centerTitle: true,
         actions: [
@@ -142,7 +142,7 @@ class _restaurantDetail extends State<restaurantDetail> {
                     },
                     icon: Icon(
                       Icons.location_pin,
-                      color: Color(0xFF66CDAA),
+                      color: Color(0xFF89CDA7),
                     )),
                 trailing: Container(
                     width: MediaQuery.of(context).size.width - 100.0,

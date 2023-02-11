@@ -83,7 +83,7 @@ class _DailyMenuWidgetState extends State<DailyMenuWidget> {
                     },
                   );
                 },
-                backgroundColor: Color(0xFF66CDAA),
+                backgroundColor: Color(0xFF89CDA7),
                 foregroundColor: Colors.white,
                 icon: Icon(
                   Icons.save,
@@ -104,7 +104,7 @@ class _DailyMenuWidgetState extends State<DailyMenuWidget> {
                     isScrollControlled: true,
                   );
                 },
-                backgroundColor: Color(0xFF66CDAA),
+                backgroundColor: Color(0xFF89CDA7),
                 child: Icon(Icons.add),
               )), // button second
         ],
@@ -329,7 +329,7 @@ class _DailyMenuWidgetState extends State<DailyMenuWidget> {
                                                                         style: ElevatedButton
                                                                             .styleFrom(
                                                                           primary:
-                                                                              Color(0xFF66CDAA),
+                                                                              Color(0xFF89CDA7),
                                                                         ),
                                                                         onPressed:
                                                                             () {

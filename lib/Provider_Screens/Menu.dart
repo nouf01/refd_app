@@ -147,7 +147,7 @@ class _MenuScreenState extends State<MenuScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(0xFF66CDAA),
+        backgroundColor: Color(0xFF89CDA7),
         onPressed: (() {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => AddDish()));
@@ -200,7 +200,7 @@ class _MenuScreenState extends State<MenuScreen> {
             _refresh();
           },
           icon: Icon(Icons.edit),
-          color: Color(0xFF66CDAA),
+          color: Color(0xFF89CDA7),
           iconSize: 25,
         ),
       ),
@@ -227,7 +227,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     ElevatedButton(
                       child: Text("OK"),
                       style: ElevatedButton.styleFrom(
-                        primary: Color(0xFF66CDAA),
+                        primary: Color(0xFF89CDA7),
                       ),
                       onPressed: () async {
                         Database db = Database();

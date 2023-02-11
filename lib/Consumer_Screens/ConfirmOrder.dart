@@ -64,7 +64,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
     }
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xFF66CDAA),
+          backgroundColor: Color(0xFF89CDA7),
         ),
         body: Column(children: [
           SafeArea(
@@ -209,7 +209,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                       horizontal: 32,
                                       vertical: 16.0,
                                     ),
-                                    primary: Color(0xFF66CDAA),
+                                    primary: Color(0xFF89CDA7),
                                     elevation: 0,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8.0),
@@ -284,7 +284,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                             ElevatedButton(
                                               child: Text("OK"),
                                               style: ElevatedButton.styleFrom(
-                                                  primary: Color(0xFF66CDAA)),
+                                                  primary: Color(0xFF89CDA7)),
                                               onPressed: () {
                                                 Navigator.push(
                                                     context,
@@ -298,7 +298,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                                                     'Order Status'),
                                                                 backgroundColor:
                                                                     Color(
-                                                                        0xFF66CDAA),
+                                                                        0xFF89CDA7),
                                                                 leading:
                                                                     IconButton(
                                                                   icon: Icon(Icons

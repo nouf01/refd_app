@@ -132,7 +132,7 @@ class _MyWidgetState extends State<ConsumerSignUp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          automaticallyImplyLeading: false, backgroundColor: Color(0xFF66CDAA)),
+          automaticallyImplyLeading: true, backgroundColor: Color(0xFF89CDA7)),
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -177,14 +177,14 @@ class _MyWidgetState extends State<ConsumerSignUp> {
                             color: Colors.grey,
                           ),
                           focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xFF66CDAA)),
+                              borderSide: BorderSide(color: Color(0xFF89CDA7)),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(100.0))),
                           enabledBorder: OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(100.0)),
                               borderSide: BorderSide(
-                                  width: 3, color: Color(0xFF66CDAA))),
+                                  width: 3, color: Color(0xFF89CDA7))),
                           label: Text(
                             "Name",
                             style: TextStyle(fontSize: 14, color: Colors.grey),
@@ -219,14 +219,14 @@ class _MyWidgetState extends State<ConsumerSignUp> {
                             color: Colors.grey,
                           ),
                           focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xFF66CDAA)),
+                              borderSide: BorderSide(color: Color(0xFF89CDA7)),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(100.0))),
                           enabledBorder: OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(100.0)),
                               borderSide: BorderSide(
-                                  width: 3, color: Color(0xFF66CDAA))),
+                                  width: 3, color: Color(0xFF89CDA7))),
                         )),
                   ),
                   const SizedBox(
@@ -258,14 +258,14 @@ class _MyWidgetState extends State<ConsumerSignUp> {
                             color: Colors.grey,
                           ),
                           focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xFF66CDAA)),
+                              borderSide: BorderSide(color: Color(0xFF89CDA7)),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(100.0))),
                           enabledBorder: OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(100.0)),
                               borderSide: BorderSide(
-                                  width: 3, color: Color(0xFF66CDAA))),
+                                  width: 3, color: Color(0xFF89CDA7))),
                         )),
                   ),
                   const SizedBox(
@@ -294,14 +294,14 @@ class _MyWidgetState extends State<ConsumerSignUp> {
                             color: Colors.grey,
                           ),
                           focusedBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xFF66CDAA)),
+                              borderSide: BorderSide(color: Color(0xFF89CDA7)),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(100.0))),
                           enabledBorder: const OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(100.0)),
                               borderSide: BorderSide(
-                                  width: 3, color: Color(0xFF66CDAA))),
+                                  width: 3, color: Color(0xFF89CDA7))),
                           label: Text(
                             "Password",
                             style: const TextStyle(
@@ -327,14 +327,14 @@ class _MyWidgetState extends State<ConsumerSignUp> {
                             color: Colors.grey,
                           ),
                           focusedBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xFF66CDAA)),
+                              borderSide: BorderSide(color: Color(0xFF89CDA7)),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(100.0))),
                           enabledBorder: const OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(100.0)),
                               borderSide: BorderSide(
-                                  width: 3, color: Color(0xFF66CDAA))),
+                                  width: 3, color: Color(0xFF89CDA7))),
                           label: Text(
                             "Confirm password",
                             style: const TextStyle(
@@ -359,7 +359,7 @@ class _MyWidgetState extends State<ConsumerSignUp> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ConsumerNavigation()),
+                                  builder: (context) => ConsumerLogIn()),
                             );
                           } else {
                             print("SIGN UP FAILED");
@@ -372,7 +372,7 @@ class _MyWidgetState extends State<ConsumerSignUp> {
                         ),
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(Color(0xFF66CDAA)),
+                              MaterialStateProperty.all(Color(0xFF89CDA7)),
                           foregroundColor:
                               MaterialStateProperty.all(Colors.white),
                         )),
@@ -399,7 +399,7 @@ class _MyWidgetState extends State<ConsumerSignUp> {
                           },
                           child: Text(
                             "Log in",
-                            style: TextStyle(color: Color(0xFF66CDAA)),
+                            style: TextStyle(color: Color(0xFF89CDA7)),
                           ))
                     ],
                   ),

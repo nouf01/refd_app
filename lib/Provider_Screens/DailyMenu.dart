@@ -53,7 +53,7 @@ class _DailyMenuScreenState extends State<DailyMenuScreen> {
                   ],
                 )),
             resizeToAvoidBottomInset: true,
-            backgroundColor: Color(0xFF66CDAA),
+            backgroundColor: Color(0xFF89CDA7),
             body: TabBarView(
               children: [
                 DailyMenuWidget(),

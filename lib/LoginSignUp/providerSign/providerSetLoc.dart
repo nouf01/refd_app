@@ -9,6 +9,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:refd_app/LoginSignUp/providerSign/ProviderSignUp.dart';
 
+import '../UserType.dart';
+
 class providerSetLoc extends StatefulWidget {
   const providerSetLoc({super.key});
 
@@ -91,7 +93,19 @@ class _MyproviderSetLocState extends State<providerSetLoc> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xFF66CDAA),
+          automaticallyImplyLeading: false,
+          leading: BackButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => UserType()),
+              );
+            },
+          ),
+          backgroundColor: Color(0xFF89CDA7),
           title: Text("First set your location"),
         ),
         body: _userCurrentPosition.latitude == 0 &&
@@ -99,7 +113,7 @@ class _MyproviderSetLocState extends State<providerSetLoc> {
             ? Center(
                 child: SpinKitFadingCube(
                   size: 85,
-                  color: Color(0xFF66CDAA),
+                  color: Color(0xFF89CDA7),
                 ),
               )
             : Stack(
@@ -152,7 +166,7 @@ class _MyproviderSetLocState extends State<providerSetLoc> {
                               ),
                               style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all(
-                                    Color.fromARGB(255, 78, 183, 175)),
+                                    Color(0xFF89CDA7)),
                                 foregroundColor:
                                     MaterialStateProperty.all(Colors.white),
                               )),

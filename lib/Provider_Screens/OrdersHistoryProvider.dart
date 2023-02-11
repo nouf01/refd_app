@@ -45,7 +45,7 @@ class _OrdersHistoryProviderState extends State<OrdersHistoryProvider> {
                     style: TextStyle(fontSize: 25),
                   ),
                 ),
-                backgroundColor: Color(0xFF66CDAA),
+                backgroundColor: Color(0xFF89CDA7),
                 bottom: TabBar(
                   tabs: [
                     Tab(
@@ -61,7 +61,7 @@ class _OrdersHistoryProviderState extends State<OrdersHistoryProvider> {
                   ],
                 )),
             resizeToAvoidBottomInset: true,
-            backgroundColor: Color(0xFF66CDAA),
+            backgroundColor: Color(0xFF89CDA7),
             body: TabBarView(
               children: [
                 listOfOrders(status: 0, provID: log.getEmailOnly()),

@@ -252,7 +252,7 @@ class _approveUnderProcessState extends State<approveUnderProcess> {
                                   iconSize: 30.0,
                                   icon: Icon(
                                     Icons.chat,
-                                    color: Color(0xFF66CDAA),
+                                    color: Color(0xFF89CDA7),
                                   ),
                                   onPressed: () async {
                                     Navigator.of(context, rootNavigator: true)
@@ -269,7 +269,7 @@ class _approveUnderProcessState extends State<approveUnderProcess> {
                   ElevatedButton(
                       style: const ButtonStyle(
                         backgroundColor:
-                            MaterialStatePropertyAll<Color>(Color(0xFF66CDAA)),
+                            MaterialStatePropertyAll<Color>(Color(0xFF89CDA7)),
                         fixedSize:
                             MaterialStatePropertyAll<Size>(Size(200.0, 20.0)),
                       ),
@@ -303,7 +303,7 @@ class _approveUnderProcessState extends State<approveUnderProcess> {
                                 ElevatedButton(
                                   child: Text("OK"),
                                   style: ElevatedButton.styleFrom(
-                                    primary: Color(0xFF66CDAA),
+                                    primary: Color(0xFF89CDA7),
                                   ),
                                   onPressed: () {
                                     Navigator.pop(context);
@@ -380,7 +380,7 @@ class _approveUnderProcessState extends State<approveUnderProcess> {
         child: Text(
       '${timeLeft.substring(0, 7)}',
       style: const TextStyle(
-          fontSize: 40, color: Color(0xFF66CDAA), fontWeight: FontWeight.bold),
+          fontSize: 40, color: Color(0xFF89CDA7), fontWeight: FontWeight.bold),
     ));
   }
 

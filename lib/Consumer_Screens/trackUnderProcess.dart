@@ -127,7 +127,7 @@ class _trackUnderProcessState extends State<trackUnderProcess> {
           ? Center(
               child: SpinKitFadingCube(
                 //size: 85,
-                color: Color(0xFF66CDAA),
+                color: Color(0xFF89CDA7),
               ),
             )
           : StreamBuilder(
@@ -268,7 +268,7 @@ class _trackUnderProcessState extends State<trackUnderProcess> {
                                               iconSize: 30.0,
                                               icon: Icon(
                                                 Icons.chat,
-                                                color: Color(0xFF66CDAA),
+                                                color: Color(0xFF89CDA7),
                                               ),
                                               onPressed: () async {
                                                 Navigator.of(context).push(
@@ -360,7 +360,7 @@ class _trackUnderProcessState extends State<trackUnderProcess> {
                                   ),
                                   style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty.all(
-                                        Color(0xFF66CDAA)),
+                                        Color(0xFF89CDA7)),
                                     foregroundColor:
                                         MaterialStateProperty.all(Colors.white),
                                   )),
@@ -416,7 +416,7 @@ class _trackUnderProcessState extends State<trackUnderProcess> {
                                                                       'Order Status'),
                                                                   backgroundColor:
                                                                       Color(
-                                                                          0xFF66CDAA),
+                                                                          0xFF89CDA7),
                                                                   leading:
                                                                       IconButton(
                                                                     icon: Icon(Icons
@@ -471,7 +471,7 @@ class _trackUnderProcessState extends State<trackUnderProcess> {
                   return Center(
                     child: SpinKitFadingCube(
                       size: 85,
-                      color: Color(0xFF66CDAA),
+                      color: Color(0xFF89CDA7),
                     ),
                   );
                 }
@@ -490,7 +490,7 @@ class _trackUnderProcessState extends State<trackUnderProcess> {
         child: Text(
       '${timeLeft.substring(0, 7)}',
       style: const TextStyle(
-          fontSize: 40, color: Color(0xFF66CDAA), fontWeight: FontWeight.bold),
+          fontSize: 40, color: Color(0xFF89CDA7), fontWeight: FontWeight.bold),
     ));
   }
 

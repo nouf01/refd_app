@@ -174,7 +174,7 @@ class _MyConsumerProfileState extends State<ProviderProfile> {
           return Scaffold(
             appBar: AppBar(
               toolbarHeight: 65,
-              backgroundColor: Color(0xFF66CDAA),
+              backgroundColor: Color(0xFF89CDA7),
               centerTitle: true,
               title: const Text(
                 "Account details",
@@ -213,16 +213,16 @@ class _MyConsumerProfileState extends State<ProviderProfile> {
                       onPressed: imageFromGallery,
                       child: Text(
                         "change profile picture",
-                        style: TextStyle(color: Color(0xFF66CDAA)),
+                        style: TextStyle(color: Color(0xFF89CDA7)),
                       )),
                   Text("$_provname", style: TextStyle(fontSize: 35)),
                   Text("$_userEmail",
-                      style: TextStyle(fontSize: 20, color: Color(0xFF66CDAA))),
+                      style: TextStyle(fontSize: 20, color: Color(0xFF89CDA7))),
                   SizedBox(
                     height: 5,
                   ),
                   Text("$_commercialReg",
-                      style: TextStyle(fontSize: 20, color: Color(0xFF66CDAA))),
+                      style: TextStyle(fontSize: 20, color: Color(0xFF89CDA7))),
                   Form(
                       key: formKey,
                       child: Column(
@@ -250,17 +250,15 @@ class _MyConsumerProfileState extends State<ProviderProfile> {
                                   labelStyle: TextStyle(fontSize: 17),
                                   prefixIcon: Icon(
                                     Icons.person,
-                                    color: Color(0xFF66CDAA),
+                                    color: Color(0xFF89CDA7),
                                   ),
                                   border: OutlineInputBorder(
                                       borderRadius:
                                           BorderRadius.circular(100))),
                             ),
                           ),
+                          SizedBox(height: 30),
 
-                          SizedBox(
-                            height: 30,
-                          ),
                           SizedBox(
                             width: 355,
                             height: 45,
@@ -282,7 +280,7 @@ class _MyConsumerProfileState extends State<ProviderProfile> {
                                   labelStyle: TextStyle(fontSize: 17),
                                   prefixIcon: Icon(
                                     Icons.phone,
-                                    color: Color(0xFF66CDAA),
+                                    color: Color(0xFF89CDA7),
                                   ),
                                   border: OutlineInputBorder(
                                       borderRadius:
@@ -299,7 +297,7 @@ class _MyConsumerProfileState extends State<ProviderProfile> {
                               "category",
                               textAlign: TextAlign.left,
                               style: TextStyle(
-                                  fontSize: 20, color: Color(0xFF66CDAA)),
+                                  fontSize: 20, color: Color(0xFF89CDA7)),
                             ),
                           ),
                           Container(
@@ -333,8 +331,8 @@ class _MyConsumerProfileState extends State<ProviderProfile> {
                               ),
                               choiceStyle: FlexiChipStyle.when(
                                   selected: const C2ChipStyle(
-                                      checkmarkColor: Color(0xFF66CDAA),
-                                      backgroundColor: Color(0xFF66CDAA),
+                                      checkmarkColor: Color(0xFF89CDA7),
+                                      backgroundColor: Color(0xFF89CDA7),
                                       foregroundStyle:
                                           TextStyle(color: Colors.black))),
                               choiceCheckmark: true,
@@ -360,7 +358,7 @@ class _MyConsumerProfileState extends State<ProviderProfile> {
                         ),
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(Color(0xFF66CDAA)),
+                              MaterialStateProperty.all(Color(0xFF89CDA7)),
                           foregroundColor:
                               MaterialStateProperty.all(Colors.white),
                         )),
@@ -432,7 +430,7 @@ class _MyConsumerProfileState extends State<ProviderProfile> {
           return Center(
             child: SpinKitFadingCube(
               size: 85,
-              color: Color(0xFF66CDAA),
+              color: Color(0xFF89CDA7),
             ),
           );
         else

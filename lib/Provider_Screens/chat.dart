@@ -32,7 +32,7 @@ class _ChatPageState extends State<ChatPage> {
         appBar: AppBar(
           systemOverlayStyle: SystemUiOverlayStyle.light,
           title: const Text('Chat'),
-          backgroundColor: Color(0xFF66CDAA),
+          backgroundColor: Color(0xFF89CDA7),
         ),
         body: StreamBuilder<types.Room>(
           initialData: widget.room,
@@ -45,7 +45,7 @@ class _ChatPageState extends State<ChatPage> {
                   inputBackgroundColor: Colors.grey,
                   inputTextColor: Colors.white,
                   inputTextCursorColor: Colors.white,
-                  primaryColor: Color(0xFF66CDAA)),
+                  primaryColor: Color(0xFF89CDA7)),
               isAttachmentUploading: _isAttachmentUploading,
               messages: snapshot.data ?? [],
               onAttachmentPressed: _handleAtachmentPressed,

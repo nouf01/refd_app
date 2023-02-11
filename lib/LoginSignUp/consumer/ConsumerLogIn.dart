@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:refd_app/LoginSignUp/UserType.dart';
 import 'package:refd_app/LoginSignUp/updatePassword.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:refd_app/Elements/Reset.dart';
@@ -10,6 +11,7 @@ import '../../Consumer_Screens/ConsumerNavigation.dart';
 import '../../DataModel/Consumer.dart';
 import '../../DataModel/DB_Service.dart';
 import 'ConsumerSignUp.dart';
+import '../EmailVerFunc.dart';
 
 class ConsumerLogIn extends StatefulWidget {
   const ConsumerLogIn({super.key});
@@ -107,7 +109,17 @@ class _MyWidgetState extends State<ConsumerLogIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: Color(0xFF66CDAA)),
+      appBar: AppBar(
+          automaticallyImplyLeading: false,
+          leading: BackButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => UserType()),
+              );
+            },
+          ),
+          backgroundColor: Color(0xFF89CDA7)),
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -153,14 +165,14 @@ class _MyWidgetState extends State<ConsumerLogIn> {
                             color: Colors.grey,
                           ),
                           focusedBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xFF66CDAA)),
+                              borderSide: BorderSide(color: Color(0xFF89CDA7)),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(100.0))),
                           enabledBorder: const OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(100.0)),
                               borderSide: BorderSide(
-                                  width: 3, color: Color(0xFF66CDAA))),
+                                  width: 3, color: Color(0xFF89CDA7))),
                           label: Text(
                             "Email",
                             style: const TextStyle(
@@ -198,14 +210,14 @@ class _MyWidgetState extends State<ConsumerLogIn> {
                             color: Colors.grey,
                           ),
                           focusedBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xFF66CDAA)),
+                              borderSide: BorderSide(color: Color(0xFF89CDA7)),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(100.0))),
                           enabledBorder: const OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(100.0)),
                               borderSide: BorderSide(
-                                  width: 3, color: Color(0xFF66CDAA))),
+                                  width: 3, color: Color(0xFF89CDA7))),
                           label: Text(
                             "Password",
                             style: const TextStyle(
@@ -229,7 +241,7 @@ class _MyWidgetState extends State<ConsumerLogIn> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ConsumerNavigation()),
+                                  builder: (context) => EmailVerfunc()),
                             );
                           } else
                             print("something went wrong");
@@ -241,7 +253,7 @@ class _MyWidgetState extends State<ConsumerLogIn> {
                         ),
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(Color(0xFF66CDAA)),
+                              MaterialStateProperty.all(Color(0xFF89CDA7)),
                           foregroundColor:
                               MaterialStateProperty.all(Colors.white),
                         )),
@@ -268,7 +280,7 @@ class _MyWidgetState extends State<ConsumerLogIn> {
                           },
                           child: Text(
                             "Sign Up",
-                            style: TextStyle(color: Color(0xFF66CDAA)),
+                            style: TextStyle(color: Color(0xFF89CDA7)),
                           ))
                     ],
                   ),
@@ -290,7 +302,7 @@ class _MyWidgetState extends State<ConsumerLogIn> {
                           },
                           child: Text(
                             "forgot password",
-                            style: TextStyle(color: Color(0xFF66CDAA)),
+                            style: TextStyle(color: Color(0xFF89CDA7)),
                           ))
                     ],
                   ),

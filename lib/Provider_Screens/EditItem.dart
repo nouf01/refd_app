@@ -100,7 +100,7 @@ class _EditScreenState extends State<EditScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF66CDAA),
+        backgroundColor: Color(0xFF89CDA7),
         title: Text('Edit Item'),
         centerTitle: true,
       ),
@@ -166,7 +166,7 @@ class _EditScreenState extends State<EditScreen> {
                         labelStyle: TextStyle(fontSize: 17),
                         prefixIcon: Icon(
                           Icons.restaurant,
-                          color: Color(0xFF66CDAA),
+                          color: Color(0xFF89CDA7),
                         ),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(100))),
@@ -201,7 +201,7 @@ class _EditScreenState extends State<EditScreen> {
                         labelStyle: TextStyle(fontSize: 17),
                         prefixIcon: Icon(
                           Icons.monetization_on,
-                          color: Color(0xFF66CDAA),
+                          color: Color(0xFF89CDA7),
                         ),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(100))),
@@ -291,7 +291,7 @@ class _EditScreenState extends State<EditScreen> {
                       },
                       style: ButtonStyle(
                         backgroundColor:
-                            MaterialStateProperty.all(Color(0xFF66CDAA)),
+                            MaterialStateProperty.all(Color(0xFF89CDA7)),
                         foregroundColor:
                             MaterialStateProperty.all(Colors.white),
                       ),

@@ -81,7 +81,7 @@ class _pickedUpState extends State<pickedUp> {
                                 style: const TextStyle(
                                     fontSize: 25,
                                     fontWeight: FontWeight.bold,
-                                    color: Color(0xFF66CDAA)),
+                                    color: Color(0xFF89CDA7)),
                                 textAlign: TextAlign.center)),
                         SizedBox(height: 50),
                         Container(
