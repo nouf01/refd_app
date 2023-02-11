@@ -110,7 +110,7 @@ class _AddDish extends State<AddDish> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF66CDAA),
+        backgroundColor: Color(0xFF89CDA7),
         title: Text('Add New Item'),
         centerTitle: true,
       ),
@@ -179,7 +179,7 @@ class _AddDish extends State<AddDish> {
                         labelStyle: TextStyle(fontSize: 17),
                         prefixIcon: Icon(
                           Icons.restaurant,
-                          color: Color(0xFF66CDAA),
+                          color: Color(0xFF89CDA7),
                         ),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(100))),
@@ -211,7 +211,7 @@ class _AddDish extends State<AddDish> {
                         labelStyle: TextStyle(fontSize: 17),
                         prefixIcon: Icon(
                           Icons.monetization_on,
-                          color: Color(0xFF66CDAA),
+                          color: Color(0xFF89CDA7),
                         ),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(100))),
@@ -244,7 +244,7 @@ class _AddDish extends State<AddDish> {
                         labelStyle: TextStyle(fontSize: 17),
                         prefixIcon: Icon(
                           Icons.description,
-                          color: Color(0xFF66CDAA),
+                          color: Color(0xFF89CDA7),
                         ),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(100))),
@@ -280,7 +280,7 @@ class _AddDish extends State<AddDish> {
                       ),
                       style: ButtonStyle(
                         backgroundColor:
-                            MaterialStateProperty.all(Color(0xFF66CDAA)),
+                            MaterialStateProperty.all(Color(0xFF89CDA7)),
                         foregroundColor:
                             MaterialStateProperty.all(Colors.white),
                       )),

@@ -89,20 +89,20 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         hintStyle: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF66CDAA)),
+                            color: Color(0xFF89CDA7)),
                         prefixIcon: const Icon(
                           Icons.email,
                           color: Colors.grey,
                         ),
                         focusedBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF66CDAA)),
+                            borderSide: BorderSide(color: Color(0xFF89CDA7)),
                             borderRadius:
                                 BorderRadius.all(Radius.circular(100.0))),
                         enabledBorder: const OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(100.0)),
                             borderSide:
-                                BorderSide(width: 3, color: Color(0xFF66CDAA))),
+                                BorderSide(width: 3, color: Color(0xFF89CDA7))),
                         label: Text(
                           "Email",
                           style:
@@ -121,7 +121,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF66CDAA)),
+                          color: Color(0xFF89CDA7)),
                     ),
                   ),
                   const SizedBox(height: 80),
@@ -133,7 +133,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             minimumSize: Size(360, 40),
-                            backgroundColor: Color(0xFF66CDAA),
+                            backgroundColor: Color(0xFF89CDA7),
                             shape: const BeveledRectangleBorder(
                                 borderRadius: BorderRadius.all(
                               Radius.circular(5),
@@ -164,7 +164,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   //   child: Material(
                   //     elevation: 2,
                   //     borderRadius: BorderRadius.circular(20),
-                  //     color: Color(0xFF66CDAA),
+                  //     color: Color(0xFF89CDA7),
                   //     child: MaterialButton(
                   //       onPressed: () async {
                   //         if (_key.currentState!.validate()) {

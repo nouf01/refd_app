@@ -74,7 +74,13 @@ class _HomeScreenProviderState extends State<HomeScreenProvider> {
                           SizedBox(
                             width: 80,
                           ),
-                          Text(p!.get_commercialName),
+                          Container(
+                              child: Center(
+                            child: Text(
+                              p!.get_commercialName,
+                              textAlign: TextAlign.center,
+                            ),
+                          )),
                         ],
                       ),
                     ),
@@ -116,7 +122,7 @@ class _HomeScreenProviderState extends State<HomeScreenProvider> {
                     )
                   ],
                 ),
-                backgroundColor: Color(0xFF66CDAA),
+                backgroundColor: Color(0xFF89CDA7),
 
                 /*actions: [
                   SliderButton(
@@ -171,7 +177,7 @@ class _HomeScreenProviderState extends State<HomeScreenProvider> {
                   ],
                 )),
             resizeToAvoidBottomInset: true,
-            backgroundColor: Color(0xFF66CDAA),
+            backgroundColor: Color(0xFF89CDA7),
             body: TabBarView(
               children: [
                 listOfOrders(status: 0, provID: p!.get_email),

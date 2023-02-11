@@ -57,7 +57,6 @@ class _MenuScreenState extends State<MenuScreen> {
                     itemBuilder: (context, index) {
                       return Container(
                         width: 174,
-                        height: 170,
                         decoration: BoxDecoration(
                           border: Border.all(
                             color: Color(0xffE2E2E2),
@@ -147,7 +146,7 @@ class _MenuScreenState extends State<MenuScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(0xFF66CDAA),
+        backgroundColor: Color(0xFF89CDA7),
         onPressed: (() {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => AddDish()));
@@ -195,12 +194,12 @@ class _MenuScreenState extends State<MenuScreen> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => EditScreen(
-                          currentItem: retrieveditemList![index],
-                        )));
+                        currentItem: retrieveditemList![index],
+                        uid: retrieveditemList![index].getId()!)));
             _refresh();
           },
           icon: Icon(Icons.edit),
-          color: Color(0xFF66CDAA),
+          color: Color(0xFF89CDA7),
           iconSize: 25,
         ),
       ),
@@ -227,21 +226,24 @@ class _MenuScreenState extends State<MenuScreen> {
                     ElevatedButton(
                       child: Text("OK"),
                       style: ElevatedButton.styleFrom(
-                        primary: Color(0xFF66CDAA),
+                        primary: Color(0xFF89CDA7),
                       ),
                       onPressed: () async {
                         Database db = Database();
                         Item t = retrieveditemList![index];
                         retrieveditemList!.remove(retrieveditemList![index]);
                         db.removeFromPrvoiderMenu(t);
-                        DailyMenu_Item d = DailyMenu_Item.fromDocumentSnapshot(
-                            await FirebaseFirestore.instance
-                                .collection('Providers')
-                                .doc(t.get_providerID)
-                                .collection('DailyMenu')
-                                .doc(t.getId())
-                                .get());
-                        db.removeFromPrvoiderDM(t.get_providerID, d);
+                        if (t.get_inDM() == 1) {
+                          DailyMenu_Item d =
+                              DailyMenu_Item.fromDocumentSnapshot(
+                                  await FirebaseFirestore.instance
+                                      .collection('Providers')
+                                      .doc(t.get_providerID)
+                                      .collection('DailyMenu')
+                                      .doc(t.getId())
+                                      .get());
+                          db.removeFromPrvoiderDM(t.get_providerID, d);
+                        }
                         _refresh();
                         Navigator.pop(context);
                       },

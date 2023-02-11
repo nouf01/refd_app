@@ -203,7 +203,7 @@ class _WaitingForPickUpState extends State<WaitingForPickUp> {
                               iconSize: 30.0,
                               icon: Icon(
                                 Icons.arrow_drop_down_circle_outlined,
-                                color: Color(0xFF66CDAA),
+                                color: Color(0xFF89CDA7),
                               ),
                               onPressed: () {
                                 showModalBottomSheet(
@@ -251,7 +251,7 @@ class _WaitingForPickUpState extends State<WaitingForPickUp> {
                                   iconSize: 30.0,
                                   icon: Icon(
                                     Icons.chat,
-                                    color: Color(0xFF66CDAA),
+                                    color: Color(0xFF89CDA7),
                                   ),
                                   onPressed: () async {
                                     Navigator.of(context, rootNavigator: true)
@@ -270,7 +270,7 @@ class _WaitingForPickUpState extends State<WaitingForPickUp> {
                   ElevatedButton(
                       style: const ButtonStyle(
                         backgroundColor:
-                            MaterialStatePropertyAll<Color>(Color(0xFF66CDAA)),
+                            MaterialStatePropertyAll<Color>(Color(0xFF89CDA7)),
                         fixedSize:
                             MaterialStatePropertyAll<Size>(Size(200.0, 20.0)),
                       ),
@@ -290,7 +290,7 @@ class _WaitingForPickUpState extends State<WaitingForPickUp> {
                                 ElevatedButton(
                                   child: Text("Confirm"),
                                   style: ElevatedButton.styleFrom(
-                                    primary: Color(0xFF66CDAA),
+                                    primary: Color(0xFF89CDA7),
                                   ),
                                   onPressed: () {
                                     //change order status to picked up
@@ -311,8 +311,8 @@ class _WaitingForPickUpState extends State<WaitingForPickUp> {
                                               appBar: AppBar(
                                                 title:
                                                     const Text('Order Status'),
-                                                backgroundColor:
-                                                    Color(0xFF66CDAA),
+                                                backgroundColor: Color.fromRGBO(
+                                                    137, 205, 167, 0),
                                                 leading: IconButton(
                                                   icon: Icon(Icons.arrow_back),
                                                   onPressed: () {
@@ -365,7 +365,7 @@ class _WaitingForPickUpState extends State<WaitingForPickUp> {
         child: Text(
       '${timeLeft.substring(2, 7)}',
       style: const TextStyle(
-          fontSize: 35, color: Color(0xFF66CDAA), fontWeight: FontWeight.bold),
+          fontSize: 35, color: Color(0xFF89CDA7), fontWeight: FontWeight.bold),
     ));
   }
 

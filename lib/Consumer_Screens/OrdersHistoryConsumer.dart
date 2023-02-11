@@ -37,7 +37,7 @@ class _OrdersHistoryScreenState extends State<OrdersHistoryScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Center(child: Text('My Orders')),
-        backgroundColor: Color(0xFF66CDAA),
+        backgroundColor: Color(0xFF89CDA7),
         automaticallyImplyLeading: false,
       ),
       body: RefreshIndicator(
@@ -105,7 +105,7 @@ class _OrdersHistoryScreenState extends State<OrdersHistoryScreen> {
                     child: Center(
                   child: SpinKitFadingCube(
                     size: 85,
-                    color: Color(0xFF66CDAA),
+                    color: Color(0xFF89CDA7),
                   ),
                 ));
               }
@@ -144,7 +144,7 @@ class _OrdersHistoryScreenState extends State<OrdersHistoryScreen> {
     } else if (status == 'pickedUp') {
       return const Text(
         'Picked Up',
-        style: TextStyle(color: Color(0xFF66CDAA), fontSize: 10),
+        style: TextStyle(color: Color(0xFF89CDA7), fontSize: 10),
       );
     } else if (status == 'canceled') {
       return const Text(

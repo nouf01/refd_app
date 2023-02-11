@@ -34,7 +34,7 @@ class _restaurantInfo extends State<restaurantInfo> {
         ],
       ),
       child: Card(
-        color: Color(0xFF66CDAA),
+        color: Color(0xFF89CDA7),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,

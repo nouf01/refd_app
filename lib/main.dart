@@ -89,14 +89,5 @@ class _MyAppState extends State<MyApp> {
                   ? ProviderNavigation()
                   : ConsumerNavigation(),
     );
-    //before seeema
-    /*if (isProvider) {
-      return ProviderNavigation(
-        choosedIndex: choosedInde,4
-      );
-    } else {
-      return ConsumerNavigation();
-    }*/
-    // return ConsumerNavigation();
   }
 }

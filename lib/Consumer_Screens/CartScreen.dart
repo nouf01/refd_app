@@ -98,7 +98,7 @@ class _CartScreen extends State<CartScreen> {
     } else {*/
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xFF66CDAA),
+          backgroundColor: Color(0xFF89CDA7),
           title: Text('My Cart'),
           centerTitle: true,
         ),
@@ -353,9 +353,23 @@ class _CartScreen extends State<CartScreen> {
                 );
               } else if (numCart == 0) {
                 return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Image.asset('cart_empty.png'),
-                    Text('Your Cart is empty!'),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Your Cart is empty!',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ],
+                    ),
+                    Image.asset(
+                      'images/logo.png',
+                      width: 200,
+                      height: 200,
+                    ),
                   ],
                 );
               } else {
@@ -421,7 +435,7 @@ class _CartScreen extends State<CartScreen> {
                         horizontal: 32,
                         vertical: 16.0,
                       ),
-                      backgroundColor: Color(0xFF66CDAA),
+                      backgroundColor: Color(0xFF89CDA7),
                       elevation: 0,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),
@@ -443,7 +457,7 @@ class _CartScreen extends State<CartScreen> {
                                 ElevatedButton(
                                   child: Text("OK"),
                                   style: ElevatedButton.styleFrom(
-                                    primary: Color(0xFF66CDAA),
+                                    primary: Color(0xFF89CDA7),
                                   ),
                                   onPressed: () {
                                     Navigator.of(context).pop();

@@ -43,7 +43,7 @@ class _DailyMenuScreenState extends State<DailyMenuScreen> {
                 title: Center(
                   child: Text('Manage Items'),
                 ),
-                backgroundColor: Color(0xFF66CDAA),
+                backgroundColor: Color(0xFF89CDA7),
                 bottom: TabBar(
                   tabs: [
                     Tab(
@@ -53,7 +53,7 @@ class _DailyMenuScreenState extends State<DailyMenuScreen> {
                   ],
                 )),
             resizeToAvoidBottomInset: true,
-            backgroundColor: Color(0xFF66CDAA),
+            backgroundColor: Color(0xFF89CDA7),
             body: TabBarView(
               children: [
                 DailyMenuWidget(),

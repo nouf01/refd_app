@@ -91,7 +91,7 @@ class _MyproviderSetLocState extends State<providerSetLoc> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xFF66CDAA),
+          backgroundColor: Color(0xFF89CDA7),
           title: Text("First set your location"),
         ),
         body: _userCurrentPosition.latitude == 0 &&
@@ -99,7 +99,7 @@ class _MyproviderSetLocState extends State<providerSetLoc> {
             ? Center(
                 child: SpinKitFadingCube(
                   size: 85,
-                  color: Color(0xFF66CDAA),
+                  color: Color(0xFF89CDA7),
                 ),
               )
             : Stack(

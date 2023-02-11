@@ -13,7 +13,7 @@ class UserType extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-          automaticallyImplyLeading: false, backgroundColor: Color(0xFF66CDAA)),
+          automaticallyImplyLeading: false, backgroundColor: Color(0xFF89CDA7)),
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -69,7 +69,7 @@ class UserType extends StatelessWidget {
                   ),
                   style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all(Color(0xFF66CDAA)),
+                        MaterialStateProperty.all(Color(0xFF89CDA7)),
                     foregroundColor: MaterialStateProperty.all(Colors.white),
                   )),
             ),
@@ -94,7 +94,7 @@ class UserType extends StatelessWidget {
                   ),
                   style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all(Color(0xFF66CDAA)),
+                        MaterialStateProperty.all(Color(0xFF89CDA7)),
                     foregroundColor: MaterialStateProperty.all(Colors.white),
                   )),
             ),

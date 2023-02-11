@@ -45,13 +45,13 @@ class _path extends State<path> {
             child: Center(
               child: SpinKitFadingCube(
                 size: 85,
-                color: Color(0xFF66CDAA),
+                color: Color(0xFF89CDA7),
               ),
             ),
           )
         : Scaffold(
             appBar: AppBar(
-              backgroundColor: Color(0xFF66CDAA),
+              backgroundColor: Color(0xFF89CDA7),
               title: Text("Your route to " + this.widget.p.get_commercialName),
               centerTitle: true,
             ),
@@ -146,7 +146,7 @@ class _path extends State<path> {
                         horizontal: 32,
                         vertical: 16.0,
                       ),
-                      backgroundColor: Color(0xFF66CDAA),
+                      backgroundColor: Color(0xFF89CDA7),
                       elevation: 0,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),

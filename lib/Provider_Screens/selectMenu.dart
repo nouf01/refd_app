@@ -62,7 +62,7 @@ class _SelectMenuState extends State<SelectMenu> {
       appBar: AppBar(
         title: Text('Choose items to be added',
             style: TextStyle(
-                color: Color(0xFF66CDAA),
+                color: Color(0xFF89CDA7),
                 fontSize: 16,
                 fontWeight: FontWeight.bold)),
         backgroundColor: Colors.white,
@@ -97,7 +97,7 @@ class _SelectMenuState extends State<SelectMenu> {
                   ElevatedButton(
                     child: Text("OK"),
                     style: ElevatedButton.styleFrom(
-                      primary: Color(0xFF66CDAA),
+                      primary: Color(0xFF89CDA7),
                     ),
                     onPressed: () {
                       Navigator.push(
@@ -113,7 +113,7 @@ class _SelectMenuState extends State<SelectMenu> {
             },
           );
         },
-        backgroundColor: Color(0xFF66CDAA),
+        backgroundColor: Color(0xFF89CDA7),
         foregroundColor: Colors.white,
         icon: Icon(
           Icons.save,

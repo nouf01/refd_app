@@ -103,7 +103,7 @@ class _MyWidgetState extends State<ProviderLogIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: Color(0xFF66CDAA)),
+      appBar: AppBar(backgroundColor: Color(0xFF89CDA7)),
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -149,14 +149,14 @@ class _MyWidgetState extends State<ProviderLogIn> {
                             color: Colors.grey,
                           ),
                           focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xFF66CDAA)),
+                              borderSide: BorderSide(color: Color(0xFF89CDA7)),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(100.0))),
                           enabledBorder: OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(100.0)),
                               borderSide: BorderSide(
-                                  width: 3, color: Color(0xFF66CDAA))),
+                                  width: 3, color: Color(0xFF89CDA7))),
                           label: Text(
                             "Email",
                             style: TextStyle(fontSize: 14, color: Colors.grey),
@@ -193,14 +193,14 @@ class _MyWidgetState extends State<ProviderLogIn> {
                             color: Colors.grey,
                           ),
                           focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xFF66CDAA)),
+                              borderSide: BorderSide(color: Color(0xFF89CDA7)),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(100.0))),
                           enabledBorder: OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(100.0)),
                               borderSide: BorderSide(
-                                  width: 3, color: Color(0xFF66CDAA))),
+                                  width: 3, color: Color(0xFF89CDA7))),
                           label: Text(
                             "Password",
                             style: TextStyle(fontSize: 14, color: Colors.grey),
@@ -235,7 +235,7 @@ class _MyWidgetState extends State<ProviderLogIn> {
                         ),
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(Color(0xFF66CDAA)),
+                              MaterialStateProperty.all(Color(0xFF89CDA7)),
                           foregroundColor:
                               MaterialStateProperty.all(Colors.white),
                         )),
@@ -262,7 +262,7 @@ class _MyWidgetState extends State<ProviderLogIn> {
                           },
                           child: const Text(
                             "Sign Up",
-                            style: TextStyle(color: Color(0xFF66CDAA)),
+                            style: TextStyle(color: Color(0xFF89CDA7)),
                           ))
                     ],
                   ),
@@ -284,7 +284,7 @@ class _MyWidgetState extends State<ProviderLogIn> {
                           },
                           child: const Text(
                             "forgot password",
-                            style: TextStyle(color: Color(0xFF66CDAA)),
+                            style: TextStyle(color: Color(0xFF89CDA7)),
                           ))
                     ],
                   ),

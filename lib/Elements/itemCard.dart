@@ -106,10 +106,11 @@ class GroceryItemCardWidget extends StatelessWidget {
                 MaterialPageRoute(
                     builder: (context) => EditScreen(
                           currentItem: item,
+                          uid: item.getId()!,
                         )));
           },
           icon: Icon(Icons.edit),
-          color: Color(0xFF66CDAA),
+          color: Color(0xFF89CDA7),
           iconSize: 25,
         ),
       ),
@@ -136,7 +137,7 @@ class GroceryItemCardWidget extends StatelessWidget {
                     ElevatedButton(
                       child: Text("OK"),
                       style: ElevatedButton.styleFrom(
-                        primary: Color(0xFF66CDAA),
+                        primary: Color(0xFF89CDA7),
                       ),
                       onPressed: () {
                         Database db = Database();
@@ -150,7 +151,7 @@ class GroceryItemCardWidget extends StatelessWidget {
             );
           },
           icon: Icon(Icons.delete),
-          color: Color(0xFF66CDAA),
+          color: Color(0xFF89CDA7),
           iconSize: 25,
         ),
       ),

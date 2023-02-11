@@ -57,7 +57,7 @@ class _items extends State<items> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF66CDAA),
+        backgroundColor: Color(0xFF89CDA7),
         title: Text(widget.currentItem.getItem().get_name()),
         centerTitle: true,
         actions: [
@@ -104,7 +104,7 @@ class _items extends State<items> {
                 //     textAlign: TextAlign.center,
                 //     this.widget.currentItem.getItem().get_name(),
                 //     style: TextStyle(
-                //       color: Color(0xFF66CDAA),
+                //       color: Color(0xFF89CDA7),
                 //       fontSize: 20,
                 //       fontWeight: FontWeight.bold,
                 //     ),
@@ -257,7 +257,7 @@ class _items extends State<items> {
                             style: ElevatedButton.styleFrom(
                               fixedSize: Size(200, 35),
                               //padding: EdgeInsets.symmetric(horizontal: 40, vertical: 40),
-                              backgroundColor: Color(0xFF66CDAA),
+                              backgroundColor: Color(0xFF89CDA7),
                               //primary: Theme.of(context).accentColor,
                             ),
                             onPressed: () {
@@ -371,7 +371,7 @@ class _items extends State<items> {
                       ElevatedButton(
                           child: Text("OK"),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF66CDAA),
+                            backgroundColor: Color(0xFF89CDA7),
                           ),
                           onPressed: () {
                             Navigator.of(context).pop();
@@ -394,7 +394,7 @@ class _items extends State<items> {
                   ElevatedButton(
                     child: Text("OK"),
                     style: ElevatedButton.styleFrom(
-                      primary: Color(0xFF66CDAA),
+                      primary: Color(0xFF89CDA7),
                       //   padding: EdgeInsets.symmetric(
                       //       horizontal: 30, vertical: 30),
                     ),
@@ -427,7 +427,7 @@ class _items extends State<items> {
                     ElevatedButton(
                         child: Text("OK"),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF66CDAA),
+                          backgroundColor: Color(0xFF89CDA7),
                         ),
                         onPressed: () {
                           Navigator.of(context).pop();
@@ -450,7 +450,7 @@ class _items extends State<items> {
                 ElevatedButton(
                   child: Text("OK"),
                   style: ElevatedButton.styleFrom(
-                    primary: Color(0xFF66CDAA),
+                    primary: Color(0xFF89CDA7),
                     //   padding: EdgeInsets.symmetric(
                     //       horizontal: 30, vertical: 30),
                   ),
@@ -484,7 +484,7 @@ class itemAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverAppBar(
       automaticallyImplyLeading: false,
-      backgroundColor: Color(0xFF66CDAA),
+      backgroundColor: Color(0xFF89CDA7),
       pinned: true,
       expandedHeight: 250.0,
       flexibleSpace: FlexibleSpaceBar(

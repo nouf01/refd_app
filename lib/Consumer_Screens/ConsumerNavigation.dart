@@ -59,25 +59,25 @@ class _ConsumerNavigationState extends State<ConsumerNavigation> {
           onTap: _onItemTapped,
           showSelectedLabels: true,
           showUnselectedLabels: false,
-          selectedItemColor: Colors.white,
-          unselectedItemColor: Color.fromARGB(255, 208, 208, 208),
+          selectedItemColor: Color.fromARGB(255, 0, 0, 0),
+          unselectedItemColor: Color.fromARGB(255, 255, 255, 255),
           items: const [
             BottomNavigationBarItem(
                 icon: Icon(Icons.home),
                 label: "home",
-                backgroundColor: Color(0xFF66CDAA)),
+                backgroundColor: Color(0xFF89CDA7)),
             BottomNavigationBarItem(
                 icon: Icon(Icons.map_outlined),
                 label: "map",
-                backgroundColor: Color(0xFF66CDAA)),
+                backgroundColor: Color(0xFF89CDA7)),
             BottomNavigationBarItem(
                 icon: Icon(Icons.history),
                 label: "order history",
-                backgroundColor: Color(0xFF66CDAA)),
+                backgroundColor: Color(0xFF89CDA7)),
             BottomNavigationBarItem(
                 icon: Icon(Icons.person),
                 label: "profile",
-                backgroundColor: Color(0xFF66CDAA)),
+                backgroundColor: Color(0xFF89CDA7)),
           ]),
     )
         /*BottomNavigationBar(
@@ -85,27 +85,27 @@ class _ConsumerNavigationState extends State<ConsumerNavigation> {
               BottomNavigationBarItem(
                 icon: Icon(Icons.home),
                 label: 'Home',
-                backgroundColor: Color(0xFF66CDAA),
+                backgroundColor: Color(0xFF89CDA7),
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.map),
                 label: 'Maps',
-                backgroundColor: Color(0xFF66CDAA),
+                backgroundColor: Color(0xFF89CDA7),
               ),
               /*BottomNavigationBarItem(
                 icon: Icon(Icons.shopping_cart),
                 label: 'Cart',
-                backgroundColor: Color(0xFF66CDAA),
+                backgroundColor: Color(0xFF89CDA7),
               ),*/
               BottomNavigationBarItem(
                 icon: Icon(Icons.history),
                 label: 'Orders History',
-                backgroundColor: Color(0xFF66CDAA),
+                backgroundColor: Color(0xFF89CDA7),
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.person),
                 label: 'Profile',
-                backgroundColor: Color(0xFF66CDAA),
+                backgroundColor: Color(0xFF89CDA7),
               ),
             ],
             currentIndex: _pageIndex,

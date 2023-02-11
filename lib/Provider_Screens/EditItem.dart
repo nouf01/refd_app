@@ -19,7 +19,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 class EditScreen extends StatefulWidget {
   Item currentItem;
-  EditScreen({super.key, required this.currentItem});
+  String uid;
+  EditScreen({super.key, required this.currentItem, required this.uid});
 
   @override
   State<EditScreen> createState() => _EditScreenState();
@@ -100,7 +101,7 @@ class _EditScreenState extends State<EditScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF66CDAA),
+        backgroundColor: Color(0xFF89CDA7),
         title: Text('Edit Item'),
         centerTitle: true,
       ),
@@ -166,7 +167,7 @@ class _EditScreenState extends State<EditScreen> {
                         labelStyle: TextStyle(fontSize: 17),
                         prefixIcon: Icon(
                           Icons.restaurant,
-                          color: Color(0xFF66CDAA),
+                          color: Color(0xFF89CDA7),
                         ),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(100))),
@@ -201,7 +202,7 @@ class _EditScreenState extends State<EditScreen> {
                         labelStyle: TextStyle(fontSize: 17),
                         prefixIcon: Icon(
                           Icons.monetization_on,
-                          color: Color(0xFF66CDAA),
+                          color: Color(0xFF89CDA7),
                         ),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(100))),
@@ -235,7 +236,7 @@ class _EditScreenState extends State<EditScreen> {
                         labelStyle: TextStyle(fontSize: 17),
                         prefixIcon: Icon(
                           Icons.description,
-                          color: Color(0xFF66CDAA),
+                          color: Color(0xFF89CDA7),
                         ),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(100))),
@@ -254,8 +255,7 @@ class _EditScreenState extends State<EditScreen> {
                           formFields.save();
                           LoggedProvider log = LoggedProvider();
                           Database db = Database();
-                          db.updateItemInfo(
-                              widget.currentItem.getId(), widget.currentItem, {
+                          db.updateItemInfo(widget.uid, widget.currentItem, {
                             'name': itemName!,
                             'originalPrice': double.parse(itemPrice!),
                             'description': itemDescrib!,
@@ -269,29 +269,31 @@ class _EditScreenState extends State<EditScreen> {
                               imageURL: image_URL);
                           t.set_inDM(widget.currentItem.get_inDM());
                           //search for daily menu item and change it
-                          double dis = (await FirebaseFirestore.instance
-                                  .collection('Providers')
-                                  .doc(t.get_providerID)
-                                  .collection('DailyMenu')
-                                  .doc(widget.currentItem.getId())
-                                  .get())
-                              .data()!['discount'];
-                          await FirebaseFirestore.instance
-                              .collection('Providers')
-                              .doc(widget.currentItem.get_providerID)
-                              .collection('DailyMenu')
-                              .doc(widget.currentItem.getId())
-                              .update({
-                            'item': t.toMap(),
-                            'priceAfterDiscount': t.get_originalPrice() -
-                                (t.get_originalPrice() * dis)
-                          });
+                          if (widget.currentItem.get_inDM() == 1) {
+                            double dis = (await FirebaseFirestore.instance
+                                    .collection('Providers')
+                                    .doc(t.get_providerID)
+                                    .collection('DailyMenu')
+                                    .doc(widget.uid)
+                                    .get())
+                                .data()!['discount'];
+                            await FirebaseFirestore.instance
+                                .collection('Providers')
+                                .doc(widget.currentItem.get_providerID)
+                                .collection('DailyMenu')
+                                .doc(widget.uid)
+                                .update({
+                              'item': t.toMap(),
+                              'priceAfterDiscount': t.get_originalPrice() -
+                                  (t.get_originalPrice() * dis)
+                            });
+                          }
                           Navigator.pop(context);
                         }
                       },
                       style: ButtonStyle(
                         backgroundColor:
-                            MaterialStateProperty.all(Color(0xFF66CDAA)),
+                            MaterialStateProperty.all(Color(0xFF89CDA7)),
                         foregroundColor:
                             MaterialStateProperty.all(Colors.white),
                       ),

@@ -79,6 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return false;
     }
     permission = await Geolocator.checkPermission();
+    print(permission);
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
@@ -86,6 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SnackBar(content: Text('Location permissions are denied')));
         return false;
       }
+      setState(() {});
     }
     if (permission == LocationPermission.deniedForever) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -93,6 +95,15 @@ class _HomeScreenState extends State<HomeScreen> {
               'Location permissions are permanently denied, we cannot request permissions.')));
       return false;
     }
+    if (permission == LocationPermission.whileInUse) {
+      _getUserCurrentLocation();
+      return true;
+    }
+    if (permission == LocationPermission.always) {
+      _getUserCurrentLocation();
+      return true;
+    }
+    setState(() {});
     return true;
   }
 
@@ -119,14 +130,14 @@ class _HomeScreenState extends State<HomeScreen> {
         ? Center(
             child: SpinKitFadingCube(
               size: 85,
-              color: Color(0xFF66CDAA),
+              color: Color(0xFF89CDA7),
             ),
           )
         : Scaffold(
             appBar: PreferredSize(
               preferredSize: Size.fromHeight(65.0), // here the desired height
               child: AppBar(
-                backgroundColor: Color(0xFF66CDAA),
+                backgroundColor: Color(0xFF89CDA7),
                 actions: [
                   StreamBuilder(
                       stream: ref,
@@ -199,8 +210,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     choiceStyle: FlexiChipStyle.when(
                         selected: const C2ChipStyle(
-                            checkmarkColor: Color(0xFF66CDAA),
-                            backgroundColor: Color(0xFF66CDAA),
+                            checkmarkColor: Color(0xFF89CDA7),
+                            backgroundColor: Color(0xFF89CDA7),
                             foregroundStyle: TextStyle(color: Colors.black))),
                     choiceCheckmark: true,
                   ),
@@ -215,7 +226,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         hintText: 'Search for resturant',
                         suffixIcon: Icon(
                           Icons.search,
-                          color: Color(0xFF66CDAA),
+                          color: Color(0xFF89CDA7),
                         ),
                         contentPadding: const EdgeInsets.only(
                             left: 20.0, bottom: 5.0, top: 12.5),

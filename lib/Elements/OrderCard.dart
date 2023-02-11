@@ -139,7 +139,7 @@ Widget getTheStatus(String status) {
   } else if (status == 'pickedUp') {
     return const Text(
       'Picked Up',
-      style: TextStyle(color: Color(0xFF66CDAA), fontSize: 10),
+      style: TextStyle(color: Color(0xFF89CDA7), fontSize: 10),
     );
   } else if (status == 'canceled') {
     return const Text(

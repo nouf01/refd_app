@@ -54,7 +54,7 @@ class _ManageOrderState extends State<ManageOrder> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Order Status'),
-        backgroundColor: Color(0xFF66CDAA),
+        backgroundColor: Color(0xFF89CDA7),
       ),
       body: _Pages[whichStatus],
     );

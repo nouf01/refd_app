@@ -6,7 +6,7 @@ import 'package:timelines/timelines.dart';
 const kTileHeight = 50.0;
 
 const completeColor = Color(0xff5e6172);
-const inProgressColor = Color(0xFF66CDAA);
+const inProgressColor = Color(0xFF89CDA7);
 const todoColor = Color(0xffd1d2d7);
 
 class TimeLineStatus extends StatefulWidget {

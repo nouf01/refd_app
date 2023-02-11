@@ -140,7 +140,7 @@ class _trackWaitingState extends State<trackWaiting> {
         ? Center(
             child: SpinKitFadingCube(
               //size: 85,
-              color: Color(0xFF66CDAA),
+              color: Color(0xFF89CDA7),
             ),
           )
         : StreamBuilder(
@@ -274,7 +274,8 @@ class _trackWaitingState extends State<trackWaiting> {
                                           iconSize: 30.0,
                                           icon: Icon(
                                             Icons.chat,
-                                            color: Color(0xFF66CDAA),
+                                            color: Color.fromRGBO(
+                                                137, 205, 167, 0),
                                           ),
                                           onPressed: () async {
                                             Navigator.of(context).push(
@@ -365,7 +366,7 @@ class _trackWaitingState extends State<trackWaiting> {
                               ),
                               style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all(
-                                    Color(0xFF66CDAA)),
+                                    Color(0xFF89CDA7)),
                                 foregroundColor:
                                     MaterialStateProperty.all(Colors.white),
                               )),
@@ -392,7 +393,7 @@ class _trackWaitingState extends State<trackWaiting> {
         child: Text(
       '${timeLeft.substring(2, 7)}',
       style: const TextStyle(
-          fontSize: 40, color: Color(0xFF66CDAA), fontWeight: FontWeight.bold),
+          fontSize: 40, color: Color(0xFF89CDA7), fontWeight: FontWeight.bold),
     ));
   }
 

@@ -37,6 +37,7 @@ class _ConsumerMapState extends State<ConsumerMap> {
   static LatLng _userCurrentPosition = LatLng(0, 0);
   final Set<Marker> _mapMarkers = {};
   var consumerLan, consumerLat;
+  BitmapDescriptor? myIcon;
 
   //firebase variables
   Database db = Database();
@@ -66,6 +67,11 @@ class _ConsumerMapState extends State<ConsumerMap> {
   @override
   void initState() {
     super.initState();
+    BitmapDescriptor.fromAssetImage(
+            ImageConfiguration(size: Size(10, 10)), 'images/logo7.png')
+        .then((onValue) {
+      myIcon = onValue;
+    });
     _getUserCurrentLocation();
     _getProviders();
   }
@@ -87,7 +93,6 @@ class _ConsumerMapState extends State<ConsumerMap> {
   var providerInfoId = 0;
   List<Map> providersInfo = [{}];
   Future _getProviders() async {
-    var markerLogo = await getImages();
     //retrive all providers
     List<Provider> pList = await db.retrieveAllProviders();
     for (int i = 0; i < pList.length; i++) {
@@ -111,18 +116,17 @@ class _ConsumerMapState extends State<ConsumerMap> {
         "Lat": lat
       });
 
-      Uint8List bytes =
+      /*Uint8List bytes =
           (await NetworkAssetBundle(Uri.parse(logoURL)).load(logoURL))
               .buffer
-              .asUint8List();
+              .asUint8List();*/
       _mapMarkers.add(Marker(
         markerId: MarkerId("${i + 1}"),
         position: LatLng(lat, lang),
         infoWindow: InfoWindow(
           title: "$provname",
         ),
-        icon: BitmapDescriptor.fromBytes(
-            markerLogo), //fromBytes(await getImages(logoURL, 80)),
+        icon: myIcon!, //fromBytes(await getImages(logoURL, 80)),
         onTap: () {
           var thisMarker = i + 1;
           setState(() {
@@ -142,7 +146,6 @@ class _ConsumerMapState extends State<ConsumerMap> {
 
   void _getUserCurrentLocation() async {
     Position currentPosition = await Geolocator.getCurrentPosition();
-
     List<Placemark> placemarks = await placemarkFromCoordinates(
         currentPosition.latitude, currentPosition.longitude);
     consumerLan = currentPosition.latitude;
@@ -254,7 +257,7 @@ class _ConsumerMapState extends State<ConsumerMap> {
                                   ),
                                   style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty.all(
-                                        Color(0xFF66CDAA)),
+                                        Color(0xFF89CDA7)),
                                     foregroundColor:
                                         MaterialStateProperty.all(Colors.white),
                                   )),
@@ -279,7 +282,7 @@ class _ConsumerMapState extends State<ConsumerMap> {
           ? Center(
               child: SpinKitFadingCube(
                 size: 85,
-                color: Color(0xFF66CDAA),
+                color: Color(0xFF89CDA7),
               ),
             )
           : FutureBuilder(
@@ -328,7 +331,7 @@ class _ConsumerMapState extends State<ConsumerMap> {
                   return Center(
                     child: SpinKitFadingCube(
                       size: 85,
-                      color: Color(0xFF66CDAA),
+                      color: Color(0xFF89CDA7),
                     ),
                   );
                 else
