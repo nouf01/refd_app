@@ -284,8 +284,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                             ElevatedButton(
                                               child: Text("OK"),
                                               style: ElevatedButton.styleFrom(
-                                                  primary: Color.fromRGBO(
-                                                      137, 205, 167, 0)),
+                                                  primary: Color(0xFF66CDAA)),
                                               onPressed: () {
                                                 Navigator.push(
                                                     context,
@@ -299,7 +298,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                                                     'Order Status'),
                                                                 backgroundColor:
                                                                     Color(
-                                                                        0xFF66CDAA),
+                                                                        0xFF89CDA7),
                                                                 leading:
                                                                     IconButton(
                                                                   icon: Icon(Icons

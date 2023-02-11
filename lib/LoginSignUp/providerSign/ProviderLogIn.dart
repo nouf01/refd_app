@@ -1,12 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:refd_app/Elements/Reset.dart';
+import 'package:refd_app/LoginSignUp/EmailVerFunc.dart';
 import 'package:refd_app/LoginSignUp/providerSign/providerSetLoc.dart';
 import 'package:refd_app/LoginSignUp/updatePassword.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../DataModel/DB_Service.dart';
 import '../../DataModel/Provider.dart';
 import '../../Provider_Screens/ProviderNavigation.dart';
+import '../UserType.dart';
 import 'ProviderSignUp.dart';
 
 class ProviderLogIn extends StatefulWidget {
@@ -103,7 +105,18 @@ class _MyWidgetState extends State<ProviderLogIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: Color(0xFF89CDA7)),
+      appBar: AppBar(
+        backgroundColor: Color(0xFF89CDA7),
+        automaticallyImplyLeading: false,
+        leading: BackButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => UserType()),
+            );
+          },
+        ),
+      ),
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -223,7 +236,7 @@ class _MyWidgetState extends State<ProviderLogIn> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ProviderNavigation()),
+                                  builder: (context) => EmailVerfunc()),
                             );
                           } else
                             print("something went wrong");

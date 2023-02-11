@@ -261,10 +261,8 @@ class _MyConsumerProfileState extends State<ProviderProfile> {
                                           BorderRadius.circular(100))),
                             ),
                           ),
+                          SizedBox(height: 30),
 
-                          SizedBox(
-                            height: 30,
-                          ),
                           SizedBox(
                             width: 355,
                             height: 45,

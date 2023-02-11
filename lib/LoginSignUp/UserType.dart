@@ -21,7 +21,7 @@ class UserType extends StatelessWidget {
           child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
             Center(
               child: Container(
-                  margin: const EdgeInsets.only(top: 140),
+                  margin: const EdgeInsets.only(top: 100),
                   width: Screenwidth,
                   alignment: Alignment.center,
                   child: const Text(
@@ -33,14 +33,13 @@ class UserType extends StatelessWidget {
               height: 30,
             ),
             Container(
-              height: 80,
-              width: 80,
-              /*decoration: const BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage("assests/emptyPlaceholder.jpg")))*/
-            ),
+                height: 150,
+                width: 150,
+                decoration: const BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage("images\\smile.png")))),
             const SizedBox(
-              height: 70,
+              height: 30,
             ),
             Container(
                 alignment: Alignment.center,

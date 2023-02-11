@@ -132,7 +132,7 @@ class _MyWidgetState extends State<ConsumerSignUp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          automaticallyImplyLeading: false, backgroundColor: Color(0xFF89CDA7)),
+          automaticallyImplyLeading: true, backgroundColor: Color(0xFF89CDA7)),
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -359,7 +359,7 @@ class _MyWidgetState extends State<ConsumerSignUp> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ConsumerNavigation()),
+                                  builder: (context) => ConsumerLogIn()),
                             );
                           } else {
                             print("SIGN UP FAILED");

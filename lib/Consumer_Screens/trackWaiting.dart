@@ -274,8 +274,7 @@ class _trackWaitingState extends State<trackWaiting> {
                                           iconSize: 30.0,
                                           icon: Icon(
                                             Icons.chat,
-                                            color: Color.fromRGBO(
-                                                137, 205, 167, 0),
+                                            color: Color(0xFF89CDA7),
                                           ),
                                           onPressed: () async {
                                             Navigator.of(context).push(

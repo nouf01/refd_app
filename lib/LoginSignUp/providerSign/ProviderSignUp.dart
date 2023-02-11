@@ -505,8 +505,8 @@ class _MyWidgetState extends State<ProviderSignUp> {
                           style: TextStyle(fontSize: 27),
                         ),
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                              Color.fromARGB(255, 156, 232, 169)),
+                          backgroundColor:
+                              MaterialStateProperty.all(Color(0xFF89CDA7)),
                           foregroundColor:
                               MaterialStateProperty.all(Colors.white),
                         )),

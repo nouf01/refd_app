@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:refd_app/LoginSignUp/UserType.dart';
 import 'package:refd_app/LoginSignUp/updatePassword.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:refd_app/Elements/Reset.dart';
@@ -10,6 +11,7 @@ import '../../Consumer_Screens/ConsumerNavigation.dart';
 import '../../DataModel/Consumer.dart';
 import '../../DataModel/DB_Service.dart';
 import 'ConsumerSignUp.dart';
+import '../EmailVerFunc.dart';
 
 class ConsumerLogIn extends StatefulWidget {
   const ConsumerLogIn({super.key});
@@ -107,7 +109,17 @@ class _MyWidgetState extends State<ConsumerLogIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: Color(0xFF89CDA7)),
+      appBar: AppBar(
+          automaticallyImplyLeading: false,
+          leading: BackButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => UserType()),
+              );
+            },
+          ),
+          backgroundColor: Color(0xFF89CDA7)),
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -229,7 +241,7 @@ class _MyWidgetState extends State<ConsumerLogIn> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ConsumerNavigation()),
+                                  builder: (context) => EmailVerfunc()),
                             );
                           } else
                             print("something went wrong");

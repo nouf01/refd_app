@@ -119,215 +119,272 @@ class _DailyMenuWidgetState extends State<DailyMenuWidget> {
                 future: itemList!,
                 builder: (BuildContext context,
                     AsyncSnapshot<List<DailyMenu_Item>> snapshot) {
-                  if (itemList == null ||
-                      retrieveditemList == null ||
-                      snapshot == null) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.connectionState == ConnectionState.done &&
-                      retrieveditemList!.isEmpty) {
-                    return Center(
-                      child: ListView(
-                        children: const <Widget>[
-                          Align(
-                              alignment: AlignmentDirectional.center,
-                              child: Text('No data available')),
-                        ],
-                      ),
-                    );
-                  } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                    return RefreshIndicator(
-                      onRefresh: _refresh,
-                      child: Column(
-                        children: [
-                          ListView.separated(
-                              physics: const NeverScrollableScrollPhysics(),
-                              // itemCount: retrieveditemList!.length,
-                              separatorBuilder: (context, index) =>
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                              itemCount: retrieveditemList!.length,
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                return Container(
-                                    //width: 174,
-                                    //height: 160,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Color(0xffE2E2E2),
-                                      ),
-                                      borderRadius: BorderRadius.circular(18),
+                  if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                    return Column(
+                      children: [
+                        ListView.separated(
+                            physics: const NeverScrollableScrollPhysics(),
+                            // itemCount: retrieveditemList!.length,
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                            itemCount: retrieveditemList!.length,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                  //width: 174,
+                                  //height: 160,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Color(0xffE2E2E2),
                                     ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 3,
-                                        vertical: 15,
-                                      ),
-                                      child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                GestureDetector(
-                                                  onTap: (() {
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) => EditScreen(
-                                                                currentItem:
-                                                                    retrieveditemList![
-                                                                            index]
-                                                                        .getItem(),
-                                                                uid: retrieveditemList![
-                                                                        index]
-                                                                    .get_uid)));
-                                                    _refresh();
-                                                  }),
-                                                  child: Image.network(
-                                                    height: 60,
-                                                    width: 60,
-                                                    fit: BoxFit.contain,
-                                                    retrieveditemList![index]
-                                                        .getItem()
-                                                        .get_imageURL(),
-                                                  ),
-                                                ),
-                                                SizedBox(width: 5),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Container(
-                                                        width: 150,
-                                                        child: Text(
-                                                          retrieveditemList![
-                                                                  index]
-                                                              .getItem()
-                                                              .get_name(),
-                                                          style: TextStyle(
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                          softWrap: true,
-                                                        )),
-                                                    Container(
+                                    borderRadius: BorderRadius.circular(18),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 3,
+                                      vertical: 15,
+                                    ),
+                                    child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Image.network(
+                                                height: 60,
+                                                width: 60,
+                                                fit: BoxFit.contain,
+                                                retrieveditemList![index]
+                                                    .getItem()
+                                                    .get_imageURL(),
+                                              ),
+                                              SizedBox(width: 5),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Container(
                                                       width: 150,
-                                                      height: 55,
                                                       child: Text(
                                                         retrieveditemList![
                                                                 index]
                                                             .getItem()
-                                                            .getDecription(),
-                                                        maxLines: 5,
-                                                        softWrap: true,
-                                                        textAlign:
-                                                            TextAlign.start,
-                                                        style: TextStyle(
-                                                          fontSize: 12,
-                                                          color:
-                                                              Color(0xFF7C7C7C),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                        "\$${retrieveditemList![index].getItem().get_originalPrice().toStringAsFixed(2)}",
-                                                        style: TextStyle(
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.normal,
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .lineThrough,
-                                                        )),
-                                                    Text(
-                                                        "${currentPrice[index].toStringAsFixed(2)}",
+                                                            .get_name(),
                                                         style: TextStyle(
                                                             fontSize: 16,
                                                             fontWeight:
-                                                                FontWeight.bold,
-                                                            color: Colors.red)),
+                                                                FontWeight
+                                                                    .bold),
+                                                        softWrap: true,
+                                                      )),
+                                                  Container(
+                                                    width: 150,
+                                                    height: 55,
+                                                    child: Text(
+                                                      retrieveditemList![index]
+                                                          .getItem()
+                                                          .getDecription(),
+                                                      maxLines: 5,
+                                                      softWrap: true,
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                      style: TextStyle(
+                                                        fontSize: 12,
+                                                        color:
+                                                            Color(0xFF7C7C7C),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                      "\$${retrieveditemList![index].getItem().get_originalPrice().toStringAsFixed(2)}",
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                        decoration:
+                                                            TextDecoration
+                                                                .lineThrough,
+                                                      )),
+                                                  Text(
+                                                      "${currentPrice[index].toStringAsFixed(2)}",
+                                                      style: TextStyle(
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.red)),
+                                                ],
+                                              ),
+                                              Column(children: [
+                                                AppText(
+                                                  text: "Quantity",
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    IconButton(
+                                                        iconSize: 10,
+                                                        icon: Icon(
+                                                          Icons.remove,
+                                                        ),
+                                                        onPressed: () async {
+                                                          if (currentQuantity[
+                                                                  index] !=
+                                                              0) {
+                                                            currentQuantity[
+                                                                index]--;
+                                                            setState(() {});
+                                                            if (currentQuantity[
+                                                                    index] ==
+                                                                0) {
+                                                              service.removeFromPrvoiderDM(
+                                                                  log
+                                                                      .getEmailOnly(),
+                                                                  retrieveditemList![
+                                                                      index]);
+                                                              retrieveditemList!
+                                                                  .remove(
+                                                                      retrieveditemList![
+                                                                          index]);
+                                                              currentQuantity.remove(
+                                                                  currentQuantity[
+                                                                      index]);
+                                                            }
+                                                            setState(() {});
+                                                          }
+                                                        }),
+                                                    Container(
+                                                      // padding: EdgeInsets.all(8.0),
+                                                      child: Text(
+                                                          currentQuantity[index]
+                                                              .toString()),
+                                                    ),
+                                                    IconButton(
+                                                        iconSize: 10,
+                                                        icon: Icon(
+                                                          Icons.add,
+                                                        ),
+                                                        onPressed: () async {
+                                                          setState(() {
+                                                            currentQuantity[
+                                                                index]++;
+                                                          });
+                                                        }),
                                                   ],
                                                 ),
-                                                Column(children: [
-                                                  AppText(
-                                                    text: "Quantity",
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      IconButton(
-                                                          iconSize: 10,
-                                                          icon: Icon(
-                                                            Icons.remove,
-                                                          ),
-                                                          onPressed: () async {
-                                                            if (currentQuantity[
-                                                                    index] !=
-                                                                0) {
-                                                              currentQuantity[
-                                                                  index]--;
-                                                              setState(() {});
-                                                              if (currentQuantity[
-                                                                      index] ==
-                                                                  0) {
-                                                                service.removeFromPrvoiderDM(
-                                                                    log
-                                                                        .getEmailOnly(),
-                                                                    retrieveditemList![
-                                                                        index]);
-                                                                retrieveditemList!.remove(
-                                                                    retrieveditemList![
-                                                                        index]);
-                                                                currentQuantity.remove(
-                                                                    currentQuantity[
-                                                                        index]);
-                                                              }
-                                                              setState(() {});
-                                                            }
-                                                          }),
-                                                      Container(
-                                                        // padding: EdgeInsets.all(8.0),
-                                                        child: Text(
-                                                            currentQuantity[
-                                                                    index]
-                                                                .toString()),
-                                                      ),
-                                                      IconButton(
-                                                          iconSize: 10,
-                                                          icon: Icon(
-                                                            Icons.add,
-                                                          ),
-                                                          onPressed: () async {
-                                                            setState(() {
-                                                              currentQuantity[
-                                                                  index]++;
-                                                            });
-                                                          }),
-                                                    ],
-                                                  ),
-                                                  AppText(
-                                                    text: "Discount",
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      IconButton(
-                                                          iconSize: 10,
-                                                          icon: Icon(
-                                                            Icons.remove,
-                                                          ),
-                                                          onPressed: () {
+                                                AppText(
+                                                  text: "Discount",
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    IconButton(
+                                                        iconSize: 10,
+                                                        icon: Icon(
+                                                          Icons.remove,
+                                                        ),
+                                                        onPressed: () {
+                                                          if (currentDiscount[
+                                                                  index] !=
+                                                              0) {
+                                                            currentDiscount[
+                                                                    index] =
+                                                                currentDiscount[
+                                                                        index] -
+                                                                    10;
+                                                            currentPrice[
+                                                                index] = retrieveditemList![
+                                                                        index]!
+                                                                    .getItem()
+                                                                    .get_originalPrice() -
+                                                                (retrieveditemList![
+                                                                            index]!
+                                                                        .getItem()
+                                                                        .get_originalPrice() *
+                                                                    (currentDiscount[
+                                                                            index] /
+                                                                        100));
+                                                            setState(() {});
                                                             if (currentDiscount[
-                                                                    index] !=
+                                                                    index] ==
                                                                 0) {
+                                                              //show dialog
+                                                              showDialog(
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (BuildContext
+                                                                        context) {
+                                                                  return AlertDialog(
+                                                                    title:
+                                                                        const Text(
+                                                                      "Discount can not be zero",
+                                                                    ),
+                                                                    actions: [
+                                                                      ElevatedButton(
+                                                                        child: Text(
+                                                                            "OK"),
+                                                                        style: ElevatedButton
+                                                                            .styleFrom(
+                                                                          primary:
+                                                                              Color(0xFF66CDAA),
+                                                                        ),
+                                                                        onPressed:
+                                                                            () {
+                                                                          currentDiscount[index] =
+                                                                              10.0;
+                                                                          setState(
+                                                                              () {});
+                                                                          Navigator.of(context)
+                                                                              .pop();
+                                                                        },
+                                                                      ),
+                                                                    ],
+                                                                  );
+                                                                },
+                                                              );
+                                                            }
+                                                          }
+                                                        }),
+                                                    Container(
+                                                      // padding: EdgeInsets.all(8.0),
+                                                      child: currentDiscount[
+                                                                  index] >
+                                                              91.0
+                                                          ? Text(
+                                                              '100%',
+                                                              style: TextStyle(
+                                                                  fontSize: 10,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                      .green),
+                                                            )
+                                                          : Text(currentDiscount[
+                                                                      index]
+                                                                  .toString()
+                                                                  .substring(
+                                                                      0, 2) +
+                                                              '%'),
+                                                    ),
+                                                    IconButton(
+                                                        iconSize: 10,
+                                                        icon: Icon(
+                                                          Icons.add,
+                                                        ),
+                                                        onPressed: () {
+                                                          if (currentDiscount[
+                                                                  index] !=
+                                                              100.0) {
+                                                            setState(() {
                                                               currentDiscount[
                                                                       index] =
                                                                   currentDiscount[
-                                                                          index] -
+                                                                          index] +
                                                                       10;
                                                               currentPrice[
                                                                   index] = retrieveditemList![
@@ -341,111 +398,30 @@ class _DailyMenuWidgetState extends State<DailyMenuWidget> {
                                                                       (currentDiscount[
                                                                               index] /
                                                                           100));
-                                                              setState(() {});
-                                                              if (currentDiscount[
-                                                                      index] ==
-                                                                  0) {
-                                                                //show dialog
-                                                                showDialog(
-                                                                  context:
-                                                                      context,
-                                                                  builder:
-                                                                      (BuildContext
-                                                                          context) {
-                                                                    return AlertDialog(
-                                                                      title:
-                                                                          const Text(
-                                                                        "Discount can not be zero",
-                                                                      ),
-                                                                      actions: [
-                                                                        ElevatedButton(
-                                                                          child:
-                                                                              Text("OK"),
-                                                                          style:
-                                                                              ElevatedButton.styleFrom(
-                                                                            primary: Color.fromRGBO(
-                                                                                137,
-                                                                                205,
-                                                                                167,
-                                                                                0),
-                                                                          ),
-                                                                          onPressed:
-                                                                              () {
-                                                                            currentDiscount[index] =
-                                                                                10.0;
-                                                                            setState(() {});
-                                                                            Navigator.of(context).pop();
-                                                                          },
-                                                                        ),
-                                                                      ],
-                                                                    );
-                                                                  },
-                                                                );
-                                                              }
-                                                            }
-                                                          }),
-                                                      Container(
-                                                        // padding: EdgeInsets.all(8.0),
-                                                        child: currentDiscount[
-                                                                    index] >
-                                                                91.0
-                                                            ? Text(
-                                                                '100%',
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        10,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    color: Colors
-                                                                        .green),
-                                                              )
-                                                            : Text(currentDiscount[
-                                                                        index]
-                                                                    .toString()
-                                                                    .substring(
-                                                                        0, 2) +
-                                                                '%'),
-                                                      ),
-                                                      IconButton(
-                                                          iconSize: 10,
-                                                          icon: Icon(
-                                                            Icons.add,
-                                                          ),
-                                                          onPressed: () {
-                                                            if (currentDiscount[
-                                                                    index] !=
-                                                                100.0) {
-                                                              setState(() {
-                                                                currentDiscount[
-                                                                        index] =
-                                                                    currentDiscount[
-                                                                            index] +
-                                                                        10;
-                                                                currentPrice[
-                                                                    index] = retrieveditemList![
-                                                                            index]!
-                                                                        .getItem()
-                                                                        .get_originalPrice() -
-                                                                    (retrieveditemList![index]!
-                                                                            .getItem()
-                                                                            .get_originalPrice() *
-                                                                        (currentDiscount[index] /
-                                                                            100));
-                                                              });
-                                                            }
-                                                          }),
-                                                    ],
-                                                  ),
-                                                ]),
-                                              ],
-                                            ),
-                                          ]),
-                                    ));
-                              }),
-                          SizedBox(
-                            height: 70,
-                          )
+                                                            });
+                                                          }
+                                                        }),
+                                                  ],
+                                                ),
+                                              ]),
+                                            ],
+                                          ),
+                                        ]),
+                                  ));
+                            }),
+                        SizedBox(
+                          height: 70,
+                        )
+                      ],
+                    );
+                  } else if (snapshot.connectionState == ConnectionState.done &&
+                      retrieveditemList!.isEmpty) {
+                    return Center(
+                      child: ListView(
+                        children: const <Widget>[
+                          Align(
+                              alignment: AlignmentDirectional.center,
+                              child: Text('No data available')),
                         ],
                       ),
                     );

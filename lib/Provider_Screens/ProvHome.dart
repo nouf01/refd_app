@@ -94,7 +94,7 @@ class _HomeScreenProviderState extends State<HomeScreenProvider> {
                         value: p!.get_isOpen() == 0 ? false : true,
                         textOn: 'open',
                         textOff: 'closed',
-                        colorOn: Color.fromARGB(255, 75, 177, 143),
+                        colorOn: Color(0xFF89CDA7),
                         colorOff: Colors.grey,
                         textOnColor: Colors.white,
                         iconOn: Icons.store,
