@@ -49,9 +49,11 @@ class _CartScreen extends State<CartScreen> {
         currentQuantity.add(element.getChoosedCartQuantity);
         maxQuantity.add(element.get_quantity);
         i++;
-      });
-      prov = Provider.fromDocumentSnapshot(
-          await DB.searchForProvider(cartItems![0].getItem().get_providerID));
+      }); // Fill out currentQuantity and maxQuantity lists
+      prov = Provider.fromDocumentSnapshot(await DB.searchForProvider(
+          cartItems![0]
+              .getItem()
+              .get_providerID)); //get the provider of cart items
       cartIsEmpty = 1; // means not empty
       numCartItems = currentUser!.numOfCartItems;
       print('*******************************************');
