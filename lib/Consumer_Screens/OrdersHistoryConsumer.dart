@@ -62,7 +62,10 @@ class _OrdersHistoryScreenState extends State<OrdersHistoryScreen> {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(16.0)),
                           child: ListTile(
-                            leading: Image.network(o1.getProviderLogo),
+                            leading: Container(
+                                height: 60,
+                                width: 60,
+                                child: Image.network(o1.getProviderLogo)),
                             isThreeLine: true,
                             onTap: () async {
                               Navigator.push(

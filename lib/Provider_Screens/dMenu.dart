@@ -160,13 +160,13 @@ class _DailyMenuWidgetState extends State<DailyMenuWidget> {
                                                     .getItem()
                                                     .get_imageURL(),
                                               ),
-                                              SizedBox(width: 5),
+                                              SizedBox(width: 15),
                                               Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Container(
-                                                      width: 150,
+                                                      width: 170,
                                                       child: Text(
                                                         retrieveditemList![
                                                                 index]
@@ -180,7 +180,7 @@ class _DailyMenuWidgetState extends State<DailyMenuWidget> {
                                                         softWrap: true,
                                                       )),
                                                   Container(
-                                                    width: 150,
+                                                    width: 170,
                                                     height: 55,
                                                     child: Text(
                                                       retrieveditemList![index]

@@ -545,7 +545,7 @@ class _approveUnderProcessState extends State<approveUnderProcess> {
       //Notification to the consumer that his order is canceled due to no picked up
       _sendMessageCanceled(
           consEmail: order.get_consumerID,
-          provName: order.get_consumerID,
+          provName: order.getProviderName,
           orderID: orderID.toString());
     }
   }

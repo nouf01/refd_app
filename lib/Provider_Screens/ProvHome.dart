@@ -72,7 +72,7 @@ class _HomeScreenProviderState extends State<HomeScreenProvider> {
                                 fit: BoxFit.cover,
                               )),
                           SizedBox(
-                            width: 80,
+                            width: 105,
                           ),
                           Container(
                               child: Center(
@@ -94,7 +94,7 @@ class _HomeScreenProviderState extends State<HomeScreenProvider> {
                         value: p!.get_isOpen() == 0 ? false : true,
                         textOn: 'open',
                         textOff: 'closed',
-                        colorOn: Color(0xFF89CDA7),
+                        colorOn: Color.fromARGB(255, 33, 133, 76),
                         colorOff: Colors.grey,
                         textOnColor: Colors.white,
                         iconOn: Icons.store,
@@ -167,10 +167,12 @@ class _HomeScreenProviderState extends State<HomeScreenProvider> {
                   ),
                 ],*/
                 bottom: TabBar(
+                  indicatorColor: Color.fromARGB(255, 33, 133, 76),
                   tabs: [
                     Tab(
-                        child: Text('Under process',
-                            style: TextStyle(fontSize: 15))),
+                      child:
+                          Text('Under process', style: TextStyle(fontSize: 15)),
+                    ),
                     Tab(
                         child: Text('Waiting for pickup',
                             style: TextStyle(fontSize: 15))),

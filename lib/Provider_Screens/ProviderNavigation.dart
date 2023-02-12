@@ -72,7 +72,7 @@ class _ProviderNavigationState extends State<ProviderNavigation> {
               ),
               BottomNavigationBarItem(
                 icon: Icon(Ionicons.md_stats),
-                label: 'Analysis',
+                label: 'Stats',
                 backgroundColor: Color(0xFF89CDA7),
               ),
               BottomNavigationBarItem(

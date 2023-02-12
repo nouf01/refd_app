@@ -45,6 +45,7 @@ class _DailyMenuScreenState extends State<DailyMenuScreen> {
                 ),
                 backgroundColor: Color(0xFF89CDA7),
                 bottom: TabBar(
+                  indicatorColor: Color.fromARGB(255, 33, 133, 76),
                   tabs: [
                     Tab(
                         child:

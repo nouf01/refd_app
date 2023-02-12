@@ -47,6 +47,11 @@ class _MenuScreenState extends State<MenuScreen> {
             future: itemList,
             builder:
                 (BuildContext context, AsyncSnapshot<List<Item>> snapshot) {
+              if (snapshot == null ||
+                  retrieveditemList == null ||
+                  itemList == null) {
+                return const Center(child: CircularProgressIndicator());
+              }
               if (snapshot.hasData && snapshot.data!.isNotEmpty ||
                   retrieveditemList != null) {
                 return ListView.separated(
@@ -88,7 +93,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                               retrieveditemList![index]
                                                   .get_name(),
                                               style: TextStyle(
-                                                  fontSize: 20,
+                                                  fontSize: 15,
                                                   fontWeight: FontWeight.bold),
                                               softWrap: true,
                                             )),

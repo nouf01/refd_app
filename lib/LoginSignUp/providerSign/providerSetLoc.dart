@@ -74,6 +74,7 @@ class _MyproviderSetLocState extends State<providerSetLoc> {
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
+      _getUserCurrentLocation();
       if (permission == LocationPermission.denied) {
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Location permissions are denied')));
