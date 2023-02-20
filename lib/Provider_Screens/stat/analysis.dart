@@ -238,8 +238,8 @@ class _StatsPageState extends State<StatsPage> {
       },
       {
         "icon": Ionicons.md_restaurant,
-        "color": red,
-        "label": "Total Meals",
+        "color": yellow,
+        "label": "Total Saved Meals",
         "cost": p!.totalMeals.toString(),
       }
     ];

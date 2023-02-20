@@ -398,7 +398,7 @@ class Database {
     }
     print('Total *********:');
     print(total);
-    updateOrderInfo(orderOBJ.getorderID, {'total': total});
+    //updateOrderInfo(orderOBJ.getorderID, {'total': total});
   }
 
   void returnItemsToDailyMenu(

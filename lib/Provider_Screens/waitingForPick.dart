@@ -9,6 +9,7 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:refd_app/Consumer_Screens/chat.dart';
 import 'package:refd_app/DataModel/Consumer.dart';
 import 'package:refd_app/Provider_Screens/LoggedProv.dart';
 import 'package:refd_app/Provider_Screens/ProviderNavigation.dart';
@@ -26,7 +27,6 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 
 import 'canceled.dart';
-import 'chat.dart';
 
 class WaitingForPickUp extends StatefulWidget {
   Order_object order;
@@ -203,7 +203,7 @@ class _WaitingForPickUpState extends State<WaitingForPickUp> {
                               iconSize: 30.0,
                               icon: Icon(
                                 Icons.arrow_drop_down_circle_outlined,
-                                color: Color(0xFF89CDA7),
+                                color: Colors.black,
                               ),
                               onPressed: () {
                                 showModalBottomSheet(
@@ -254,14 +254,13 @@ class _WaitingForPickUpState extends State<WaitingForPickUp> {
                                     color: Color(0xFF89CDA7),
                                   ),
                                   onPressed: () async {
+                                    var theRoom = snapshot.data!;
                                     Navigator.of(context, rootNavigator: true)
-                                        .push(
-                                      MaterialPageRoute(
-                                        builder: (context) => ChatPage(
-                                          room: snapshot.data!,
-                                        ),
+                                        .push(MaterialPageRoute(
+                                      builder: (_) => ChatPage(
+                                        room: theRoom,
                                       ),
-                                    );
+                                    ));
                                   },
                                 );
                               },

@@ -11,6 +11,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:refd_app/Consumer_Screens/ConsumerNavigation.dart';
 import 'package:refd_app/Consumer_Screens/OrdersHistoryConsumer.dart';
+import 'package:refd_app/Consumer_Screens/chat.dart';
 import 'package:refd_app/Consumer_Screens/track.dart';
 import 'package:refd_app/Consumer_Screens/trackCancelled.dart';
 import 'package:refd_app/DataModel/Consumer.dart';
@@ -31,7 +32,6 @@ import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 
 import 'ProvHome.dart';
 import 'canceled.dart';
-import 'chat.dart';
 
 class approveUnderProcess extends StatefulWidget {
   Order_object order;
@@ -255,10 +255,11 @@ class _approveUnderProcessState extends State<approveUnderProcess> {
                                     color: Color(0xFF89CDA7),
                                   ),
                                   onPressed: () async {
+                                    var theRoom = snapshot.data!;
                                     Navigator.of(context, rootNavigator: true)
                                         .push(MaterialPageRoute(
                                       builder: (_) => ChatPage(
-                                        room: snapshot.data!,
+                                        room: theRoom,
                                       ),
                                     ));
                                   },
@@ -277,7 +278,7 @@ class _approveUnderProcessState extends State<approveUnderProcess> {
                         //change order status to waiting for pick up
                         changeOrderStatus();
                         //start the 45 min waiting for pick up timer
-                        var target = DateTime.now().add(Duration(minutes: 2));
+                        var target = DateTime.now().add(Duration(minutes: 45));
                         db.setOrderTimer(widget.order.getorderID,
                             target!.millisecondsSinceEpoch);
                         //start timer in the background

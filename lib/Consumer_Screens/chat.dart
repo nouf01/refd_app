@@ -1,5 +1,9 @@
+import 'dart:async';
 import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -36,16 +40,12 @@ class _ChatPageState extends State<ChatPage> {
         ),
         body: StreamBuilder<types.Room>(
           initialData: widget.room,
-          stream: FirebaseChatCore.instance.room(widget.room.id),
+          stream: getRoom(widget.room.id),
           builder: (context, snapshot) => StreamBuilder<List<types.Message>>(
             initialData: const [],
-            stream: FirebaseChatCore.instance.messages(snapshot.data!),
+            stream: getMessages(snapshot.data!),
             builder: (context, snapshot) => Chat(
-              theme: DefaultChatTheme(
-                  inputBackgroundColor: Colors.grey,
-                  inputTextColor: Colors.white,
-                  inputTextCursorColor: Colors.white,
-                  primaryColor: Color(0xFF89CDA7)),
+              theme: DefaultChatTheme(primaryColor: Color(0xFF89CDA7)),
               isAttachmentUploading: _isAttachmentUploading,
               messages: snapshot.data ?? [],
               onAttachmentPressed: _handleAtachmentPressed,
@@ -59,6 +59,10 @@ class _ChatPageState extends State<ChatPage> {
           ),
         ),
       );
+
+  void update() {
+    setState(() {});
+  }
 
   void _handleAtachmentPressed() {
     showModalBottomSheet<void>(
@@ -218,5 +222,142 @@ class _ChatPageState extends State<ChatPage> {
     setState(() {
       _isAttachmentUploading = uploading;
     });
+  }
+
+  Stream<types.Room> getRoom(String roomId) {
+    return FirebaseFirestore.instance
+        .collection('rooms')
+        .doc(roomId)
+        .snapshots()
+        .asyncMap(
+          (doc) => processRoomDocument(
+            doc,
+            FirebaseAuth.instance.currentUser!,
+            FirebaseFirestore.instance,
+            'users',
+          ),
+        );
+  }
+
+  Future<types.Room> processRoomDocument(
+    DocumentSnapshot<Map<String, dynamic>> doc,
+    User firebaseUser,
+    FirebaseFirestore instance,
+    String usersCollectionName,
+  ) async {
+    final data = doc.data()!;
+
+    data['createdAt'] = data['createdAt']?.millisecondsSinceEpoch;
+    data['id'] = doc.id;
+    data['updatedAt'] = data['updatedAt']?.millisecondsSinceEpoch;
+
+    var imageUrl = data['imageUrl'] as String?;
+    var name = data['name'] as String?;
+    final type = data['type'] as String;
+    final userIds = data['userIds'] as List<dynamic>;
+    final userRoles = data['userRoles'] as Map<String, dynamic>?;
+
+    final users = await Future.wait(
+      userIds.map(
+        (userId) => fetchUser(
+          instance,
+          userId as String,
+          usersCollectionName,
+          role: userRoles?[userId] as String?,
+        ),
+      ),
+    );
+
+    if (type == types.RoomType.direct.toShortString()) {
+      try {
+        final otherUser = users.firstWhere(
+          (u) => u['id'] != firebaseUser.uid,
+        );
+
+        imageUrl = otherUser['imageUrl'] as String?;
+        name = '${otherUser['firstName'] ?? ''} ${otherUser['lastName'] ?? ''}'
+            .trim();
+      } catch (e) {
+        // Do nothing if other user is not found, because he should be found.
+        // Consider falling back to some default values.
+      }
+    }
+
+    data['imageUrl'] = imageUrl;
+    data['name'] = name;
+    data['users'] = users;
+
+    if (data['lastMessages'] != null) {
+      final lastMessages = data['lastMessages'].map((lm) {
+        final author = users.firstWhere(
+          (u) => u['id'] == lm['authorId'],
+          orElse: () => {'id': lm['authorId'] as String},
+        );
+
+        lm['author'] = author;
+        lm['createdAt'] = lm['createdAt']?.millisecondsSinceEpoch;
+        lm['id'] = lm['id'] ?? '';
+        lm['updatedAt'] = lm['updatedAt']?.millisecondsSinceEpoch;
+
+        return lm;
+      }).toList();
+
+      data['lastMessages'] = lastMessages;
+    }
+
+    return types.Room.fromJson(data);
+  }
+
+  Stream<List<types.Message>> getMessages(
+    types.Room room, {
+    List<Object?>? endAt,
+    List<Object?>? endBefore,
+    int? limit,
+    List<Object?>? startAfter,
+    List<Object?>? startAt,
+  }) {
+    var query = FirebaseFirestore.instance
+        .collection('rooms/${room.id}/messages')
+        .orderBy('createdAt', descending: true);
+
+    if (endAt != null) {
+      query = query.endAt(endAt);
+    }
+
+    if (endBefore != null) {
+      query = query.endBefore(endBefore);
+    }
+
+    if (limit != null) {
+      query = query.limit(limit);
+    }
+
+    if (startAfter != null) {
+      query = query.startAfter(startAfter);
+    }
+
+    if (startAt != null) {
+      query = query.startAt(startAt);
+    }
+
+    return query.snapshots().map(
+          (snapshot) => snapshot.docs.fold<List<types.Message>>(
+            [],
+            (previousValue, doc) {
+              final data = doc.data();
+              final author = room.users.firstWhere(
+                (u) => u.id == data['authorId'],
+                orElse: () => types.User(id: data['authorId'] as String),
+              );
+
+              data['author'] = author.toJson();
+              data['createdAt'] = data['createdAt']?.millisecondsSinceEpoch;
+              data['id'] = doc.id;
+              data['updatedAt'] = data['updatedAt']?.millisecondsSinceEpoch;
+
+              return [...previousValue, types.Message.fromJson(data)];
+            },
+          ),
+        );
   }
 }

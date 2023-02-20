@@ -88,7 +88,7 @@ class _OrderCardState extends State<OrderCard> {
                           height: 8,
                         ),
                         Text(
-                          '${this.widget.order.get_total}',
+                          '${this.widget.order.get_total.toStringAsFixed(2)}',
                           style: TextStyle(fontSize: 13),
                         ),
                       ],

@@ -210,85 +210,47 @@ class _trackWaitingState extends State<trackWaiting> {
                               border: Border.all(color: Colors.black),
                             ),
                             child: ListTile(
-                              //contentPadding: EdgeInsets.all(5.0),
-                              leading:
-                                  Image.network(widgetOrder!.getProviderLogo),
-                              onTap: () {
-                                showModalBottomSheet(
-                                    context: context,
-                                    builder: (context) {
-                                      return bottomOrderDetails();
-                                    });
-                              },
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              isThreeLine: true,
-                              title: Text('${widgetOrder!.getProviderName}',
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.bold)),
-                              subtitle: Text('${address!}'),
-                              trailing: roomStream == null
-                                  ? Container(
-                                      height: 10,
-                                      width: 10,
-                                      child: CircularProgressIndicator(),
-                                    )
-                                  : StreamBuilder<types.Room>(
-                                      stream: roomStream!,
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                                ConnectionState.waiting ||
-                                            snapshot.connectionState ==
-                                                ConnectionState.none) {
-                                          return Container(
-                                            height: 10,
-                                            width: 10,
-                                            child: CircularProgressIndicator(),
-                                          );
-                                        }
-                                        if (snapshot.hasError) {
-                                          return Container(
-                                            height: 10,
-                                            width: 10,
-                                            child: Text('error'),
-                                          );
-                                        }
-                                        if (!snapshot.hasData) {
-                                          return Container(
-                                            height: 10,
-                                            width: 10,
-                                            child: Text('miss'),
-                                          );
-                                        }
-                                        if (snapshot.data == null ||
-                                            snapshot.connectionState ==
-                                                ConnectionState.waiting) {
-                                          return Container(
-                                            height: 10,
-                                            width: 10,
-                                            child: CircularProgressIndicator(),
-                                          );
-                                        }
-                                        return IconButton(
-                                          iconSize: 30.0,
-                                          icon: Icon(
-                                            Icons.chat,
-                                            color: Color(0xFF89CDA7),
+                                //contentPadding: EdgeInsets.all(5.0),
+                                leading:
+                                    Image.network(widgetOrder!.getProviderLogo),
+                                onTap: () {
+                                  showModalBottomSheet(
+                                      context: context,
+                                      builder: (context) {
+                                        return bottomOrderDetails();
+                                      });
+                                },
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                isThreeLine: true,
+                                title: Text('${widgetOrder!.getProviderName}',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                                subtitle: Text('${address!}'),
+                                trailing: StreamBuilder<types.Room>(
+                                  stream: roomStream,
+                                  builder: (context, snapshot) {
+                                    return IconButton(
+                                      iconSize: 30.0,
+                                      icon: Icon(
+                                        Icons.chat,
+                                        color: Color(0xFF89CDA7),
+                                      ),
+                                      onPressed: () async {
+                                        var theRoom = snapshot.data!;
+                                        Navigator.of(context,
+                                                rootNavigator: true)
+                                            .push(MaterialPageRoute(
+                                          builder: (_) => ChatPage(
+                                            room: theRoom,
                                           ),
-                                          onPressed: () async {
-                                            Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                builder: (context) => ChatPage(
-                                                  room: snapshot.data!,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        );
+                                        ));
                                       },
-                                    ),
-                              /*IconButton(
+                                    );
+                                  },
+                                )
+                                /*IconButton(
                                     iconSize: 30.0,
                                     icon: Icon(
                                       Icons.arrow_drop_down_circle_outlined,
@@ -302,7 +264,7 @@ class _trackWaitingState extends State<trackWaiting> {
                                           });
                                     },
                                   ),*/
-                            )),
+                                )),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(15.0),
