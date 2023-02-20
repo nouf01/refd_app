@@ -160,7 +160,7 @@ class _DailyMenuWidgetState extends State<DailyMenuWidget> {
                                                     .getItem()
                                                     .get_imageURL(),
                                               ),
-                                              SizedBox(width: 15),
+                                              // SizedBox(width: 15),
                                               Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
