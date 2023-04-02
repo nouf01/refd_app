@@ -15,29 +15,3 @@ Refd is implemented using Flutter and Firebase, Flutter is a cross-platform fram
   <img src="https://www.concettolabs.com/blog/wp-content/uploads/2021/12/flutter-firebase.png" width="600" title="FLutter and firebase">
 </p>
 
-## Screenshots
-
-<p align="center">
-  <img src="https://firebasestorage.googleapis.com/v0/b/refd-d5769.appspot.com/o/Screenshot%20(524).png?alt=media&token=377f571f-e248-4ba4-a9ef-bbe5674d760d" width="600" title="hover text">
-</p>
-
-
-<p align="center">
-  <img src="https://firebasestorage.googleapis.com/v0/b/refd-d5769.appspot.com/o/Screenshot%20(521).png?alt=media&token=59a6be1b-fb05-4f88-8508-d03039fc5b16" width="600" title="hover text">
-</p>
-
-
-<p align="center">
-  <img src="https://firebasestorage.googleapis.com/v0/b/refd-d5769.appspot.com/o/Screenshot%20(533).png?alt=media&token=d3ca2fbd-2c1e-4b4a-bbc6-9024e82915d7" width="600" title="hover text">
-</p>
-
-<p align="center">
-  <img src="https://firebasestorage.googleapis.com/v0/b/refd-d5769.appspot.com/o/Screenshot%20(534).png?alt=media&token=0bdf7b5b-b504-4e04-a74f-af1bdf7a99c7" width="600" title="in-app Chat">
-</p>
-
-
-<p align="center">
-  <img src="https://firebasestorage.googleapis.com/v0/b/refd-d5769.appspot.com/o/Screenshot%20(513).png?alt=media&token=69a69a22-453d-4122-a552-90c98942cd18" width="600" title="Route Page">
-</p>
-
-
