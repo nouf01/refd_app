@@ -72,32 +72,6 @@ class _CartScreen extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    /*while (cartIsEmpty == -1) {
-      setState(() {});
-      return Container(
-        color: Colors.white,
-        child: Center(
-          child: ListView(
-            children: const <Widget>[
-              Align(
-                  alignment: AlignmentDirectional.center,
-                  child: const Center(child: CircularProgressIndicator())),
-            ],
-          ),
-        ),
-      );
-    }
-    if (cartIsEmpty == 0) {
-      return Center(
-        child: ListView(
-          children: const <Widget>[
-            Align(
-                alignment: AlignmentDirectional.center,
-                child: Text('cart is empty')),
-          ],
-        ),
-      );
-    } else {*/
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xFF89CDA7),
